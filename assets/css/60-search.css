@@ -1,0 +1,93 @@
+/* The search sheet. */
+
+.searchbox {
+    margin-bottom: var(--space-xl);
+}
+
+.search-input {
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--surface-sunk);
+    border: var(--line-frame) solid var(--rule-strong);
+    color: var(--text);
+    font-size: var(--step-0);
+    transition: border-color var(--transition);
+}
+
+.search-input::placeholder {
+    color: var(--meta-soft);
+    opacity: 1;
+}
+
+/* The 2px outline is the focus signal; changing the border colour too would
+   draw a second concentric ring around the same field. */
+.search-input:focus-visible {
+    outline-offset: 0;
+}
+
+/* The loading state is the disabled state: the placeholder already says so, so
+   nothing else has to move. */
+.search-input:disabled {
+    cursor: progress;
+    color: var(--meta);
+}
+
+.search-results {
+    list-style: none;
+    padding: 0;
+}
+
+.search-results li {
+    border-top: var(--line-thin) solid var(--rule);
+}
+
+.search-results li:last-child {
+    border-bottom: var(--line-thin) solid var(--rule);
+}
+
+.search-results a {
+    display: block;
+    padding-block: var(--space-sm);
+    text-decoration: none;
+    font-size: var(--step-1);
+    transition: color var(--transition);
+}
+
+.search-results a:hover,
+.search-results a:focus-visible {
+    color: var(--accent);
+}
+
+.search-results p {
+    padding-bottom: var(--space-sm);
+    margin-top: calc(var(--space-2xs) * -1);
+    color: var(--meta);
+    font-size: var(--step--1);
+    max-width: 68ch;
+}
+
+.search-status {
+    margin-top: var(--space-md);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--meta);
+}
+
+.search-status[data-state="error"] {
+    color: var(--danger);
+}
+
+.search-fallback {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    margin-top: var(--space-md);
+}
+
+@media (pointer: coarse) {
+    .search-results a {
+        min-height: var(--tap-target);
+    }
+}

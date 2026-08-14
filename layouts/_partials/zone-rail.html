@@ -1,0 +1,101 @@
+{{- /* The drawing frame's zone reference, and a real one: each lettered zone is
+       placed at the vertical position of the section it names, so a letter marks
+       a location on the sheet rather than merely listing one. Zone C is where the
+       third section physically is, and the mark for the section being read is the
+       lit one.
+
+       That distinction is the whole justification for the letters. On a drawing,
+       zone references are how one person tells another where to look, which only
+       works if the letter is beside the thing; a rail that lists sections in a
+       corner is a table of contents wearing a drawing's clothes, and this page
+       already has a table of contents.
+
+       Placement needs rendered heights, so it is measured after layout and
+       carried in a custom property. Without JavaScript the marks fall back to
+       even spacing down the rail — honest furniture rather than a false claim,
+       with the table of contents carrying the real navigation.
+
+       A page with fewer than two sections renders no rail at all, and the frame
+       closes the column it would have occupied. */ -}}
+{{- $letters := slice "A" "B" "C" "D" "E" "F" "G" "H" "J" "K" "L" "M" }}
+
+{{- /* Hugo pads the heading tree with a synthetic level-0 node for every heading
+       level the page skips, so a post whose top-level sections are h3 sits two
+       placeholders deep, not one. Descend until real headings appear; six is well
+       past any sane document. */ -}}
+{{- $sections := .Fragments.Headings }}
+{{- range seq 6 }}
+{{- if and (eq (len $sections) 1) (eq (index $sections 0).Level 0) }}
+{{- $sections = (index $sections 0).Headings }}
+{{- end }}
+{{- end }}
+
+{{- if ge (len $sections) 2 }}
+<nav class="zone-rail" id="zone-rail" aria-label="{{ i18n "zones" }}">
+    {{- range $i, $h := first (len $letters) $sections }}
+    <a class="zone-rail__mark" href="#{{ $h.ID }}">
+        <span aria-hidden="true">{{ index $letters $i }}</span>
+        <span class="visually-hidden">{{ $h.Title | plainify }}</span>
+    </a>
+    {{- end }}
+</nav>
+<script>
+    // The rail is emitted before <main> in the frame, so this cannot run at
+    // parse time: the sheet it has to measure against does not exist yet.
+    document.addEventListener("DOMContentLoaded", function () {
+        var rail = document.getElementById("zone-rail");
+        var sheet = document.querySelector(".main");
+        if (!rail || !sheet) return;
+
+        var marks = Array.prototype.slice.call(rail.querySelectorAll(".zone-rail__mark"));
+        var targets = marks.map(function (m) {
+            return document.getElementById(decodeURIComponent(m.hash.slice(1)));
+        });
+        if (!marks.length || targets.indexOf(null) !== -1) return;
+
+        // Each mark sits at its own section's offset down the sheet, so the rail
+        // is a scale of the page rather than a list beside it.
+        function place() {
+            var box = sheet.getBoundingClientRect();
+            var top = box.top + window.scrollY;
+            var height = sheet.offsetHeight;
+            if (!height) return;
+            marks.forEach(function (mark, i) {
+                var y = (targets[i].getBoundingClientRect().top + window.scrollY - top) / height;
+                mark.style.setProperty("--zone-top", (Math.min(Math.max(y, 0), 1) * 100).toFixed(3) + "%");
+            });
+            rail.dataset.placed = "true";
+        }
+
+        // The lit mark is the section the reader is currently inside.
+        function spy() {
+            var line = window.scrollY + window.innerHeight * 0.25;
+            var current = -1;
+            targets.forEach(function (t, i) {
+                if (t.getBoundingClientRect().top + window.scrollY <= line) current = i;
+            });
+            marks.forEach(function (mark, i) {
+                if (i === current) {
+                    mark.setAttribute("aria-current", "true");
+                } else {
+                    mark.removeAttribute("aria-current");
+                }
+            });
+        }
+
+        var frame = null;
+        function schedule() {
+            if (frame) return;
+            frame = requestAnimationFrame(function () { frame = null; spy(); });
+        }
+
+        place();
+        spy();
+        window.addEventListener("scroll", schedule, { passive: true });
+        window.addEventListener("resize", function () { place(); spy(); }, { passive: true });
+        // Web fonts and lazy images both change the sheet's height after load.
+        window.addEventListener("load", function () { place(); spy(); });
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(place);
+    });
+</script>
+{{- end }}

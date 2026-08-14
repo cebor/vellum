@@ -1,0 +1,17 @@
+### Hugo ###
+# Generated files by hugo
+/public/
+/exampleSite/public/
+/resources/_gen/
+hugo_stats.json
+
+# Temporary lock file while building. Unanchored: exampleSite creates its own.
+.hugo_build.lock
+
+### Node ###
+# The impeccable skill and the parity harness vendor their own dependencies.
+node_modules/
+
+.claude/skills/impeccable/
+.impeccable/
+.parity/

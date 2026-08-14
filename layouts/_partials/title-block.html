@@ -1,0 +1,79 @@
+{{- /* The title block: on a real drawing this is the ruled box in the corner
+       that states what the sheet is, who drew it, when, and at which revision.
+       Here it carries the post's metadata as an actual bordered table instead
+       of the usual grey caption line, which is the whole thesis of the theme.
+
+       Every row is a label/value pair, so the block reads correctly as a
+       definition list to a screen reader and stays a table to the eye. Rows
+       that have no value are omitted rather than left blank — an empty field on
+       a drawing means "not applicable", and a missing one means "not recorded".
+
+       Revision is .Lastmod, and only appears when it genuinely differs from the
+       publication date; otherwise the sheet is at its first issue. */ -}}
+{{- $rows := slice }}
+
+{{- if not .Date.IsZero }}
+{{- $rows = $rows | append (dict
+    "label" (i18n "tb_issued")
+    "value" (printf `<time datetime="%s" title="%s">%s</time>`
+        (.Date.Format "2006-01-02T15:04:05Z07:00") (.Date)
+        (.Date | time.Format (site.Params.DateFormat | default ":date_long")))) }}
+{{- end }}
+
+{{- if and (not .Lastmod.IsZero) (not .Date.IsZero) (gt (.Lastmod.Sub .Date).Hours 24.0) }}
+{{- $rows = $rows | append (dict
+    "label" (i18n "tb_revised")
+    "value" (printf `<time datetime="%s">%s</time>`
+        (.Lastmod.Format "2006-01-02T15:04:05Z07:00")
+        (.Lastmod | time.Format (site.Params.DateFormat | default ":date_long")))) }}
+{{- end }}
+
+{{- $scale := slice }}
+{{- if and (.Param "ShowReadingTime") (gt .ReadingTime 0) }}
+{{- $scale = $scale | append (i18n "read_time" .ReadingTime) }}
+{{- end }}
+{{- if and (.Param "ShowWordCount") (gt .WordCount 0) }}
+{{- $scale = $scale | append (i18n "words" .WordCount) }}
+{{- end }}
+{{- with $scale }}
+{{- $rows = $rows | append (dict "label" (i18n "tb_extent") "value" (delimit . " · ")) }}
+{{- end }}
+
+{{- with partial "author.html" . }}
+{{- $rows = $rows | append (dict "label" (i18n "tb_drawn_by") "value" .) }}
+{{- end }}
+
+{{- $tags := .GetTerms (site.Language.Params.Taxonomies.tag | default "tags") }}
+{{- with $tags }}
+{{- $links := slice }}
+{{- range . }}
+{{- $links = $links | append (printf `<a href="%s">%s</a>` .RelPermalink .LinkTitle) }}
+{{- end }}
+{{- $rows = $rows | append (dict "label" (i18n "tb_subject") "value" (delimit $links ", ")) }}
+{{- end }}
+
+{{- if .IsTranslated }}
+{{- $links := slice }}
+{{- range .Translations }}
+{{- $links = $links | append (printf `<a href="%s" hreflang="%s">%s</a>`
+    .RelPermalink .Language.Lang (.Language.Label | default .Language.Lang)) }}
+{{- end }}
+{{- $rows = $rows | append (dict "label" (i18n "tb_also_in") "value" (delimit $links ", ")) }}
+{{- end }}
+
+{{- with $rows }}
+<dl class="title-block">
+    {{- range . }}
+    <div class="title-block__row">
+        <dt class="title-block__label">{{ .label }}</dt>
+        <dd class="title-block__value">{{ .value | safeHTML }}</dd>
+    </div>
+    {{- end }}
+    {{- if $.Draft }}
+    <div class="title-block__row title-block__row--flag">
+        <dt class="title-block__label">{{ i18n "tb_status" }}</dt>
+        <dd class="title-block__value"><span class="draft-badge">{{ i18n "draft" }}</span></dd>
+    </div>
+    {{- end }}
+</dl>
+{{- end }}

@@ -1,0 +1,11 @@
+{{- /* Folds long command output away without hiding it from search or print.
+       `unsafe` is off, so a raw <details> written in Markdown would be stripped
+       — this shortcode is the only way to get one.
+
+       {{< collapse summary="Full output" >}}…{{< /collapse >}} */ -}}
+{{- $summary := .Get "summary" | default (.Get 0) }}
+{{- if not $summary }}{{ errorf "collapse shortcode in %s needs a summary" .Page.File.Path }}{{ end }}
+<details class="collapse"{{ if .Get "openByDefault" }} open{{ end }}>
+    <summary class="collapse__summary">{{ $summary | markdownify }}</summary>
+    <div class="collapse__body">{{ .Inner | .Page.RenderString (dict "display" "block") }}</div>
+</details>

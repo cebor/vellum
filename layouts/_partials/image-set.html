@@ -1,0 +1,51 @@
+{{- /* Builds one responsive WebP ladder and returns it, so the render hook, the
+       cover partial and the figure shortcode cannot drift apart.
+
+       Usage: {{ $set := partial "image-set.html" (dict "resource" $img "measure" 752) }}
+              $set.src  $set.srcset  $set.width  $set.height
+
+       The ladder is derived from the measure rather than written down: 1x, 2x,
+       and one small step for phones. Steps wider than the source are dropped so
+       a small image is never upscaled into a blurry "retina" variant, and a
+       source narrower than the smallest step is passed through untouched.
+
+       width/height come from the 1x variant and are always emitted, because an
+       image without intrinsic dimensions shifts the layout as it loads. */ -}}
+{{- $img := .resource }}
+{{- $measure := int .measure }}
+{{- $small := int (math.Min 480 $measure) }}
+
+{{- $steps := slice $small $measure (mul $measure 2) }}
+{{- $widths := slice }}
+{{- range $steps }}
+{{- if and (le . $img.Width) (not (in $widths .)) }}{{ $widths = $widths | append . }}{{ end }}
+{{- end }}
+{{- if not $widths }}{{ $widths = slice $img.Width }}{{ end }}
+
+{{- $variants := slice }}
+{{- range $widths }}
+{{- if eq . $img.Width }}
+{{- $variants = $variants | append (cond (eq $img.MediaType.SubType "webp") $img ($img.Resize (printf "%dx webp q82" .))) }}
+{{- else }}
+{{- $variants = $variants | append ($img.Resize (printf "%dx webp q82" .)) }}
+{{- end }}
+{{- end }}
+
+{{- /* The 1x variant is the one the src attribute points at: the widest step
+       that is not the 2x retina variant. */ -}}
+{{- $base := index $variants (cond (gt (len $variants) 1) (sub (len $variants) 2) 0) }}
+{{- if eq (len $variants) 1 }}{{ $base = index $variants 0 }}{{ end }}
+{{- if and (gt (len $variants) 1) (le (index $widths (sub (len $widths) 1)) $measure) }}
+{{- $base = index $variants (sub (len $variants) 1) }}
+{{- end }}
+
+{{- $srcset := slice }}
+{{- range $variants }}
+{{- $srcset = $srcset | append (printf "%s %dw" .RelPermalink .Width) }}
+{{- end }}
+
+{{- return (dict
+    "src" $base.RelPermalink
+    "srcset" (delimit $srcset ", ")
+    "width" $base.Width
+    "height" $base.Height) -}}

@@ -1,0 +1,43 @@
+name = "Vellum"
+license = "MIT"
+licenselink = "LICENSE"
+description = "A multilingual Hugo theme that sets every page as an engineering drawing sheet: a drawn frame, a zone rail, and a ruled title block instead of a grey caption line."
+homepage = "https://gitlab.stkn.org/felix/vellum"
+demosite = "https://pages.stkn.org/felix/vellum"
+tags = ["blog", "technical", "documentation", "light", "dark", "multilingual", "search", "personal", "responsive"]
+features = [
+  "responsive",
+  "blog",
+  "profile-page",
+  "multilingual",
+  "translations",
+  "social-icons",
+  "theme-toggle",
+  "table-of-contents",
+  "code-copy",
+  "search",
+  "tags",
+  "archives",
+  "breadcrumbs",
+  "cover-images",
+  "share-buttons",
+  "edit-post-link",
+  "shortcodes",
+  "reading-time",
+  "word-count",
+  "post-nav-links",
+  "responsive-images",
+  "self-hosted-fonts",
+  "print-stylesheet",
+  "opengraph",
+  "twitter-cards",
+  "schema",
+  "rss",
+  "minified-assets",
+  "subresource-integrity",
+]
+min_version = "0.146.0"
+
+[author]
+  name = "Felix Itzenplitz"
+  homepage = "https://github.com/cebor"

@@ -1,0 +1,226 @@
+- id: home
+  translation: "Start"
+
+- id: posts
+  translation: "Beiträge"
+
+- id: tags
+  translation: "Tags"
+
+- id: search
+  translation: "Suche"
+
+- id: latest_posts
+  translation: "Neueste"
+
+- id: all_posts
+  translation: "Alle Beiträge"
+
+- id: rss
+  translation: "RSS"
+
+- id: table
+  translation: "Tabelle"
+
+- id: toc
+  translation: "Inhalt"
+
+- id: draft
+  translation: "Entwurf"
+
+# --- Schriftfeld ------------------------------------------------------------
+# Die Metadaten eines Beitrags, formuliert wie das Schriftfeld einer
+# technischen Zeichnung.
+
+- id: tb_issued
+  translation: "Ausgabe"
+
+- id: tb_revised
+  translation: "Änderung"
+
+- id: tb_extent
+  translation: "Umfang"
+
+- id: tb_drawn_by
+  translation: "Von"
+
+- id: tb_subject
+  translation: "Thema"
+
+- id: tb_also_in
+  translation: "Auch auf"
+
+- id: tb_status
+  translation: "Status"
+
+# --- Blattstempel -----------------------------------------------------------
+
+- id: stamp_index
+  translation: "Themenverzeichnis"
+
+- id: stamp_subject
+  translation: "Thema"
+
+- id: stamp_section
+  translation: "Abschnitt"
+
+- id: stamp_archive
+  translation: "Archiv"
+
+- id: stamp_search
+  translation: "Suchindex"
+
+- id: stamp_office
+  translation: "Zeichenbüro"
+
+- id: indexed_count
+  translation:
+    one: "1 Blatt indexiert"
+    other: "{{ .Count }} Blätter indexiert"
+
+- id: sheet_count
+  translation:
+    one: "1 Blatt"
+    other: "{{ .Count }} Blätter"
+
+- id: subject_count
+  translation:
+    one: "1 Thema"
+    other: "{{ .Count }} Themen"
+
+- id: sheet_of
+  translation: "Blatt {{ .Current }} von {{ .Total }}"
+
+- id: tagged_with
+  translation: "Thema:"
+
+# --- Metadaten --------------------------------------------------------------
+
+- id: read_time
+  translation:
+    one: "1 Min. Lesezeit"
+    other: "{{ .Count }} Min. Lesezeit"
+
+- id: words
+  translation:
+    one: "1 Wort"
+    other: "{{ .Count }} Wörter"
+
+# --- Navigation -------------------------------------------------------------
+
+- id: nav_primary
+  translation: "Hauptnavigation"
+
+- id: nav_posts
+  translation: "Beiträge"
+
+- id: nav_pages
+  translation: "Seiten"
+
+- id: zones
+  translation: "Zonen"
+
+- id: breadcrumb
+  translation: "Pfad"
+
+- id: prev_page
+  translation: "Neuer"
+
+- id: next_page
+  translation: "Älter"
+
+- id: prev_post
+  translation: "Vorheriger"
+
+- id: next_post
+  translation: "Nächster"
+
+- id: anchor_link
+  translation: "Link zu diesem Abschnitt"
+
+# --- Aktionen ---------------------------------------------------------------
+
+- id: code_copy
+  translation: "Kopieren"
+
+- id: code_copied
+  translation: "Kopiert"
+
+- id: code_copy_failed
+  translation: "Kopieren fehlgeschlagen"
+
+- id: share
+  translation: "Teilen"
+
+- id: share_on
+  translation: "Teilen auf"
+
+- id: share_email
+  translation: "E-Mail"
+
+- id: edit_post
+  translation: "Änderung vorschlagen"
+
+# --- Suche ------------------------------------------------------------------
+
+- id: search_placeholder
+  translation: "Zum Suchen tippen…"
+
+- id: search_loading
+  translation: "Suche wird geladen…"
+
+- id: search_label
+  translation: "Suchergebnisse"
+
+- id: search_no_results
+  translation: "Nichts gefunden."
+
+# {n} wird durch die Anzahl der Treffer ersetzt.
+- id: search_results_one
+  translation: "1 Treffer"
+
+- id: search_results_other
+  translation: "{n} Treffer"
+
+- id: search_error
+  translation: "Die Suche ist momentan nicht verfügbar."
+
+- id: search_nojs
+  translation: "Die Suche benötigt JavaScript. Stattdessen nach Abschnitt oder Thema stöbern:"
+
+# --- Hinweise ---------------------------------------------------------------
+
+- id: alert_note
+  translation: "Hinweis"
+
+- id: alert_tip
+  translation: "Tipp"
+
+- id: alert_important
+  translation: "Wichtig"
+
+- id: alert_warning
+  translation: "Warnung"
+
+- id: alert_caution
+  translation: "Achtung"
+
+# --- Rahmen -----------------------------------------------------------------
+
+- id: theme_toggle
+  translation: "Zwischen hellem und dunklem Modus wechseln"
+
+- id: back_to_top
+  translation: "Nach oben"
+
+- id: not_found
+  translation: "Diese Seite gibt es nicht."
+
+- id: skip_to_content
+  translation: "Zum Inhalt springen"
+
+- id: built_with
+  translation: "Erstellt mit"
+
+- id: no_posts
+  translation: "Hier ist noch nichts."

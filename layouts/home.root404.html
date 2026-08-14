@@ -1,0 +1,11 @@
+{{- /* Hugo builds a 404 per language, so with defaultContentLanguageInSubdir
+       nothing lands at the publish root and a web server hitting an unknown
+       path has no error document to serve. The ROOT404 output format (see
+       hugo.toml) writes this page to /404.html in the default language.
+
+       The template identifier "root404" is [outputFormats.ROOT404]'s name
+       lowercased. Rename the format and this file stops matching silently —
+       no error, just a missing /404.html. */ -}}
+{{ define "main" }}
+{{ partial "not-found.html" . }}
+{{ end }}

@@ -1,0 +1,64 @@
+{{- /* One template serves all three feed scopes: the home feed, the section feed
+       at /{lang}/posts/index.xml, and every term feed at /{lang}/tags/<t>/index.xml.
+       Changing it changes bytes, never URLs.
+
+       The home page's own .Pages are the site's sections, not its posts, so the
+       home feed has to reach for RegularPages instead. */ -}}
+{{- $pages := cond .IsHome site.RegularPages .RegularPages }}
+{{- $pages = where $pages "Params.hiddenInRss" "!=" true }}
+{{- $pages = where $pages "Layout" "!=" "search" }}
+{{- $pages = where $pages "Layout" "!=" "archives" }}
+{{- $limit := site.Config.Services.RSS.Limit }}
+{{- if and (gt $limit 0) (gt (len $pages) $limit) }}{{ $pages = first $limit $pages }}{{ end }}
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} · {{ site.Title }}{{ end }}</title>
+    <link>{{ .Permalink }}</link>
+    <description>{{ (.Description | default site.Params.description) | plainify | chomp }}</description>
+    <generator>Hugo</generator>
+    <language>{{ site.Language.Locale | default site.Language.Lang }}</language>
+    {{- /* RSS wants "email (Name)". site.Params.author may be a plain string, in
+           which case there is no address and the element is simply omitted —
+           an author element without an address is invalid, not merely empty. */}}
+    {{- $name := partial "author.html" . }}
+    {{- $email := "" }}
+    {{- if reflect.IsMap site.Params.author }}{{ $email = site.Params.author.email }}{{ end }}
+    {{- with $email }}
+    <managingEditor>{{ . }} ({{ $name }})</managingEditor>
+    <webMaster>{{ . }} ({{ $name }})</webMaster>
+    {{- end }}
+    <copyright>&#169; {{ now.Year }} {{ $name | default site.Title }}</copyright>
+    {{- with (index (sort $pages "Lastmod" "desc") 0) }}
+    <lastBuildDate>{{ .Lastmod.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</lastBuildDate>
+    {{- end }}
+    {{- with .OutputFormats.Get "RSS" }}
+    {{ printf "<atom:link href=%q rel=\"self\" type=%q />" .Permalink .MediaType.Type | safeHTML }}
+    {{- end }}
+    {{- with site.Params.images }}
+    <image>
+      <url>{{ (index . 0) | absURL }}</url>
+      <title>{{ site.Title }}</title>
+      <link>{{ site.Home.Permalink }}</link>
+    </image>
+    {{- end }}
+    {{- range $pages }}
+    <item>
+      <title>{{ .Title }}</title>
+      <link>{{ .Permalink }}</link>
+      <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
+      {{- with $email }}
+      <author>{{ . }} ({{ $name }})</author>
+      {{- end }}
+      <guid>{{ .Permalink }}</guid>
+      <description>{{ .Summary | plainify | chomp | html }}</description>
+      {{- if site.Params.ShowFullTextinRSS }}
+      <content:encoded>{{ printf "<![CDATA[%s]]>" .Content | safeHTML }}</content:encoded>
+      {{- end }}
+      {{- range .Params.tags }}
+      <category>{{ printf "%v" . }}</category>
+      {{- end }}
+    </item>
+    {{- end }}
+  </channel>
+</rss>

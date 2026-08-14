@@ -1,0 +1,41 @@
+{{- /* The landing page's identity block, set as the sheet's own title block:
+       the drawing office rather than the drawing. */ -}}
+{{- $profile := site.Params.profile }}
+{{- with $profile }}
+<div class="profile">
+    {{- with .image }}
+    {{- $img := resources.Get . }}
+    {{- if not $img }}
+    {{- errorf "profile.image %q was not found under assets/" . }}
+    {{- else }}
+    {{- $w := int ($profile.imageWidth | default 120) }}
+    {{- $x1 := $img.Resize (printf "%dx webp q90" $w) }}
+    {{- $x2 := $img.Resize (printf "%dx webp q90" (mul $w 2)) }}
+    <img class="profile__avatar" src="{{ $x1.RelPermalink }}"
+        srcset="{{ $x1.RelPermalink }} 1x, {{ $x2.RelPermalink }} 2x" width="{{ $w }}" height="{{ $w }}"
+        alt="{{ $profile.imageAlt | default $profile.title | default site.Title }}" draggable="false">
+    {{- end }}
+    {{- end }}
+
+    <div class="profile__identity">
+        <h1 class="profile__name">{{ .title | default site.Title | markdownify }}</h1>
+        {{- with .subtitle }}
+        <p class="profile__subtitle">{{ . | markdownify }}</p>
+        {{- end }}
+    </div>
+
+    {{- partial "social-icons.html" . }}
+
+    {{- with .buttons }}
+    <div class="button-row">
+        {{- range . }}
+        {{- $external := strings.HasPrefix .url "http" }}
+        <a class="button" href="{{ if $external }}{{ .url }}{{ else }}{{ .url | relLangURL }}{{ end }}"
+            {{- if $external }} rel="noopener noreferrer" target="_blank"{{ end }}>
+            <span>{{ .name }}</span>{{ if $external }}{{ partialCached "icon.html" "external" "external" }}{{ else }}{{ partialCached "icon.html" "arrow-right" "arrow-right" }}{{ end }}
+        </a>
+        {{- end }}
+    </div>
+    {{- end }}
+</div>
+{{- end }}

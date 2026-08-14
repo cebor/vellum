@@ -1,0 +1,4 @@
+{{- /* Emits its body verbatim. This is a deliberate hole in `unsafe = false`:
+       everything inside is trusted exactly as far as the person who wrote the
+       post is. Reach for a render hook or another shortcode first. */ -}}
+{{- .Inner | safeHTML -}}

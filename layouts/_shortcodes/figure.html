@@ -1,0 +1,33 @@
+{{- /* Overrides Hugo's built-in figure so the image goes through the same WebP
+       ladder as everything else and carries intrinsic dimensions. The render
+       hook cannot produce a caption, which is the only reason this exists.
+
+       {{< figure src="shot.png" alt="…" caption="…" >}} */ -}}
+{{- $src := .Get "src" }}
+{{- $t := partialCached "tokens.html" .Page "tokens" }}
+{{- $img := "" }}
+{{- with $.Page.Resources.GetMatch $src }}{{ $img = . }}{{ end }}
+{{- if not $img }}{{ with resources.Get $src }}{{ $img = . }}{{ end }}{{ end }}
+<figure class="figure{{ with .Get "class" }} {{ . }}{{ end }}">
+    {{- with .Get "link" }}<a href="{{ . }}"{{ with $.Get "target" }} target="{{ . }}"{{ end }}{{ with $.Get "rel" }} rel="{{ . }}"{{ end }}>{{ end }}
+    {{- if and $img (eq $img.ResourceType "image") }}
+    {{- $set := partial "image-set.html" (dict "resource" $img "measure" $t.measure) }}
+    <img src="{{ $set.src }}" srcset="{{ $set.srcset }}"
+        sizes="(max-width: {{ $t.collapse }}rem) calc(100vw - {{ mul $t.gutter 2 }}rem), {{ $t.measure }}px"
+        width="{{ $set.width }}" height="{{ $set.height }}"
+        alt="{{ .Get "alt" | default (.Get "caption" | plainify) }}" loading="lazy" decoding="async">
+    {{- else }}
+    <img src="{{ $src | safeURL }}" alt="{{ .Get "alt" | default (.Get "caption" | plainify) }}"
+        {{- with .Get "width" }} width="{{ . }}"{{ end }}{{ with .Get "height" }} height="{{ . }}"{{ end }}
+        loading="lazy" decoding="async">
+    {{- end }}
+    {{- with .Get "link" }}</a>{{ end }}
+    {{- if or (.Get "caption") (.Get "attr") }}
+    <figcaption class="figure__caption">
+        {{- with .Get "caption" }}{{ . | markdownify }}{{ end }}
+        {{- with .Get "attr" }}
+        <span class="figure__attr">{{ with $.Get "attrlink" }}<a href="{{ . }}" rel="noopener noreferrer">{{ end }}{{ . | markdownify }}{{ with $.Get "attrlink" }}</a>{{ end }}</span>
+        {{- end }}
+    </figcaption>
+    {{- end }}
+</figure>

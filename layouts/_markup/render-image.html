@@ -1,0 +1,26 @@
+{{- /* Page-bundle images are resized into the reading measure and converted to
+       WebP, then given real dimensions so they don't shift the layout while
+       loading. Anything that isn't a bundle resource is passed through
+       untouched — and gets none of that, which is the reason to always put post
+       images in a page bundle.
+
+       The measure and the sizes breakpoint are both read from 00-tokens.css via
+       tokens.html, because the sizes attribute is evaluated with no element
+       context and so cannot use var(). The breakpoint must equal
+       --content-width exactly: at that viewport the column has no margin left,
+       so calc(100vw - gutters) and the fixed measure meet without a step.
+
+       .PageInner, not .Page: it is what makes the hook resolve correctly when
+       the image is rendered from inside a shortcode. */ -}}
+{{- $t := partialCached "tokens.html" .Page "tokens" }}
+{{- $img := .PageInner.Resources.GetMatch .Destination }}
+{{- if and $img (eq $img.ResourceType "image") }}
+{{- $set := partial "image-set.html" (dict "resource" $img "measure" $t.measure) }}
+<img src="{{ $set.src }}" srcset="{{ $set.srcset }}"
+    sizes="(max-width: {{ $t.collapse }}rem) calc(100vw - {{ mul $t.gutter 2 }}rem), {{ $t.measure }}px"
+    alt="{{ .Text }}" width="{{ $set.width }}" height="{{ $set.height }}" loading="lazy"
+    decoding="async"{{ with .Title }} title="{{ . }}"{{ end }}>
+{{- else }}
+<img src="{{ .Destination | safeURL }}" alt="{{ .Text }}" loading="lazy" decoding="async"
+    {{- with .Title }} title="{{ . }}"{{ end }}>
+{{- end -}}

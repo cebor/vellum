@@ -1,0 +1,48 @@
+{{- if lt hugo.Version "0.146.0" }}
+{{- errorf "the vellum theme requires hugo v0.146.0 or greater" }}
+{{- end -}}
+<!DOCTYPE html>
+<html lang="{{ site.Language.Locale | default site.Language.Lang }}"
+    dir="{{ site.Language.Direction | default `auto` }}"
+    data-theme="{{ site.Params.defaultTheme | default `auto` }}">
+
+<head>
+    {{- partial "head.html" . }}
+</head>
+
+<body id="top" class="sheet{{ with .Params.bodyClass }} {{ . }}{{ end }}">
+<!--
+THESIS: Every page is an engineering drawing sheet — a framed field whose title
+block states exactly what you are looking at. Refuses the centred-column
+developer blog where metadata is a grey caption line under the title.
+OWN-WORLD: Cool paper / graphite ground, blueprint-grey rules, one amber signal.
+Archivo variable at two widths for lettering, JetBrains Mono for code and
+figures. A real line-weight system: hairline zone ticks, 1px sheet rules, 2px
+frame. Ruled title blocks, zone letters, no shadows anywhere.
+STORY: A search arrival sees which sheet they landed on and its revision date,
+copies the command, and can tell the author knows how to document a procedure.
+FIRST VIEWPORT: Drawn frame edge to edge; zone rail lettering the sheet's own
+sections down the left; post title large in open field; directly beneath it the
+ruled title block — issued, extent, by, subject, also in, plus a revision row
+whenever the sheet carries one — as a bordered table.
+FORM: Wiring schematic + title block; candidate 6 of 7; seed 72cbdcbe.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
+-->
+    <a class="skip-link" href="#main">{{ i18n "skip_to_content" | default "Skip to content" }}</a>
+
+    {{- /* Uncached: the active nav item and the language switcher's target both
+           depend on the current page. */}}
+    {{ partial "header.html" . -}}
+
+    <div class="sheet__frame">
+        {{- partial "zone-rail.html" . }}
+        <main class="main" id="main">
+            {{- block "main" . }}{{ end }}
+        </main>
+    </div>
+
+    {{ partialCached "footer.html" . .Lang (.Param "ShowCodeCopyButtons") (.Param "hideFooter") -}}
+    {{ partial "extend-footer.html" . -}}
+</body>
+
+</html>

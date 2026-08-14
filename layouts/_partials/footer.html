@@ -1,0 +1,103 @@
+{{- if not (.Param "hideFooter") }}
+{{- /* The sheet's bottom border: the printed furniture of a drawing, carrying
+       the issuing party and the feed, ruled like the title block. */}}
+<footer class="footer">
+    <div class="footer__inner">
+        <span class="footer__issuer">
+            {{- with site.Params.footer.text }}{{ . | markdownify }}
+            {{- else }}&copy; {{ now.Year }} {{ partial "author.html" . | default site.Title }}{{ end }}
+        </span>
+        <span class="footer__meta">
+            {{- /* The feed is advertised in <head> for readers that sniff for it,
+                   but a person looking for it needs something to click. */}}
+            {{- with site.Home.OutputFormats.Get "rss" }}
+            <a href="{{ .RelPermalink }}">{{ i18n "rss" }}</a>
+            <span class="footer__sep" aria-hidden="true"></span>
+            {{- end }}
+            <span>{{ i18n "built_with" | default "Built with" }} <a href="https://gohugo.io/" rel="noopener noreferrer"
+                    target="_blank">Hugo</a></span>
+        </span>
+    </div>
+</footer>
+{{- end }}
+
+{{- if not site.Params.disableScrollToTop }}
+<a class="top-link" id="top-link" href="#top" aria-label="{{ i18n "back_to_top" }}" title="{{ i18n "back_to_top" }}">
+    {{- partial "icon.html" "arrow-up" -}}
+</a>
+{{- end }}
+
+<script>
+    (function () {
+        var root = document.documentElement;
+
+        var toggle = document.getElementById("theme-toggle");
+        if (toggle) {
+            toggle.addEventListener("click", function () {
+                var dark = root.dataset.theme === "dark" ||
+                    (root.dataset.theme === "auto" &&
+                        window.matchMedia("(prefers-color-scheme: dark)").matches);
+                root.dataset.theme = dark ? "light" : "dark";
+                try { localStorage.setItem("pref-theme", root.dataset.theme); } catch (e) { }
+            });
+        }
+
+        var top = document.getElementById("top-link");
+        if (top) {
+            var onScroll = function () {
+                top.classList.toggle("is-visible", window.scrollY > 800);
+            };
+            window.addEventListener("scroll", onScroll, { passive: true });
+            onScroll();
+        }
+    })();
+</script>
+
+{{- if .Param "ShowCodeCopyButtons" }}
+<script>
+    (function () {
+        var copy = {{ i18n "code_copy" }},
+            copied = {{ i18n "code_copied" }},
+            failed = {{ i18n "code_copy_failed" }};
+        document.querySelectorAll(".content .highlight").forEach(function (block) {
+            var code = block.querySelector("code");
+            if (!code) return;
+            var button = document.createElement("button");
+            button.className = "copy-code";
+            button.type = "button";
+            button.textContent = copy;
+
+            var restore = function () {
+                setTimeout(function () {
+                    button.textContent = copy;
+                    delete button.dataset.state;
+                }, 1500);
+            };
+
+            button.addEventListener("click", function () {
+                // With line numbers on, Chroma splits the block into a two-cell
+                // table; the code itself is the last cell, and copying the whole
+                // block would prefix every line with its number.
+                var text = (block.querySelector("td:last-child code") || code).innerText;
+                // The clipboard API rejects outside a secure context, so the
+                // failure has to be reported rather than silently swallowed.
+                Promise.resolve()
+                    .then(function () {
+                        if (!navigator.clipboard) throw new Error("unavailable");
+                        return navigator.clipboard.writeText(text);
+                    })
+                    .then(function () {
+                        button.textContent = copied;
+                        restore();
+                    })
+                    .catch(function () {
+                        button.textContent = failed;
+                        button.dataset.state = "failed";
+                        restore();
+                    });
+            });
+            block.appendChild(button);
+        });
+    })();
+</script>
+{{- end }}

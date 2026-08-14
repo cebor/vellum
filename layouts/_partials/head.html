@@ -1,0 +1,64 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+{{- /* An error document must never be indexed and must never claim a canonical
+       URL, since it stands in for an address that does not exist. The copy at
+       the publish root is handled separately by baseof.root404.html — Hugo
+       reports the home page's own permalink while rendering it, so it cannot be
+       recognised from here. */}}
+{{- $is404 := eq .Kind "404" }}
+{{- $noindex := or .Params.robotsNoIndex $is404 }}
+<meta name="robots" content="{{ if and hugo.IsProduction (not $noindex) }}index, follow{{ else }}noindex, nofollow{{ end }}">
+
+<title>{{ if $is404 }}404 · {{ site.Title }}{{ else if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} · {{ site.Title }}{{ end }}</title>
+
+{{- $description := .Description | default (.Summary | plainify) | default site.Params.description }}
+<meta name="description" content="{{ $description | plainify | chomp }}">
+{{- with .Params.keywords | default .Params.tags | default site.Params.keywords }}
+<meta name="keywords" content="{{ delimit . ", " }}">
+{{- end }}
+{{- with partial "author.html" . }}
+<meta name="author" content="{{ . }}">
+{{- end }}
+{{- if not $is404 }}
+<link rel="canonical" href="{{ .Params.canonicalURL | default .Permalink }}">
+{{- end }}
+
+{{- partialCached "head-assets.html" . "assets" }}
+
+{{- /* The search page is the only one that ships JavaScript beyond the two
+       inline snippets, so its bundle is built here rather than site-wide.
+       fuse.basic must be concatenated first: search.js references the global
+       it defines. */}}
+{{- if eq .Layout "search" }}
+{{- $fuse := resources.Get "js/fuse.basic.min.js" }}
+{{- $search := resources.Get "js/search.js" | js.Build (dict "params" (dict "fuseOpts" site.Params.fuseOpts)) }}
+{{- $bundle := slice $fuse $search | resources.Concat "js/search.bundle.js" | resources.Minify | fingerprint }}
+<link rel="preload" as="fetch" href="{{ "index.json" | relLangURL }}" crossorigin="anonymous">
+<script defer src="{{ $bundle.RelPermalink }}" integrity="{{ $bundle.Data.Integrity }}" crossorigin="anonymous"></script>
+{{- end }}
+
+{{- range .AlternativeOutputFormats }}
+<link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink }}" title="{{ site.Title }}">
+{{- end }}
+{{- if .IsTranslated }}
+<link rel="alternate" hreflang="{{ site.Language.Lang }}" href="{{ .Permalink }}">
+{{- range .Translations }}
+<link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ .Permalink }}">
+{{- end }}
+{{- end }}
+
+{{- with site.Params.analytics }}
+{{- with .google.SiteVerificationTag }}<meta name="google-site-verification" content="{{ . }}">{{ end }}
+{{- with .bing.SiteVerificationTag }}<meta name="msvalidate.01" content="{{ . }}">{{ end }}
+{{- with .yandex.SiteVerificationTag }}<meta name="yandex-verification" content="{{ . }}">{{ end }}
+{{- end }}
+
+{{- if and (not $is404) (or hugo.IsProduction (eq site.Params.env "production")) }}
+{{- partial "templates/opengraph.html" . }}
+{{- partial "templates/twitter-cards.html" . }}
+{{- partial "templates/schema.html" . }}
+{{- template "_internal/google_analytics.html" . }}
+{{- end }}
+
+{{- partial "extend-head.html" . }}

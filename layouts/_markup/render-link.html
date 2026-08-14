@@ -1,0 +1,14 @@
+{{- /* External links open in a new tab and say so, with the marker drawn from
+       the same icon set as everything else. Internal links, anchors and mailto
+       are left exactly as authored.
+
+       The marker is inside the link so it cannot be orphaned onto its own line
+       by a wrap, and aria-hidden because "opens in a new tab" belongs in the
+       accessible name, not as a repeated glyph announcement. */ -}}
+{{- $u := urls.Parse .Destination }}
+{{- $external := and $u.Host (ne $u.Host (urls.Parse site.BaseURL).Host) }}
+<a href="{{ .Destination | safeURL }}"{{ with .Title }} title="{{ . }}"{{ end }}
+    {{- if $external }} class="link-external" rel="noopener noreferrer" target="_blank"{{ end }}>
+    {{- .Text | safeHTML -}}
+    {{- if $external }}{{ partialCached "icon.html" "external" "external" }}{{ end -}}
+</a>

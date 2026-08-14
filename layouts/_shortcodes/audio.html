@@ -1,0 +1,5 @@
+{{- /* {{< audio src="clip.mp3" >}} — a bundle resource or a plain URL. */ -}}
+{{- $src := .Get "src" | default (.Get 0) }}
+{{- $url := $src }}
+{{- with $.Page.Resources.GetMatch $src }}{{ $url = .RelPermalink }}{{ end }}
+<audio class="audio" controls preload="metadata" src="{{ $url | safeURL }}"></audio>

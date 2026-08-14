@@ -1,0 +1,16 @@
+{{- /* {{< video src="clip.mp4" poster="still.png" >}} — a bundle resource or a
+       plain URL. Never autoplays: a reader mid-task does not want sound. */ -}}
+{{- $src := .Get "src" | default (.Get 0) }}
+{{- $url := $src }}
+{{- with $.Page.Resources.GetMatch $src }}{{ $url = .RelPermalink }}{{ end }}
+{{- $poster := "" }}
+{{- with .Get "poster" }}
+{{- $poster = . }}
+{{- with $.Page.Resources.GetMatch . }}{{ $poster = .RelPermalink }}{{ end }}
+{{- end }}
+<video class="video" controls preload="metadata"
+    {{- with $poster }} poster="{{ . }}"{{ end }}
+    {{- if $.Get "loop" }} loop{{ end }}
+    {{- if $.Get "muted" }} muted{{ end }}>
+    <source src="{{ $url | safeURL }}"{{ with $.Get "type" }} type="{{ . }}"{{ end }}>
+</video>

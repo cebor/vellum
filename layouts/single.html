@@ -1,0 +1,60 @@
+{{ define "main" }}
+{{- $isPost := and .Section (ne .Layout "search") }}
+<article class="post">
+    <header class="post-header">
+        {{- if and ($.Param "ShowBreadCrumbs") .Ancestors }}
+        {{- partial "breadcrumbs.html" . }}
+        {{- end }}
+
+        <h1 class="post-title">{{ .Title }}</h1>
+
+        {{- with .Description }}
+        <p class="post-standfirst">{{ . | markdownify }}</p>
+        {{- end }}
+
+        {{- /* The title block: a real ruled table of what this sheet is, rather
+               than a grey caption line. It replaces the usual meta row. */}}
+        {{- if not (.Param "hidemeta") }}
+        {{- partial "title-block.html" . }}
+        {{- end }}
+    </header>
+
+    {{- partial "cover.html" (dict "page" . "isSingle" true) }}
+
+    {{- partial "toc.html" . }}
+
+    <div class="content">
+        {{ .Content }}
+    </div>
+
+    {{- partial "extend-post-content.html" . }}
+
+    {{- $tags := .GetTerms (site.Language.Params.Taxonomies.tag | default "tags") }}
+    {{- $share := and ($.Param "ShowShareButtons") (not (.Param "disableShare")) $isPost }}
+    {{- $edit := and site.Params.editPost.URL (not site.Params.editPost.disabled) $isPost }}
+    {{- $nav := and (.Param "ShowPostNavLinks") $isPost }}
+
+    {{- if or $tags $share $edit }}
+    <footer class="post-footer">
+        {{- with $tags }}
+        <ul class="tag-list">
+            {{- range . }}
+            <li><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></li>
+            {{- end }}
+        </ul>
+        {{- end }}
+
+        {{- if or $share $edit }}
+        <div class="post-actions">
+            {{- if $share }}{{ partial "share-icons.html" . }}{{ end }}
+            {{- if $edit }}{{ partial "edit-post.html" . }}{{ end }}
+        </div>
+        {{- end }}
+    </footer>
+    {{- end }}
+
+    {{- if $nav }}{{ partial "post-nav-links.html" . }}{{ end }}
+
+    {{- if .Param "comments" }}{{ partial "comments.html" . }}{{ end }}
+</article>
+{{ end }}

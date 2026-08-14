@@ -1,0 +1,39 @@
+{{- /* One invariant field grid, used wherever a post is indexed: the section
+       list, the home page's latest block, a tag page, the 404. Same fields in
+       the same positions every time, so the index unit is learnable.
+
+       Usage: {{ partial "post-card.html" (dict "page" $p "level" 3) }}
+       The heading level is a parameter because the card appears at two depths:
+       directly under the h1 on a list page, and one level further down inside
+       the "Latest" section on the home page and the 404. */ -}}
+{{- $p := .page }}
+{{- $level := .level | default 2 }}
+<article class="post-card">
+    {{- partial "cover.html" (dict "page" $p "isSingle" false) }}
+    <div class="post-card__body">
+        {{- if not ($p.Param "hidemeta") }}
+        <p class="post-card__meta">
+            {{- if not $p.Date.IsZero }}
+            <time class="post-card__date" datetime="{{ $p.Date.Format "2006-01-02T15:04:05Z07:00" }}"
+                title="{{ $p.Date }}">{{ $p.Date | time.Format (site.Params.DateFormat | default ":date_long") }}</time>
+            {{- end }}
+            {{- if and ($p.Param "ShowReadingTime") (gt $p.ReadingTime 0) }}
+            <span class="post-card__extent">{{ i18n "read_time" $p.ReadingTime }}</span>
+            {{- end }}
+            {{- if $p.Draft }}<span class="draft-badge">{{ i18n "draft" }}</span>{{ end }}
+        </p>
+        {{- end }}
+
+        {{- if eq $level 3 }}
+        <h3 class="post-card__title"><a href="{{ $p.RelPermalink }}">{{ $p.Title }}</a></h3>
+        {{- else }}
+        <h2 class="post-card__title"><a href="{{ $p.RelPermalink }}">{{ $p.Title }}</a></h2>
+        {{- end }}
+
+        {{- if not ($p.Param "hideSummary") }}
+        {{- with $p.Summary }}
+        <p class="post-card__summary">{{ . | plainify | htmlUnescape | truncate 220 }}</p>
+        {{- end }}
+        {{- end }}
+    </div>
+</article>

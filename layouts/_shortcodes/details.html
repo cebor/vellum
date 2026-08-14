@@ -1,0 +1,7 @@
+{{- /* Alias of the collapse shortcode, under the name people reach for first. */ -}}
+{{- $summary := .Get "summary" | default (.Get 0) }}
+{{- if not $summary }}{{ errorf "details shortcode in %s needs a summary" .Page.File.Path }}{{ end }}
+<details class="collapse"{{ if .Get "openByDefault" }} open{{ end }}>
+    <summary class="collapse__summary">{{ $summary | markdownify }}</summary>
+    <div class="collapse__body">{{ .Inner | .Page.RenderString (dict "display" "block") }}</div>
+</details>

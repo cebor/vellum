@@ -1,0 +1,37 @@
+{{ define "main" }}
+<header class="page-header">
+    <h1 class="page-title">{{ .Title }}</h1>
+    {{- with .Description }}<p class="page-standfirst">{{ . | markdownify }}</p>{{ end }}
+    {{- partial "sheet-stamp.html" . }}
+</header>
+
+{{- with .Content }}
+<div class="content">{{ . }}</div>
+{{- end }}
+
+{{- /* Results are an ordinary list of links, so they stay tabbable and need no
+       ARIA roles; the arrow keys just move real focus between them. Every
+       string the script can display is handed over as a data attribute, so none
+       of them has to be hardcoded in English. */ -}}
+<form id="searchbox" class="searchbox" onsubmit="return false;" role="search">
+    <label class="visually-hidden" for="search-input">{{ .Title }}</label>
+    <input class="search-input" id="search-input" type="search" autocomplete="off" autocapitalize="off"
+        spellcheck="false" placeholder="{{ i18n "search_loading" }}"
+        data-index="{{ "index.json" | relLangURL }}" data-placeholder="{{ .Params.placeholder | default (i18n "search_placeholder") }}"
+        data-empty="{{ i18n "search_no_results" }}" data-error="{{ i18n "search_error" }}"
+        data-count-one="{{ i18n "search_results_one" }}" data-count-other="{{ i18n "search_results_other" }}" disabled>
+</form>
+
+<ul class="search-results" id="search-results" aria-label="{{ i18n "search_label" }}"></ul>
+<p class="search-status" id="search-status" role="status" aria-live="polite" hidden></p>
+
+{{- /* Without JavaScript the input above never enables, so it must not be the
+       only way out of this page. */}}
+<noscript>
+    <p class="empty-note">{{ i18n "search_nojs" }}</p>
+    <ul class="search-fallback">
+        {{- with site.GetPage "/posts" }}<li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>{{ end }}
+        {{- with site.GetPage "/tags" }}<li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>{{ end }}
+    </ul>
+</noscript>
+{{ end }}

@@ -1,0 +1,43 @@
+{{- /* The compact counterpart to a post's title block, for pages that index
+       other pages rather than carrying a date of their own: sheet kind on the
+       left, count on the right, ruled like the block it abbreviates.
+
+       Every page type gets one, so the drawing-sheet reading holds across the
+       whole site rather than only on posts. */ -}}
+{{- $sections := site.Params.mainSections | default (slice "posts") }}
+{{- $kind := "" }}
+{{- $count := 0 }}
+{{- $label := "" }}
+
+{{- if eq .Kind "taxonomy" }}
+{{- $kind = i18n "stamp_index" }}
+{{- $count = len .Data.Terms }}
+{{- /* This index counts subjects, not sheets — every other stamp counts posts. */}}
+{{- $label = i18n "subject_count" $count }}
+
+{{- else if eq .Kind "term" }}
+{{- $kind = i18n "stamp_subject" }}
+{{- $count = len .Pages }}
+
+{{- else if eq .Layout "archives" }}
+{{- $kind = i18n "stamp_archive" }}
+{{- $count = len (where site.RegularPages "Type" "in" $sections) }}
+
+{{- else if eq .Layout "search" }}
+{{- $kind = i18n "stamp_search" }}
+{{- $count = len (where site.RegularPages "Params.searchHidden" "!=" true) }}
+{{- $label = i18n "indexed_count" $count }}
+
+{{- else if .IsHome }}
+{{- $kind = i18n "stamp_office" }}
+{{- $count = len (where site.RegularPages "Type" "in" $sections) }}
+
+{{- else }}
+{{- $kind = i18n "stamp_section" }}
+{{- $count = len .RegularPages }}
+{{- end }}
+
+<p class="sheet-stamp">
+    <span class="sheet-stamp__kind">{{ $kind }}</span>
+    <span class="sheet-stamp__count">{{ $label | default (i18n "sheet_count" $count) }}</span>
+</p>

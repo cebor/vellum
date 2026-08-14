@@ -1,0 +1,217 @@
+/* The single source of truth for colour, type, space and motion. Nothing else
+   in this stylesheet may carry a bare hex, rem or duration.
+
+   Some of these values are also read by Hugo at build time — see
+   layouts/_partials/tokens.html, which parses --content-width, --sheet-gutter
+   and --bg out of this file so the image `sizes` attribute and the theme-color
+   metas cannot go stale. Renaming one of those three fails the build loudly. */
+
+/* Colours resolve through light-dark(), so each token is written once and the
+   browser picks the side from the used color-scheme. data-theme="auto" matches
+   the bare :root rule and follows the OS, which means the page themes correctly
+   with JavaScript disabled and never needs a blocking repaint. The explicit
+   choices only have to override color-scheme — never the palette itself. */
+
+:root {
+    color-scheme: light dark;
+}
+
+:root[data-theme="light"] {
+    color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+}
+
+:root {
+    /* --- palette ------------------------------------------------------
+
+       A drawing sheet: cool paper or graphite ground, blueprint-grey rules,
+       and exactly one signal colour. Amber is the drawing office's red pencil —
+       the mark that says "this one is live". It is never used for more than one
+       thing on a screen at a time. */
+
+    --bg: light-dark(#eff0ec, #12161a);
+    --surface: light-dark(#e4e6e0, #1a1f25);
+    --surface-sunk: light-dark(#e9ebe6, #161b20);
+
+    --text: light-dark(#14181c, #e4e7e9);
+    --meta: light-dark(#4a5560, #a0a8af);
+    --meta-soft: light-dark(#59636d, #8d959c);
+
+    /* The line-weight system. A drawing distinguishes edges by weight, not by
+       colour, so these three are one hue at three strengths and the widths in
+       10-base.css do the talking. */
+    --rule: light-dark(#c7ccc6, #2c333a);
+    --rule-strong: light-dark(#a3aba4, #454e56);
+    --rule-frame: light-dark(#8d968f, #566069);
+
+    /* The blueprint grid the sheet is printed on. Deliberately a hair off the
+       ground: it is substrate, not content, and the moment it is readable as a
+       table it is competing with the drawing. */
+    --grid: light-dark(#e5e8e2, #1b2229);
+
+    --accent: light-dark(#8a5200, #e9a93a);
+    --accent-strong: light-dark(#6d4100, #f5be5c);
+    --accent-soft: light-dark(rgba(138, 82, 0, 0.1), rgba(233, 169, 58, 0.14));
+
+    --danger: light-dark(#a32218, #f2a49c);
+    --danger-soft: light-dark(rgba(163, 34, 24, 0.09), rgba(242, 164, 156, 0.12));
+    --mark: light-dark(#f4dfae, #4a3a12);
+
+    --selection: light-dark(rgba(138, 82, 0, 0.18), rgba(233, 169, 58, 0.24));
+
+    /* Every text token above clears 4.5:1 against the surface it sits on in
+       both schemes, --meta-soft included. Dim text by dropping to --meta-soft
+       and a smaller step, never by lowering opacity. */
+
+    /* Syntax colours are drawn from the same ink family as the chrome, so code
+       and page share one palette rather than fighting. */
+    --syn-keyword: light-dark(#8a4b18, #f0b98a);
+    --syn-string: light-dark(#2f6b4f, #8fd3ac);
+    --syn-comment: light-dark(#59636d, #8d959c);
+    --syn-number: light-dark(#8a5200, #e9a93a);
+    --syn-func: light-dark(#17527a, #a9cfea);
+    --syn-type: light-dark(#12666b, #7fd0d4);
+    --syn-op: light-dark(#3d474f, #b8c0c7);
+    --syn-punct: light-dark(#59636d, #99a1a8);
+    --syn-error: light-dark(#a32218, #f2a49c);
+    --syn-ins: light-dark(rgba(47, 107, 79, 0.13), rgba(143, 211, 172, 0.13));
+    --syn-del: light-dark(rgba(163, 34, 24, 0.11), rgba(242, 164, 156, 0.12));
+
+    /* --- type ---------------------------------------------------------
+
+       Archivo is a variable font with a width axis as well as a weight axis, so
+       one file supplies both voices this theme needs: normal width for reading,
+       and the narrow, tracked, capitalised lettering that engineering drawings
+       use for every label on the sheet. --font-stretch-label is what makes a
+       title block look drawn rather than typed. */
+
+    --font-sans: "Archivo", -apple-system, BlinkMacSystemFont, system-ui,
+        "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono",
+        Menlo, Consolas, "Liberation Mono", monospace;
+
+    --font-stretch-label: 72%;
+    --font-stretch-display: 84%;
+
+    --tracking-label: 0.1em;
+    --tracking-display: -0.015em;
+
+    /* --step-0 is body copy. Measured, not estimated: at 20px, Archivo runs
+       about 8.7px per character in running English, so the 800px column sets
+       roughly 92 characters. That is deliberately past the classic 65–75 ideal
+       — the trade the wider sheet was chosen for, so command blocks and
+       terminal output stop wrapping — and about ten characters longer than the
+       predecessor theme's line. The generous --line-height below is what keeps
+       a line that long trackable.
+
+       Recount with a real rendered line before changing either number; an
+       estimate of characters-per-pixel is reliably wrong. */
+    --step--2: 0.8125rem;
+    --step--1: 0.9375rem;
+    --step-0: 1.25rem;
+    --step-1: 1.375rem;
+    --step-2: 1.625rem;
+    --step-3: 2.0625rem;
+    --step-4: 2.625rem;
+    --step-5: 3.5rem;
+
+    --line-height: 1.75;
+    --line-height-tight: 1.2;
+    --line-height-snug: 1.4;
+    --line-height-code: 1.6;
+
+    /* --- space --------------------------------------------------------- */
+
+    --space-4xs: 0.125rem;
+    --space-3xs: 0.25rem;
+    --space-2xs: 0.375rem;
+    --space-xs: 0.5rem;
+    --space-sm: 0.75rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-2xl: 2.75rem;
+    --space-3xl: 4rem;
+    --space-4xl: 6rem;
+
+    /* --- the sheet ------------------------------------------------------
+
+       --content-width is the sheet's reading column; --sheet-gutter is the
+       margin inside the drawn frame. tokens.html derives the measure from the
+       two, so the image `sizes` attribute never disagrees with the layout.
+       --frame-width is exactly the column plus its gutters plus the zone rail,
+       so the drawn border hugs the sheet instead of enclosing empty ground, and
+       the header and footer rules line up with the same two edges. */
+
+    --content-width: 800px;
+    --sheet-gutter: 1.5rem;
+    --zone-rail-width: 2.5rem;
+    /* Border-box, so the two frame borders are inside this figure. Get the
+       arithmetic wrong and the reading column silently stops matching
+       --content-width, which also desynchronises the image `sizes` attribute
+       that tokens.html derives from it. */
+    --frame-width: calc(var(--content-width) + var(--zone-rail-width) + var(--sheet-gutter) * 2 + var(--line-frame) * 2);
+    --grid-pitch: 1.5rem;
+
+    /* Below this the drawn frame and the zone rail are dropped and the column
+       runs full-bleed inside its gutters. tokens.html reads it too, because the
+       image `sizes` attribute has to switch at exactly the same width. */
+    --frame-collapse: 60rem;
+
+    /* Line weights, as a real system: hairline for zone ticks and table rules,
+       thin for ordinary divisions, frame for the sheet border. */
+    --line-hair: 1px;
+    --line-thin: 1px;
+    --line-frame: 2px;
+
+    --radius-sm: 2px;
+    --radius: 3px;
+
+    /* Platform minimum for a touch target; applied under pointer: coarse only,
+       so the pointer layouts keep their density. */
+    --tap-target: 44px;
+
+    --transition: 140ms cubic-bezier(0.2, 0, 0.2, 1);
+    --transition-slow: 320ms cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+/* Browsers without light-dark() get no value at all for every colour token
+   above — the declarations are invalid at computed-value time, which would leave
+   borders falling back to currentColor and the page reading as broken rather
+   than plain. This restates the light palette for them and nothing else; the
+   theme's baseline is otherwise Chrome 123+, Safari 17.5+, Firefox 120+. */
+@supports not (color: light-dark(#000, #fff)) {
+    :root {
+        --bg: #eff0ec;
+        --surface: #e4e6e0;
+        --surface-sunk: #e9ebe6;
+        --text: #14181c;
+        --meta: #4a5560;
+        --meta-soft: #59636d;
+        --rule: #c7ccc6;
+        --rule-strong: #a3aba4;
+        --rule-frame: #8d968f;
+        --grid: #e5e8e2;
+        --accent: #8a5200;
+        --accent-strong: #6d4100;
+        --accent-soft: rgba(138, 82, 0, 0.1);
+        --danger: #a32218;
+        --danger-soft: rgba(163, 34, 24, 0.09);
+        --mark: #f4dfae;
+        --selection: rgba(138, 82, 0, 0.18);
+        --syn-keyword: #8a4b18;
+        --syn-string: #2f6b4f;
+        --syn-comment: #59636d;
+        --syn-number: #8a5200;
+        --syn-func: #17527a;
+        --syn-type: #12666b;
+        --syn-op: #3d474f;
+        --syn-punct: #59636d;
+        --syn-error: #a32218;
+        --syn-ins: rgba(47, 107, 79, 0.13);
+        --syn-del: rgba(163, 34, 24, 0.11);
+    }
+}

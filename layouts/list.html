@@ -1,0 +1,27 @@
+{{ define "main" }}
+<header class="page-header">
+    {{- if and ($.Param "ShowBreadCrumbs") .Ancestors }}
+    {{- partial "breadcrumbs.html" . }}
+    {{- end }}
+    <h1 class="page-title">{{ .Title }}</h1>
+    {{- with .Description }}<p class="page-standfirst">{{ . | markdownify }}</p>{{ end }}
+    {{- partial "sheet-stamp.html" . }}
+</header>
+
+{{- with .Content }}
+<div class="content">{{ . }}</div>
+{{- end }}
+
+{{- $paginator := .Paginate (union .RegularPages .Sections) }}
+{{- with $paginator.Pages }}
+<ul class="post-list">
+    {{- range . }}
+    <li>{{ partial "post-card.html" (dict "page" .) }}</li>
+    {{- end }}
+</ul>
+{{- else }}
+<p class="empty-note">{{ i18n "no_posts" }}</p>
+{{- end }}
+
+{{ partial "pagination.html" $paginator }}
+{{ end }}

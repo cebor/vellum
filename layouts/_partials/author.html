@@ -1,0 +1,18 @@
+{{- /* Returns the author's display name as a plain string, or "".
+
+       site.Params.author may be a string, a map with a name key, or a list of
+       names; a page may override any of them. Everything downstream — the meta
+       tag, the title block, JSON-LD, the feed — wants one string, so the
+       branching lives here rather than at five call sites. */ -}}
+{{- $a := .Params.author | default site.Params.author }}
+{{- $name := "" }}
+{{- if reflect.IsSlice $a }}
+{{- $names := slice }}
+{{- range $a }}{{ $names = $names | append (printf "%v" .) }}{{ end }}
+{{- $name = delimit $names ", " }}
+{{- else if reflect.IsMap $a }}
+{{- $name = $a.name | default "" }}
+{{- else }}
+{{- $name = $a | default "" }}
+{{- end }}
+{{- return $name -}}

@@ -1,0 +1,9 @@
+{{- /* An image set inline in a run of text — a glyph, a badge, a small mark —
+       sized to the line rather than the column.
+
+       {{< intextimg url="icon.svg" alt="…" height="1.1em" >}} */ -}}
+{{- $src := .Get "url" | default (.Get "src") }}
+{{- $url := $src }}
+{{- with $.Page.Resources.GetMatch $src }}{{ $url = .RelPermalink }}{{ end }}
+<img class="in-text" src="{{ $url | safeURL }}" alt="{{ .Get "alt" }}"
+    style="height:{{ .Get "height" | default "1em" }}" loading="lazy" decoding="async">

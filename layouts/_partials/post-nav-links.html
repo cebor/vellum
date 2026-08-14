@@ -1,0 +1,25 @@
+{{- /* The section is sorted newest first, so Hugo's "next" is the older post and
+       its "previous" is the newer one — the labels are deliberately inverted
+       relative to the method names. */ -}}
+{{- if or .PrevInSection .NextInSection }}
+<nav class="post-nav" aria-label="{{ i18n "nav_posts" }}">
+    {{- with .NextInSection }}
+    <a class="post-nav__link post-nav__link--prev" href="{{ .RelPermalink }}" rel="prev">
+        {{- partialCached "icon.html" "arrow-left" "arrow-left" }}
+        <span class="post-nav__side">
+            <span class="post-nav__label">{{ i18n "prev_post" }}</span>
+            <span class="post-nav__title">{{ .Title }}</span>
+        </span>
+    </a>
+    {{- end }}
+    {{- with .PrevInSection }}
+    <a class="post-nav__link post-nav__link--next" href="{{ .RelPermalink }}" rel="next">
+        <span class="post-nav__side">
+            <span class="post-nav__label">{{ i18n "next_post" }}</span>
+            <span class="post-nav__title">{{ .Title }}</span>
+        </span>
+        {{- partialCached "icon.html" "arrow-right" "arrow-right" }}
+    </a>
+    {{- end }}
+</nav>
+{{- end }}

@@ -1,0 +1,73 @@
+{{- /* Everything both the ordinary <head> and the root 404's leaner one need:
+       the pre-paint theme choice, the fonts, the stylesheet, the icons. Kept in
+       its own partial so the two heads cannot drift apart.
+
+       Cacheable on a constant key: it reads no page state and no i18n. */ -}}
+
+{{- $t := partialCached "tokens.html" . "tokens" }}
+
+{{- /* Tints the mobile browser's own chrome. Both values are read out of
+       --bg in 00-tokens.css, so they cannot go stale. */}}
+<meta name="theme-color" content="{{ $t.bgLight }}" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="{{ $t.bgDark }}" media="(prefers-color-scheme: dark)">
+
+{{- /* Applied before first paint. Without a stored preference data-theme stays
+       "auto" and the CSS follows the OS through color-scheme, so this script is
+       only ever correcting an explicit choice — nothing flashes when it is
+       absent, and nothing breaks when it cannot run.
+
+       The .js class is what reveals JS-only controls. Defaulting them to hidden
+       means a visitor without JavaScript never meets a dead button.
+
+       localStorage throws outright in some privacy modes and sandboxed frames,
+       which would otherwise abort the whole IIFE and leave .js unset. */}}
+<script>
+    (function () {
+        var r = document.documentElement;
+        r.classList.add("js");
+        try {
+            var t = localStorage.getItem("pref-theme");
+            if (t === "dark" || t === "light") r.dataset.theme = t;
+        } catch (e) { /* storage unavailable; auto is a correct fallback */ }
+    })();
+</script>
+
+{{- /* Self-hosted variable faces, subset to latin + latin-ext. Archivo carries a
+       width axis, so one file provides both the narrow drafting lettering of the
+       title blocks and the normal-width reading face.
+
+       Every face has to be walked, not just the preloaded ones: Hugo publishes
+       an asset only when something evaluates its RelPermalink, and the @font-face
+       rules in 10-base.css reference these by plain URL, which is invisible to
+       the build. Miss one and it 404s in production while working locally off
+       the source directory — the latin-ext and italic faces are exactly the ones
+       nobody would notice failing.
+
+       Only the two roman latin faces are preloaded. The italics and the
+       latin-ext subsets are fetched on demand, which for most pages is never. */}}
+{{- $preload := slice "/fonts/archivo.woff2" "/fonts/jetbrains-mono.woff2" }}
+{{- range resources.Match "fonts/*.woff2" }}
+{{- if in $preload .Name }}
+<link rel="preload" as="font" type="font/woff2" href="{{ .RelPermalink }}" crossorigin="anonymous">
+{{- else }}
+{{- /* Referenced purely so Hugo emits the file. */}}
+{{- $_ := .RelPermalink }}
+{{- end }}
+{{- end }}
+
+{{- /* One stylesheet. The numeric filename prefixes make the alphabetical glob
+       order the cascade order, so no explicit slice is needed. fingerprint must
+       come last: it hashes the bytes that are actually served, and any step
+       after it would invalidate the integrity attribute. */}}
+{{- $css := resources.Match "css/*.css" | resources.Concat "css/main.css" | resources.Minify | fingerprint }}
+<link rel="preload stylesheet" as="style" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}"
+    crossorigin="anonymous">
+
+{{- with site.Params.assets }}
+{{- with .favicon }}<link rel="icon" href="{{ . | absURL }}">{{ end }}
+{{- with .favicon16x16 }}<link rel="icon" type="image/png" sizes="16x16" href="{{ . | absURL }}">{{ end }}
+{{- with .favicon32x32 }}<link rel="icon" type="image/png" sizes="32x32" href="{{ . | absURL }}">{{ end }}
+{{- with .apple_touch_icon }}<link rel="apple-touch-icon" href="{{ . | absURL }}">{{ end }}
+{{- with .safari_pinned_tab }}<link rel="mask-icon" href="{{ . | absURL }}">{{ end }}
+{{- end }}
+<link rel="manifest" href="{{ "site.webmanifest" | absURL }}">

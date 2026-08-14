@@ -1,0 +1,33 @@
+{{- /* Goldmark emits a bare <table>, and a wide one pushes the whole page
+       sideways. The wrapper is the scroll container; tabindex and role make it
+       reachable and announced, so a keyboard user can actually scroll it.
+
+       .THead and .TBody are slices of rows of cells, not strings — each cell
+       carries its own Text and Alignment, so the alignment authored in the
+       Markdown separator row survives into the markup. */ -}}
+<div class="table-wrap" tabindex="0" role="region" aria-label="{{ i18n "table" }}">
+    <table>
+        {{- with .THead }}
+        <thead>
+            {{- range . }}
+            <tr>
+                {{- range . }}
+                <th{{ with .Alignment }} style="text-align: {{ . }}"{{ end }}>{{ .Text }}</th>
+                {{- end }}
+            </tr>
+            {{- end }}
+        </thead>
+        {{- end }}
+        {{- with .TBody }}
+        <tbody>
+            {{- range . }}
+            <tr>
+                {{- range . }}
+                <td{{ with .Alignment }} style="text-align: {{ . }}"{{ end }}>{{ .Text }}</td>
+                {{- end }}
+            </tr>
+            {{- end }}
+        </tbody>
+        {{- end }}
+    </table>
+</div>

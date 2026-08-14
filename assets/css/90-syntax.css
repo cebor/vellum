@@ -1,0 +1,144 @@
+/* Chroma token classes mapped onto the syntax variables from 00-tokens.css,
+   so light and dark share one mapping instead of two generated style dumps. */
+
+.chroma {
+    background: none;
+}
+
+.chroma .line {
+    display: flex;
+}
+
+.chroma .hl {
+    display: flex;
+    background: var(--accent-soft);
+}
+
+.chroma .lntable {
+    border-spacing: 0;
+    border: 0;
+}
+
+.chroma .lntd {
+    vertical-align: top;
+    padding: 0;
+    border: 0;
+}
+
+.chroma .lntd:last-of-type {
+    width: 100%;
+}
+
+.chroma .ln,
+.chroma .lnt {
+    color: var(--meta-soft);
+    white-space: pre;
+    user-select: none;
+    -webkit-user-select: none;
+    padding-right: 1em;
+}
+
+.chroma .lnlinks {
+    color: inherit;
+    text-decoration: none;
+    outline: none;
+}
+
+.chroma .k,
+.chroma .kc,
+.chroma .kd,
+.chroma .kn,
+.chroma .kp,
+.chroma .kr,
+.chroma .kt {
+    color: var(--syn-keyword);
+}
+
+.chroma .s,
+.chroma .sa,
+.chroma .sb,
+.chroma .sc,
+.chroma .dl,
+.chroma .sd,
+.chroma .s2,
+.chroma .se,
+.chroma .sh,
+.chroma .si,
+.chroma .sx,
+.chroma .sr,
+.chroma .s1,
+.chroma .ss {
+    color: var(--syn-string);
+}
+
+.chroma .c,
+.chroma .ch,
+.chroma .cm,
+.chroma .cp,
+.chroma .cpf,
+.chroma .c1,
+.chroma .cs {
+    /* Colour already separates comments; no italic, so the mono italic face
+       never has to ship for a code block. */
+    color: var(--syn-comment);
+}
+
+.chroma .m,
+.chroma .mb,
+.chroma .mf,
+.chroma .mh,
+.chroma .mi,
+.chroma .il,
+.chroma .mo {
+    color: var(--syn-number);
+}
+
+.chroma .nf,
+.chroma .fm {
+    color: var(--syn-func);
+}
+
+.chroma .nc,
+.chroma .nn,
+.chroma .no,
+.chroma .nt,
+.chroma .na,
+.chroma .ne,
+.chroma .nb,
+.chroma .bp,
+.chroma .nd {
+    color: var(--syn-type);
+}
+
+.chroma .o,
+.chroma .ow {
+    color: var(--syn-op);
+}
+
+.chroma .p {
+    color: var(--syn-punct);
+}
+
+.chroma .err {
+    color: var(--syn-error);
+}
+
+.chroma .gi {
+    background: var(--syn-ins);
+}
+
+.chroma .gd {
+    background: var(--syn-del);
+}
+
+/* Emphasis inside a code sample. The mono family deliberately ships no italic
+   file, so this leans on weight rather than asking for a synthesised oblique. */
+.chroma .ge {
+    font-weight: 600;
+}
+
+.chroma .gs,
+.chroma .gh,
+.chroma .gu {
+    font-weight: 600;
+}

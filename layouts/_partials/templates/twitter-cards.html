@@ -1,0 +1,13 @@
+{{- /* summary_large_image whenever the page actually has an image to show;
+       plain summary otherwise, because a large-image card with no image is an
+       empty grey box in the timeline. */ -}}
+{{- $img := partial "templates/page-image.html" . }}
+<meta name="twitter:card" content="{{ if $img }}summary_large_image{{ else }}summary{{ end }}">
+{{- with $img }}
+<meta name="twitter:image" content="{{ . }}">
+{{- end }}
+<meta name="twitter:title" content="{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }}{{ end }}">
+<meta name="twitter:description" content="{{ (.Description | default (.Summary | plainify) | default site.Params.description) | plainify | chomp }}">
+{{- with site.Params.social.twitter }}
+<meta name="twitter:site" content="{{ printf "@%s" (strings.TrimPrefix "@" .) }}">
+{{- end }}

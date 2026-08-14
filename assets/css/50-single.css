@@ -1,0 +1,652 @@
+/* The post sheet: title block, prose rhythm, code, and the sheet's closing
+   furniture. */
+
+.post-header {
+    margin-bottom: var(--space-2xl);
+}
+
+.post-title {
+    font-size: var(--step-4);
+}
+
+.post-standfirst {
+    margin-top: var(--space-sm);
+    color: var(--meta);
+    font-size: var(--step-1);
+    max-width: 60ch;
+}
+
+/* --- title block ---------------------------------------------------------
+
+   The thesis of the theme: what is usually a grey caption line is here the
+   ruled block a drawing carries in its corner. Two columns — narrow tracked
+   label, value — with a hairline between every row, framed top and bottom by
+   the sheet's heavier rule. */
+
+.title-block {
+    margin-top: var(--space-lg);
+    border-block: var(--line-frame) solid var(--rule-frame);
+    display: grid;
+    font-size: var(--step--1);
+}
+
+.title-block__row {
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    gap: var(--space-md);
+    padding-block: var(--space-2xs);
+    align-items: baseline;
+}
+
+.title-block__row + .title-block__row {
+    border-top: var(--line-hair) solid var(--rule);
+}
+
+.title-block__label {
+    font-stretch: var(--font-stretch-label);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--meta);
+}
+
+.title-block__value {
+    margin: 0;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+    min-width: 0;
+}
+
+.title-block__value a {
+    text-decoration-color: var(--rule-strong);
+}
+
+/* --- cover --------------------------------------------------------------- */
+
+.cover {
+    margin-block: var(--space-xl);
+}
+
+.cover__image {
+    width: 100%;
+    border: var(--line-thin) solid var(--rule-strong);
+}
+
+.cover__caption {
+    margin-top: var(--space-2xs);
+    font-size: var(--step--2);
+    color: var(--meta);
+    font-family: var(--font-mono);
+}
+
+/* --- table of contents --------------------------------------------------- */
+
+.toc {
+    margin-bottom: var(--space-2xl);
+    border: var(--line-thin) solid var(--rule-strong);
+    background: var(--surface-sunk);
+}
+
+.toc__summary {
+    cursor: pointer;
+    padding: var(--space-xs) var(--space-md);
+    font-stretch: var(--font-stretch-label);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--meta);
+    list-style-position: inside;
+}
+
+.toc__summary:hover {
+    color: var(--accent);
+}
+
+.toc[open] .toc__summary {
+    border-bottom: var(--line-hair) solid var(--rule);
+}
+
+.toc__body {
+    padding: var(--space-sm) var(--space-md);
+}
+
+.toc ul {
+    list-style: none;
+    padding-inline-start: var(--space-md);
+    margin: 0;
+}
+
+.toc > .toc__body > nav > ul {
+    padding-inline-start: 0;
+}
+
+.toc li {
+    margin-block: var(--space-4xs);
+}
+
+.toc a {
+    text-decoration: none;
+    font-size: var(--step--1);
+    color: var(--meta);
+}
+
+.toc a:hover {
+    color: var(--accent);
+    text-decoration: underline;
+}
+
+/* --- prose --------------------------------------------------------------- */
+
+.content > * + * {
+    margin-top: var(--space-md);
+}
+
+/* More space above a heading than below it, so a heading belongs to what
+   follows it rather than floating between two blocks. */
+.content h2,
+.content h3,
+.content h4 {
+    margin-top: var(--space-2xl);
+    margin-bottom: var(--space-xs);
+}
+
+.content h2 {
+    font-size: var(--step-3);
+    padding-bottom: var(--space-3xs);
+    border-bottom: var(--line-thin) solid var(--rule);
+}
+
+.content h3 {
+    font-size: var(--step-2);
+}
+
+.content h4 {
+    font-size: var(--step-1);
+}
+
+.content > h2:first-child,
+.content > h3:first-child {
+    margin-top: 0;
+}
+
+.heading {
+    position: relative;
+}
+
+.heading__anchor {
+    display: inline-flex;
+    align-items: center;
+    margin-inline-start: var(--space-2xs);
+    color: var(--rule-strong);
+    opacity: 0;
+    text-decoration: none;
+    transition: opacity var(--transition), color var(--transition);
+}
+
+.heading__anchor .icon {
+    width: 0.7em;
+    height: 0.7em;
+}
+
+.heading:hover .heading__anchor,
+.heading__anchor:focus-visible {
+    opacity: 1;
+}
+
+.heading__anchor:hover {
+    color: var(--accent);
+}
+
+/* Anchors are a pointer affordance; on touch they never reveal, so they are
+   removed rather than left as dead space. */
+@media (pointer: coarse) {
+    .heading__anchor {
+        display: none;
+    }
+}
+
+.content ul,
+.content ol {
+    padding-inline-start: var(--space-lg);
+}
+
+.content li + li {
+    margin-top: var(--space-3xs);
+}
+
+.content li::marker {
+    color: var(--meta-soft);
+}
+
+/* A start rule is the standard typographic convention for a block quotation,
+   kept at hairline weight so it reads as a drawn rule rather than a coloured
+   stripe. The italic is a real loaded face, not synthesised oblique. */
+.content blockquote {
+    padding-inline-start: var(--space-md);
+    border-inline-start: var(--line-thin) solid var(--rule-strong);
+    color: var(--meta);
+    font-style: italic;
+}
+
+.content img,
+.content video {
+    border: var(--line-thin) solid var(--rule-strong);
+}
+
+.link-external .icon {
+    display: inline-block;
+    width: 0.7em;
+    height: 0.7em;
+    margin-inline-start: var(--space-4xs);
+    vertical-align: baseline;
+    color: var(--meta-soft);
+}
+
+/* --- alerts -------------------------------------------------------------- */
+
+.alert {
+    border: var(--line-thin) solid var(--rule-strong);
+    background: var(--surface-sunk);
+    padding: var(--space-sm) var(--space-md);
+}
+
+.alert__label {
+    font-stretch: var(--font-stretch-label);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--meta);
+    margin-bottom: var(--space-3xs);
+}
+
+.alert--warning,
+.alert--caution {
+    border-color: var(--danger);
+    background: var(--danger-soft);
+}
+
+.alert--warning .alert__label,
+.alert--caution .alert__label {
+    color: var(--danger);
+}
+
+.alert--important,
+.alert--tip {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+}
+
+.alert--important .alert__label,
+.alert--tip .alert__label {
+    color: var(--accent);
+}
+
+/* --- collapse ------------------------------------------------------------ */
+
+.collapse {
+    border: var(--line-thin) solid var(--rule-strong);
+    background: var(--surface-sunk);
+}
+
+.collapse__summary {
+    cursor: pointer;
+    padding: var(--space-xs) var(--space-md);
+    font-stretch: var(--font-stretch-label);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--meta);
+}
+
+.collapse__summary:hover {
+    color: var(--accent);
+}
+
+.collapse[open] .collapse__summary {
+    border-bottom: var(--line-hair) solid var(--rule);
+}
+
+.collapse__body {
+    padding: var(--space-sm) var(--space-md);
+}
+
+/* --- figures ------------------------------------------------------------- */
+
+.figure {
+    margin-block: var(--space-xl);
+}
+
+.figure__caption {
+    margin-top: var(--space-2xs);
+    font-size: var(--step--2);
+    color: var(--meta);
+    font-family: var(--font-mono);
+}
+
+.figure__attr {
+    display: block;
+    color: var(--meta-soft);
+}
+
+img.in-text {
+    display: inline-block;
+    vertical-align: text-bottom;
+    border: 0;
+}
+
+/* --- tables -------------------------------------------------------------- */
+
+/* Goldmark emits a bare table; the wrapper from _markup/render-table.html is
+   the scroll container that keeps a wide one from pushing the page sideways. */
+.table-wrap {
+    overflow-x: auto;
+    margin-block: var(--space-lg);
+    border: var(--line-thin) solid var(--rule-strong);
+}
+
+.content table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: var(--step--1);
+    font-variant-numeric: tabular-nums;
+}
+
+.content th,
+.content td {
+    padding: var(--space-2xs) var(--space-sm);
+    border-bottom: var(--line-hair) solid var(--rule);
+    text-align: start;
+    vertical-align: top;
+}
+
+.content thead th {
+    border-bottom: var(--line-thin) solid var(--rule-strong);
+    font-stretch: var(--font-stretch-label);
+    font-size: var(--step--2);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--meta);
+    white-space: nowrap;
+}
+
+.content tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+/* --- code ---------------------------------------------------------------- */
+
+.content :not(pre) > code {
+    background: var(--surface);
+    border: var(--line-hair) solid var(--rule);
+    padding: 0.1em 0.3em;
+    border-radius: var(--radius-sm);
+    word-break: break-word;
+}
+
+.content pre {
+    overflow-x: auto;
+    padding: var(--space-md);
+    line-height: var(--line-height-code);
+    background: var(--surface-sunk);
+    tab-size: 4;
+}
+
+.content pre code {
+    background: none;
+    border: 0;
+    padding: 0;
+}
+
+/* The block a reader came for. Ruled like everything else, and given room to
+   breathe: on a code-heavy sheet this is the content, not an inset. */
+.content .highlight {
+    position: relative;
+    margin-block: var(--space-lg);
+    border: var(--line-thin) solid var(--rule-strong);
+    background: var(--surface-sunk);
+}
+
+.content .highlight pre {
+    margin: 0;
+    border: 0;
+}
+
+.copy-code {
+    position: absolute;
+    top: var(--space-3xs);
+    right: var(--space-3xs);
+    display: none;
+    padding: var(--space-4xs) var(--space-xs);
+    border: var(--line-hair) solid var(--rule-strong);
+    background: var(--bg);
+    color: var(--meta);
+    font-stretch: var(--font-stretch-label);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity var(--transition), color var(--transition), border-color var(--transition);
+}
+
+.js .copy-code {
+    display: block;
+}
+
+.highlight:hover .copy-code,
+.copy-code:focus-visible {
+    opacity: 1;
+}
+
+.copy-code:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.copy-code[data-state="failed"] {
+    color: var(--danger);
+    border-color: var(--danger);
+    opacity: 1;
+}
+
+/* Touch has no hover, so the control must be permanently visible there. */
+@media (pointer: coarse) {
+    .js .copy-code {
+        opacity: 1;
+        min-height: var(--tap-target);
+    }
+}
+
+/* --- post footer --------------------------------------------------------- */
+
+.post-footer {
+    margin-top: var(--space-3xl);
+    padding-top: var(--space-md);
+    border-top: var(--line-frame) solid var(--rule-frame);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    justify-content: space-between;
+    align-items: center;
+}
+
+.post-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.share {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.share__label {
+    font-stretch: var(--font-stretch-label);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--meta);
+}
+
+.share__list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3xs);
+}
+
+.share__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--space-xl);
+    height: var(--space-xl);
+    color: var(--meta);
+    border: var(--line-hair) solid transparent;
+    transition: color var(--transition), border-color var(--transition);
+}
+
+.share__link:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.share__link .icon {
+    width: 1.1em;
+    height: 1.1em;
+}
+
+.edit-post {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3xs);
+    text-decoration: none;
+    font-stretch: var(--font-stretch-label);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--meta);
+}
+
+.edit-post:hover {
+    color: var(--accent);
+}
+
+.edit-post .icon {
+    width: 1em;
+    height: 1em;
+}
+
+/* --- post navigation ----------------------------------------------------- */
+
+.post-nav {
+    margin-top: var(--space-2xl);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-md);
+}
+
+.post-nav__link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-sm) var(--space-md);
+    border: var(--line-thin) solid var(--rule);
+    text-decoration: none;
+    transition: border-color var(--transition), background-color var(--transition);
+    min-width: 0;
+}
+
+.post-nav__link:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+}
+
+.post-nav__link--next {
+    grid-column: 2;
+    justify-content: flex-end;
+    text-align: end;
+}
+
+.post-nav__side {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.post-nav__label {
+    font-stretch: var(--font-stretch-label);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--meta);
+}
+
+.post-nav__title {
+    font-size: var(--step--1);
+    line-height: var(--line-height-snug);
+}
+
+.post-nav__link .icon {
+    color: var(--meta);
+    flex: none;
+}
+
+@media (max-width: 40rem) {
+    .post-title {
+        font-size: var(--step-3);
+    }
+
+    .title-block__row {
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--space-4xs);
+    }
+
+    .content h2 {
+        font-size: var(--step-2);
+    }
+
+    .content h3 {
+        font-size: var(--step-1);
+    }
+
+    .content pre {
+        padding: var(--space-sm);
+    }
+
+    .post-nav {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .post-nav__link--next {
+        grid-column: 1;
+    }
+
+    .post-footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (pointer: coarse) {
+    .share__link {
+        min-width: var(--tap-target);
+        min-height: var(--tap-target);
+    }
+
+    .edit-post,
+    .tag-list a {
+        min-height: var(--tap-target);
+    }
+}

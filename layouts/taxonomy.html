@@ -1,0 +1,27 @@
+{{ define "main" }}
+<header class="page-header">
+    {{- if and ($.Param "ShowBreadCrumbs") .Ancestors }}
+    {{- partial "breadcrumbs.html" . }}
+    {{- end }}
+    <h1 class="page-title">{{ .Title }}</h1>
+    {{- with .Description }}<p class="page-standfirst">{{ . | markdownify }}</p>{{ end }}
+    {{- partial "sheet-stamp.html" . }}
+</header>
+
+{{- with .Content }}
+<div class="content">{{ . }}</div>
+{{- end }}
+
+{{- with .Data.Terms.Alphabetical }}
+<ul class="tag-list tag-list--index">
+    {{- range . }}
+    <li>
+        <a href="{{ .Page.RelPermalink }}">{{ .Page.LinkTitle }}
+            <span class="tag-list__count">{{ .Count }}</span></a>
+    </li>
+    {{- end }}
+</ul>
+{{- else }}
+<p class="empty-note">{{ i18n "no_posts" }}</p>
+{{- end }}
+{{ end }}

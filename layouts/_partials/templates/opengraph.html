@@ -1,0 +1,34 @@
+{{- /* Overrides Hugo's internal opengraph template so a cover declared in front
+       matter reaches the card. See templates/page-image.html. */ -}}
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:site_name" content="{{ site.Title }}">
+<meta property="og:title" content="{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }}{{ end }}">
+<meta property="og:description" content="{{ (.Description | default (.Summary | plainify) | default site.Params.description) | plainify | chomp }}">
+<meta property="og:locale" content="{{ replace (site.Language.Locale | default site.Language.Lang) "-" "_" }}">
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+
+{{- with partial "templates/page-image.html" . }}
+<meta property="og:image" content="{{ . }}">
+{{- end }}
+
+{{- if .IsPage }}
+{{- with .Section }}<meta property="article:section" content="{{ . }}">{{ end }}
+{{- if not .Date.IsZero }}
+<meta property="article:published_time" content="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+{{- end }}
+{{- if not .Lastmod.IsZero }}
+<meta property="article:modified_time" content="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
+{{- end }}
+{{- with .Params.tags }}
+{{- range first 6 . }}
+<meta property="article:tag" content="{{ printf "%v" . }}">
+{{- end }}
+{{- end }}
+{{- with partial "author.html" . }}
+<meta property="article:author" content="{{ . }}">
+{{- end }}
+{{- end }}
+
+{{- range .Translations }}
+<meta property="og:locale:alternate" content="{{ replace (.Language.Locale | default .Language.Lang) "-" "_" }}">
+{{- end }}

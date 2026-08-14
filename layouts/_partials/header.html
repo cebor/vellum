@@ -1,0 +1,52 @@
+{{- $page := . }}
+<header class="header">
+    <div class="header__inner">
+        <a class="header__brand" href="{{ "" | relLangURL }}">
+            {{- with site.Params.label }}
+            {{- with .iconSVG }}{{ . | safeHTML }}{{ end }}
+            {{- with .icon }}
+            {{- with resources.Get . }}
+            {{- $h := int (site.Params.label.iconHeight | default 24) }}
+            <img class="header__logo" src="{{ (.Resize (printf "x%d webp q90" $h)).RelPermalink }}"
+                width="{{ $h }}" height="{{ $h }}" alt="">
+            {{- end }}
+            {{- end }}
+            <span class="header__label">{{ .text | default site.Title }}</span>
+            {{- else }}
+            <span class="header__label">{{ site.Title }}</span>
+            {{- end }}
+        </a>
+
+        <nav class="nav" aria-label="{{ i18n "nav_primary" }}">
+            {{- range site.Menus.main }}
+            {{- $active := or ($page.IsMenuCurrent "main" .) ($page.HasMenuCurrent "main" .) }}
+            {{- $external := strings.HasPrefix .URL "http" }}
+            <a class="nav__item{{ if $active }} is-active{{ end }}" href="{{ .URL }}"
+                {{- if $active }} aria-current="page"{{ end }}
+                {{- if $external }} rel="noopener noreferrer" target="_blank"{{ end }}>{{ .Name }}{{ if $external }}{{ partial "icon.html" "external" }}{{ end }}</a>
+            {{- end }}
+
+            {{- if and hugo.IsMultilingual (not site.Params.disableLangToggle) }}
+            <span class="nav__rule" aria-hidden="true"></span>
+            {{- range site.Home.Translations }}
+            {{- $lang := .Lang }}
+            {{- $href := .Permalink }}
+            {{- /* Prefer this page's own translation; fall back to that language's home. */}}
+            {{- range $page.Translations }}
+            {{- if eq .Lang $lang }}{{ $href = .Permalink }}{{ end }}
+            {{- end }}
+            <a class="lang-switch" href="{{ $href }}" hreflang="{{ $lang }}"
+                title="{{ .Language.Label | default $lang }}">{{ if site.Params.displayFullLangName }}{{ .Language.Label | default $lang }}{{ else }}{{ $lang }}{{ end }}</a>
+            {{- end }}
+            {{- end }}
+
+            {{- if not site.Params.disableThemeToggle }}
+            <button class="theme-toggle" id="theme-toggle" type="button" aria-label="{{ i18n "theme_toggle" }}"
+                title="{{ i18n "theme_toggle" }}">
+                {{ partial "icon.html" "moon" }}
+                {{ partial "icon.html" "sun" }}
+            </button>
+            {{- end }}
+        </nav>
+    </div>
+</header>

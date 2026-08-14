@@ -1,0 +1,45 @@
+{{ define "main" }}
+{{- /* Opt-in via `layout = "archives"` in a page's front matter. Groups every
+       post by year, then by month, so a growing archive stays reachable without
+       paging through the section list. */ -}}
+<header class="page-header">
+    {{- if and ($.Param "ShowBreadCrumbs") .Ancestors }}
+    {{- partial "breadcrumbs.html" . }}
+    {{- end }}
+    <h1 class="page-title">{{ .Title }}</h1>
+    {{- with .Description }}<p class="page-standfirst">{{ . | markdownify }}</p>{{ end }}
+    {{- partial "sheet-stamp.html" . }}
+</header>
+
+{{- with .Content }}
+<div class="content">{{ . }}</div>
+{{- end }}
+
+{{- $pages := where site.RegularPages "Type" "in" (site.Params.mainSections | default (slice "posts")) }}
+{{- $pages = where $pages "Params.searchHidden" "!=" true }}
+{{- if not (.Param "ShowAllPagesInArchive") }}
+{{- $pages = where $pages "Section" "!=" "" }}
+{{- end }}
+
+{{- with $pages.GroupByPublishDate "2006" }}
+{{- range . }}
+<section class="archive-year">
+    <h2 class="archive-year__label">{{ .Key }}<span class="archive-year__count">{{ len .Pages }}</span></h2>
+    {{- range .Pages.GroupByPublishDate "January" }}
+    <h3 class="archive-month">{{ .Key }}</h3>
+    <ul class="archive-list">
+        {{- range .Pages }}
+        <li class="archive-item">
+            <time class="archive-item__date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02" }}</time>
+            <a class="archive-item__link" href="{{ .RelPermalink }}">{{ .Title }}</a>
+            {{- if .Draft }}<span class="draft-badge">{{ i18n "draft" }}</span>{{ end }}
+        </li>
+        {{- end }}
+    </ul>
+    {{- end }}
+</section>
+{{- end }}
+{{- else }}
+<p class="empty-note">{{ i18n "no_posts" }}</p>
+{{- end }}
+{{ end }}

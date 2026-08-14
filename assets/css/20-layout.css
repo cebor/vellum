@@ -1,0 +1,533 @@
+/* The sheet itself: its drawn frame, the zone rail, and the printed furniture
+   at the top and bottom. */
+
+.skip-link {
+    position: absolute;
+    left: var(--space-sm);
+    top: var(--space-sm);
+    z-index: 10;
+    transform: translateY(-200%);
+    background: var(--bg);
+    color: var(--text);
+    border: var(--line-frame) solid var(--accent);
+    padding: var(--space-xs) var(--space-md);
+    text-decoration: none;
+    font-stretch: var(--font-stretch-label);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+}
+
+.skip-link:focus {
+    transform: translateY(0);
+}
+
+/* --- header -------------------------------------------------------------- */
+
+.header {
+    border-bottom: var(--line-frame) solid var(--rule-frame);
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+.header__inner {
+    max-width: var(--frame-width);
+    margin-inline: auto;
+    padding: var(--space-sm) var(--sheet-gutter);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+    min-width: 0;
+}
+
+.header__brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    text-decoration: none;
+    font-stretch: var(--font-stretch-label);
+    font-weight: 700;
+    font-size: var(--step--1);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+}
+
+.header__brand:hover {
+    color: var(--accent);
+}
+
+.header__logo {
+    border: var(--line-hair) solid var(--rule);
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+}
+
+.nav__item {
+    position: relative;
+    text-decoration: none;
+    font-stretch: var(--font-stretch-label);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--meta);
+    padding-block: var(--space-3xs);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3xs);
+}
+
+.nav__item:hover {
+    color: var(--text);
+}
+
+/* The current sheet is marked, not merely tinted: a drawn underline in the
+   signal colour, which survives being read in greyscale or by someone who
+   cannot separate the two hues. */
+.nav__item.is-active {
+    color: var(--text);
+}
+
+.nav__item.is-active::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: calc(var(--space-sm) * -1 - var(--line-frame));
+    height: var(--line-frame);
+    background: var(--accent);
+}
+
+.nav__item .icon {
+    width: 0.85em;
+    height: 0.85em;
+}
+
+.nav__rule {
+    width: var(--line-hair);
+    align-self: stretch;
+    background: var(--rule-strong);
+    margin-inline: var(--space-3xs);
+}
+
+.lang-switch {
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    color: var(--meta);
+}
+
+.lang-switch:hover {
+    color: var(--accent);
+}
+
+.theme-toggle {
+    color: var(--meta);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.js .theme-toggle {
+    display: inline-flex;
+}
+
+.theme-toggle:hover {
+    color: var(--accent);
+}
+
+/* light-dark() only produces colours, so swapping which glyph is shown needs a
+   real media query. data-theme is repeated so an explicit choice beats the OS. */
+.theme-toggle .icon--sun {
+    display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+    .theme-toggle .icon--moon {
+        display: none;
+    }
+
+    .theme-toggle .icon--sun {
+        display: block;
+    }
+}
+
+:root[data-theme="light"] .theme-toggle .icon--moon {
+    display: block;
+}
+
+:root[data-theme="light"] .theme-toggle .icon--sun {
+    display: none;
+}
+
+:root[data-theme="dark"] .theme-toggle .icon--moon {
+    display: none;
+}
+
+:root[data-theme="dark"] .theme-toggle .icon--sun {
+    display: block;
+}
+
+/* --- the frame ----------------------------------------------------------- */
+
+/* The drawn frame. Its side borders are the sheet's edge, the graph substrate
+   is printed inside them and nowhere else, and the zone rail sits just within
+   the left border where a drawing's zone reference belongs. */
+.sheet__frame {
+    width: 100%;
+    max-width: var(--frame-width);
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: var(--zone-rail-width) minmax(0, 1fr);
+    align-items: stretch;
+    border-inline: var(--line-frame) solid var(--rule-frame);
+    /* The sheet runs to the footer rather than ending mid-page above a band of
+       bare ground. Short pages carry no zone letters, so the room left over
+       reads as unused sheet — which is what it is — rather than as an index
+       marking nothing, which was the objection to a tall lettered frame. */
+    flex: 1;
+
+    /* The graph substrate is printed inside the frame and nowhere else. Two
+       hairline gradients, so it never becomes an image request. */
+    background-image:
+        repeating-linear-gradient(to right, var(--grid) 0 var(--line-hair), transparent var(--line-hair) var(--grid-pitch)),
+        repeating-linear-gradient(to bottom, var(--grid) 0 var(--line-hair), transparent var(--line-hair) var(--grid-pitch));
+}
+
+/* A sheet with nothing to index renders no rail, so the column it would have
+   occupied is closed rather than left as a lettered empty strip. */
+.sheet__frame:not(:has(.zone-rail)) {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.main {
+    width: 100%;
+    max-width: calc(var(--content-width) + var(--sheet-gutter) * 2);
+    padding-block: var(--space-2xl) var(--space-4xl);
+    padding-inline: var(--sheet-gutter);
+    border-inline-start: var(--line-thin) solid var(--rule-strong);
+    min-width: 0;
+}
+
+/* --- zone rail ----------------------------------------------------------- */
+
+/* Before measurement the marks flow evenly down the rail; once placed they are
+   absolutely positioned at their own section's offset, which is what makes a
+   letter mark a location rather than list one. */
+.zone-rail {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding-block: var(--space-2xl);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--meta-soft);
+    /* Ticks read against the column's own rule, so the rail is right-aligned
+       into it. */
+    align-items: flex-end;
+    padding-inline-end: var(--space-3xs);
+}
+
+.zone-rail[data-placed] {
+    display: block;
+    position: relative;
+    padding-block: 0;
+}
+
+.zone-rail__mark {
+    position: relative;
+    padding-inline-end: var(--space-sm);
+    line-height: 1;
+    text-decoration: none;
+    color: inherit;
+    transition: color var(--transition);
+}
+
+.zone-rail[data-placed] .zone-rail__mark {
+    position: absolute;
+    inset-inline-end: 0;
+    /* Measured against .main's border box, which already includes its own
+       padding, so no extra offset belongs here. */
+    top: var(--zone-top, 0);
+}
+
+/* The section being read is the lit zone — the drawing office's live mark. */
+.zone-rail__mark[aria-current] {
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.zone-rail__mark[aria-current]::after {
+    background: var(--accent);
+    width: var(--space-md);
+}
+
+.zone-rail__mark:hover,
+.zone-rail__mark:focus-visible {
+    color: var(--accent);
+}
+
+.zone-rail__mark:hover::after,
+.zone-rail__mark:focus-visible::after {
+    background: var(--accent);
+}
+
+/* The hairline tick each zone letter sits against — the drawing's own ruling,
+   drawn onto the column rule the rail abuts. */
+.zone-rail__mark::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: var(--space-xs);
+    height: var(--line-hair);
+    background: var(--rule-strong);
+}
+
+/* --- page header --------------------------------------------------------- */
+
+.page-header {
+    margin-bottom: var(--space-2xl);
+}
+
+.page-title {
+    font-size: var(--step-4);
+}
+
+.page-title__prefix {
+    display: block;
+    font-stretch: var(--font-stretch-label);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--meta);
+    margin-bottom: var(--space-2xs);
+}
+
+.page-standfirst {
+    color: var(--meta);
+    font-size: var(--step-1);
+    margin-top: var(--space-sm);
+    max-width: 60ch;
+}
+
+/* --- sheet stamp --------------------------------------------------------- */
+
+.sheet-stamp {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-md);
+    margin-top: var(--space-lg);
+    padding-block: var(--space-2xs);
+    border-block: var(--line-thin) solid var(--rule);
+    font-stretch: var(--font-stretch-label);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--meta);
+}
+
+.sheet-stamp__count {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+/* --- breadcrumbs --------------------------------------------------------- */
+
+.breadcrumbs {
+    margin-bottom: var(--space-md);
+}
+
+.breadcrumbs__list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2xs);
+    font-stretch: var(--font-stretch-label);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--meta);
+}
+
+.breadcrumbs__item + .breadcrumbs__item::before {
+    content: "/";
+    margin-inline-end: var(--space-2xs);
+    color: var(--rule-strong);
+}
+
+.breadcrumbs__item a {
+    text-decoration: none;
+}
+
+.breadcrumbs__item a:hover {
+    color: var(--accent);
+    text-decoration: underline;
+}
+
+.breadcrumbs__item--current {
+    color: var(--text);
+}
+
+/* --- footer -------------------------------------------------------------- */
+
+.footer {
+    border-top: var(--line-frame) solid var(--rule-frame);
+    margin-top: auto;
+}
+
+.footer__inner {
+    max-width: var(--frame-width);
+    margin-inline: auto;
+    padding: var(--space-md) var(--sheet-gutter);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm) var(--space-lg);
+    justify-content: space-between;
+    align-items: center;
+    font-size: var(--step--1);
+    color: var(--meta);
+    min-width: 0;
+}
+
+.footer__issuer,
+.footer__meta {
+    min-width: 0;
+}
+
+.footer__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.footer__sep {
+    width: var(--space-md);
+    height: var(--line-hair);
+    background: var(--rule-strong);
+}
+
+.footer a {
+    text-decoration-color: var(--rule-strong);
+}
+
+/* --- back to top --------------------------------------------------------- */
+
+.top-link {
+    position: fixed;
+    right: var(--space-lg);
+    bottom: var(--space-lg);
+    z-index: 4;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: var(--space-2xl);
+    height: var(--space-2xl);
+    background: var(--bg);
+    color: var(--meta);
+    border: var(--line-thin) solid var(--rule-strong);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition), visibility var(--transition), color var(--transition), border-color var(--transition);
+}
+
+.js .top-link {
+    display: flex;
+}
+
+.top-link.is-visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.top-link:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+/* --- adaptation ---------------------------------------------------------- */
+
+/* The zone rail is sheet furniture, not content: below the frame's own width
+   it has nothing to rule against, so the sheet collapses to a single column
+   and the rail is removed from the flow entirely. */
+@media (max-width: 60rem) {
+    .sheet__frame {
+        grid-template-columns: minmax(0, 1fr);
+        border-inline: 0;
+    }
+
+    .zone-rail {
+        display: none;
+    }
+
+    .main {
+        border-inline-start: 0;
+    }
+}
+
+@media (max-width: 40rem) {
+    :root {
+        --sheet-gutter: 1rem;
+        /* The 20px body exists to hold the 800px desktop column near 90
+           characters. On a phone the column is the viewport, so the same size
+           would cut the line to about 40 characters and wrap everything twice
+           as often. */
+        --step-0: 1.125rem;
+    }
+
+    .main {
+        padding-block: var(--space-xl) var(--space-3xl);
+    }
+
+    .header__inner {
+        gap: var(--space-xs);
+    }
+
+    .nav {
+        gap: var(--space-sm);
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .page-title {
+        font-size: var(--step-3);
+    }
+}
+
+@media (pointer: coarse) {
+    .nav__item,
+    .lang-switch,
+    .theme-toggle,
+    .breadcrumbs__item a {
+        min-height: var(--tap-target);
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .theme-toggle {
+        min-width: var(--tap-target);
+    }
+
+    .top-link {
+        width: var(--tap-target);
+        height: var(--tap-target);
+    }
+}

@@ -1,0 +1,13 @@
+{{- /* The sheet's location in the set. Ancestors runs child-to-root, so it is
+       reversed to read the way a path does. The current page is the last crumb
+       and is not a link. */ -}}
+<nav class="breadcrumbs" aria-label="{{ i18n "breadcrumb" }}">
+    <ol class="breadcrumbs__list">
+        {{- range .Ancestors.Reverse }}
+        <li class="breadcrumbs__item">
+            <a href="{{ .RelPermalink }}">{{ if .IsHome }}{{ i18n "home" }}{{ else }}{{ .LinkTitle }}{{ end }}</a>
+        </li>
+        {{- end }}
+        <li class="breadcrumbs__item breadcrumbs__item--current" aria-current="page">{{ .LinkTitle }}</li>
+    </ol>
+</nav>

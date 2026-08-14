@@ -1,0 +1,225 @@
+- id: home
+  translation: "Home"
+
+- id: posts
+  translation: "Posts"
+
+- id: tags
+  translation: "Tags"
+
+- id: search
+  translation: "Search"
+
+- id: latest_posts
+  translation: "Latest"
+
+- id: all_posts
+  translation: "All posts"
+
+- id: rss
+  translation: "RSS"
+
+- id: table
+  translation: "Table"
+
+- id: toc
+  translation: "Contents"
+
+- id: draft
+  translation: "draft"
+
+# --- title block ------------------------------------------------------------
+# The ruled metadata block on a post, worded as a drawing sheet's title block.
+
+- id: tb_issued
+  translation: "Issued"
+
+- id: tb_revised
+  translation: "Revised"
+
+- id: tb_extent
+  translation: "Extent"
+
+- id: tb_drawn_by
+  translation: "By"
+
+- id: tb_subject
+  translation: "Subject"
+
+- id: tb_also_in
+  translation: "Also in"
+
+- id: tb_status
+  translation: "Status"
+
+# --- sheet stamp ------------------------------------------------------------
+
+- id: stamp_index
+  translation: "Subject index"
+
+- id: stamp_subject
+  translation: "Subject"
+
+- id: stamp_section
+  translation: "Section"
+
+- id: stamp_archive
+  translation: "Archive"
+
+- id: stamp_search
+  translation: "Search index"
+
+- id: stamp_office
+  translation: "Drawing office"
+
+- id: indexed_count
+  translation:
+    one: "1 sheet indexed"
+    other: "{{ .Count }} sheets indexed"
+
+- id: sheet_count
+  translation:
+    one: "1 sheet"
+    other: "{{ .Count }} sheets"
+
+- id: subject_count
+  translation:
+    one: "1 subject"
+    other: "{{ .Count }} subjects"
+
+- id: sheet_of
+  translation: "Sheet {{ .Current }} of {{ .Total }}"
+
+- id: tagged_with
+  translation: "Subject:"
+
+# --- meta -------------------------------------------------------------------
+
+- id: read_time
+  translation:
+    one: "1 min read"
+    other: "{{ .Count }} min read"
+
+- id: words
+  translation:
+    one: "1 word"
+    other: "{{ .Count }} words"
+
+# --- navigation -------------------------------------------------------------
+
+- id: nav_primary
+  translation: "Primary"
+
+- id: nav_posts
+  translation: "Posts"
+
+- id: nav_pages
+  translation: "Pages"
+
+- id: zones
+  translation: "Zones"
+
+- id: breadcrumb
+  translation: "Breadcrumb"
+
+- id: prev_page
+  translation: "Newer"
+
+- id: next_page
+  translation: "Older"
+
+- id: prev_post
+  translation: "Previous"
+
+- id: next_post
+  translation: "Next"
+
+- id: anchor_link
+  translation: "Link to this section"
+
+# --- actions ----------------------------------------------------------------
+
+- id: code_copy
+  translation: "Copy"
+
+- id: code_copied
+  translation: "Copied"
+
+- id: code_copy_failed
+  translation: "Copy failed"
+
+- id: share
+  translation: "Share"
+
+- id: share_on
+  translation: "Share on"
+
+- id: share_email
+  translation: "Email"
+
+- id: edit_post
+  translation: "Suggest an edit"
+
+# --- search -----------------------------------------------------------------
+
+- id: search_placeholder
+  translation: "Type to search…"
+
+- id: search_loading
+  translation: "Loading search…"
+
+- id: search_label
+  translation: "Search results"
+
+- id: search_no_results
+  translation: "Nothing found."
+
+# {n} is replaced with the result count.
+- id: search_results_one
+  translation: "1 result"
+
+- id: search_results_other
+  translation: "{n} results"
+
+- id: search_error
+  translation: "Search is unavailable right now."
+
+- id: search_nojs
+  translation: "Search needs JavaScript. Browse by section or subject instead:"
+
+# --- alerts -----------------------------------------------------------------
+
+- id: alert_note
+  translation: "Note"
+
+- id: alert_tip
+  translation: "Tip"
+
+- id: alert_important
+  translation: "Important"
+
+- id: alert_warning
+  translation: "Warning"
+
+- id: alert_caution
+  translation: "Caution"
+
+# --- chrome -----------------------------------------------------------------
+
+- id: theme_toggle
+  translation: "Toggle light and dark mode"
+
+- id: back_to_top
+  translation: "Back to top"
+
+- id: not_found
+  translation: "This page does not exist."
+
+- id: skip_to_content
+  translation: "Skip to content"
+
+- id: built_with
+  translation: "Built with"
+
+- id: no_posts
+  translation: "Nothing here yet."

@@ -1,0 +1,47 @@
+{{- /* The error sheet. Beyond saying no, it does one useful thing: it feeds the
+       path that failed into the site search as a query, so a stale link from a
+       search engine becomes a recovery rather than a dead end. That is the whole
+       reason the search page reads ?query= on load.
+
+       Every URL here is root-relative, because this body is also rendered into
+       /404.html and served from arbitrary paths. */ -}}
+<div class="not-found">
+    <p class="not-found__code">404</p>
+    <h1 class="not-found__title">{{ i18n "not_found" }}</h1>
+
+    <div class="not-found__actions">
+        {{- with site.GetPage "/" }}
+        <a class="button" href="{{ .RelPermalink }}"><span>{{ i18n "home" }}</span>{{ partialCached "icon.html" "arrow-right" "arrow-right" }}</a>
+        {{- end }}
+        {{- with site.GetPage "/search" }}
+        <a class="button button--quiet" id="search-failed-path" href="{{ .RelPermalink }}"
+            data-search-base="{{ .RelPermalink }}">{{ partialCached "icon.html" "search" "search" }}<span>{{ i18n "search" }}</span></a>
+        {{- end }}
+    </div>
+</div>
+
+{{- /* Turns /en/posts/some-old-slug/ into ?query=some old slug. Progressive:
+       without JavaScript the button still leads to the search page. */}}
+<script>
+    (function () {
+        var a = document.getElementById("search-failed-path");
+        if (!a) return;
+        var slug = location.pathname.split("/").filter(Boolean).pop() || "";
+        slug = slug.replace(/\.(html?|php)$/i, "").replace(/[-_.]+/g, " ").trim();
+        if (slug) a.href = a.dataset.searchBase + "?query=" + encodeURIComponent(slug);
+    })();
+</script>
+
+{{- $sections := site.Params.mainSections | default (slice "posts") }}
+{{- with first 3 (where site.RegularPages "Type" "in" $sections) }}
+<section class="latest">
+    <div class="latest__head">
+        <h2 class="latest__title">{{ i18n "latest_posts" }}</h2>
+    </div>
+    <ul class="post-list post-list--latest">
+        {{- range . }}
+        <li>{{ partial "post-card.html" (dict "page" . "level" 3) }}</li>
+        {{- end }}
+    </ul>
+</section>
+{{- end }}

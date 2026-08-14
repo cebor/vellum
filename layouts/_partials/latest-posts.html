@@ -1,0 +1,22 @@
+{{- /* Usage: {{ partial "latest-posts.html" (dict "page" . "count" 5) }}
+       Renders nothing at all when the count is zero or the section is empty,
+       rather than an empty heading. */ -}}
+{{- $count := int (.count | default 5) }}
+{{- $sections := site.Params.mainSections | default (slice "posts") }}
+{{- $posts := where site.RegularPages "Type" "in" $sections }}
+{{- $posts = where $posts "Params.hiddenInHomeList" "!=" true }}
+{{- if and (gt $count 0) $posts }}
+<section class="latest">
+    <div class="latest__head">
+        <h2 class="latest__title">{{ i18n "latest_posts" }}</h2>
+        {{- with site.GetPage (index $sections 0) }}
+        <a class="latest__all" href="{{ .RelPermalink }}">{{ i18n "all_posts" }}{{ partialCached "icon.html" "arrow-right" "arrow-right" }}</a>
+        {{- end }}
+    </div>
+    <ul class="post-list post-list--latest">
+        {{- range first $count $posts }}
+        <li>{{ partial "post-card.html" (dict "page" . "level" 3) }}</li>
+        {{- end }}
+    </ul>
+</section>
+{{- end }}

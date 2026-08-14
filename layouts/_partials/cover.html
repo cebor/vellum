@@ -1,0 +1,55 @@
+{{- /* The post's cover image.
+
+       Resolved from the page bundle first, then from the theme's or site's
+       assets, so a bundled cover.png needs no front matter at all. Covers are
+       eager on the post itself (it is the largest contentful paint) and lazy in
+       lists, where several are below the fold.
+
+       Usage: {{ partial "cover.html" (dict "page" $p "isSingle" true) }} */ -}}
+{{- $p := .page }}
+{{- $single := .isSingle }}
+{{- $cover := $p.Params.cover }}
+{{- $hidden := false }}
+{{- if reflect.IsMap $cover }}
+{{- $hidden = or $cover.hidden (and $single $cover.hiddenInSingle) (and (not $single) $cover.hiddenInList) }}
+{{- end }}
+
+{{- if not $hidden }}
+{{- $name := "" }}
+{{- if reflect.IsMap $cover }}{{ $name = $cover.image }}{{ else }}{{ $name = $cover }}{{ end }}
+
+{{- $img := "" }}
+{{- if $name }}
+{{- with $p.Resources.GetMatch $name }}{{ $img = . }}{{ end }}
+{{- if not $img }}{{ with resources.Get $name }}{{ $img = . }}{{ end }}{{ end }}
+{{- else }}
+{{- with $p.Resources.GetMatch "{cover,cover.*,*-cover.*}" }}{{ $img = . }}{{ end }}
+{{- end }}
+
+{{- if and $img (ne $img.ResourceType "image") }}{{ $img = "" }}{{ end }}
+
+{{- if $img }}
+{{- $t := partialCached "tokens.html" $p "tokens" }}
+{{- $set := partial "image-set.html" (dict "resource" $img "measure" $t.measure) }}
+{{- $alt := "" }}
+{{- if reflect.IsMap $cover }}{{ $alt = $cover.alt | default $cover.caption }}{{ end }}
+{{- $caption := "" }}
+{{- if reflect.IsMap $cover }}{{ $caption = $cover.caption }}{{ end }}
+<figure class="cover{{ if $single }} cover--single{{ end }}">
+    {{- if and $single site.Params.cover.linkFullImages }}
+    <a href="{{ $img.RelPermalink }}" aria-label="{{ $alt | default $p.Title }}">
+    {{- end }}
+    <img class="cover__image" src="{{ $set.src }}" srcset="{{ $set.srcset }}"
+        sizes="(max-width: {{ $t.collapse }}rem) calc(100vw - {{ mul $t.gutter 2 }}rem), {{ $t.measure }}px"
+        width="{{ $set.width }}" height="{{ $set.height }}" alt="{{ $alt }}"
+        loading="{{ if $single }}eager{{ else }}lazy{{ end }}"
+        {{ if $single }}fetchpriority="high"{{ else }}decoding="async"{{ end }}>
+    {{- if and $single site.Params.cover.linkFullImages }}</a>{{ end }}
+    {{- with $caption }}
+    {{- if $single }}
+    <figcaption class="cover__caption">{{ . | markdownify }}</figcaption>
+    {{- end }}
+    {{- end }}
+</figure>
+{{- end }}
+{{- end }}

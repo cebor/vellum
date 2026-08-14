@@ -1,0 +1,35 @@
+{{- /* The publish-root copy of the 404 (see hugo.toml's [outputFormats.ROOT404]
+       and layouts/home.root404.html). It gets its own shell rather than the
+       ordinary baseof because Hugo renders it from the home page and reports
+       the home page's permalink and kind, so the shared <head> cannot tell the
+       two apart — and because an error document should carry no canonical URL,
+       no hreflang alternates, no OpenGraph and no analytics.
+
+       Every URL below is root-relative, so the page renders correctly whichever
+       path the server was asked for. */ -}}
+<!DOCTYPE html>
+<html lang="{{ site.Language.Locale | default site.Language.Lang }}"
+    dir="{{ site.Language.Direction | default `auto` }}"
+    data-theme="{{ site.Params.defaultTheme | default `auto` }}">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>404 · {{ site.Title }}</title>
+    {{- partialCached "head-assets.html" . "assets" }}
+</head>
+
+<body id="top" class="sheet">
+    <a class="skip-link" href="#main">{{ i18n "skip_to_content" | default "Skip to content" }}</a>
+    {{ partial "header.html" . }}
+    <div class="sheet__frame">
+        {{- partial "zone-rail.html" . }}
+        <main class="main" id="main">
+            {{- block "main" . }}{{ end }}
+        </main>
+    </div>
+    {{ partial "footer.html" . }}
+</body>
+
+</html>

@@ -1,0 +1,22 @@
+{{- /* Takes a paginator: {{ partial "pagination.html" $paginator }} */ -}}
+{{- if gt .TotalPages 1 }}
+<nav class="pagination" aria-label="{{ i18n "nav_pages" }}">
+    {{- with .Prev }}
+    <a class="pagination__link pagination__link--prev" href="{{ .URL }}" rel="prev">
+        {{- partialCached "icon.html" "arrow-left" "arrow-left" }}<span>{{ i18n "prev_page" }}</span></a>
+    {{- else }}
+    <span class="pagination__link is-disabled" aria-hidden="true">
+        {{- partialCached "icon.html" "arrow-left" "arrow-left" }}<span>{{ i18n "prev_page" }}</span></span>
+    {{- end }}
+
+    <span class="pagination__position">{{ i18n "sheet_of" (dict "Current" .PageNumber "Total" .TotalPages) }}</span>
+
+    {{- with .Next }}
+    <a class="pagination__link pagination__link--next" href="{{ .URL }}" rel="next">
+        <span>{{ i18n "next_page" }}</span>{{ partialCached "icon.html" "arrow-right" "arrow-right" -}}</a>
+    {{- else }}
+    <span class="pagination__link is-disabled" aria-hidden="true">
+        <span>{{ i18n "next_page" }}</span>{{ partialCached "icon.html" "arrow-right" "arrow-right" -}}</span>
+    {{- end }}
+</nav>
+{{- end }}

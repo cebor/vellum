@@ -1,0 +1,18 @@
+{{- /* GitHub-style alerts: a blockquote opening with [!NOTE], [!TIP],
+       [!IMPORTANT], [!WARNING] or [!CAUTION] becomes a labelled callout. Written
+       in plain Markdown, so posts need no shortcode syntax and stay readable as
+       source — which matters here because `unsafe` is off and raw HTML in
+       content is stripped.
+
+       Anything else renders as an ordinary quotation. */ -}}
+{{- if eq .Type "alert" }}
+{{- $label := printf "alert_%s" (lower .AlertType) }}
+<div class="alert alert--{{ lower .AlertType }}" role="note">
+    <p class="alert__label">{{ i18n $label | default (title .AlertType) }}</p>
+    <div class="alert__body">{{ .Text | safeHTML }}</div>
+</div>
+{{- else }}
+<blockquote{{ with .Attributes.class }} class="{{ . }}"{{ end }}>
+    {{- .Text | safeHTML -}}
+</blockquote>
+{{- end }}

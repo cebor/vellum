@@ -1,0 +1,305 @@
+/* Index sheets: the post card, the tag list, pagination. The card is one
+   invariant field grid, identical wherever a post is indexed, so the unit is
+   learnable rather than re-invented per page. */
+
+.post-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Entries are separated by a ruled line rather than boxed. A drawing divides a
+   schedule with rules; boxing each row would make the index heavier than the
+   drawing it indexes. */
+.post-list > li {
+    border-top: var(--line-thin) solid var(--rule);
+}
+
+.post-list > li:last-child {
+    border-bottom: var(--line-thin) solid var(--rule);
+}
+
+.post-card {
+    display: grid;
+    gap: var(--space-sm) var(--space-lg);
+    padding-block: var(--space-lg);
+    transition: background-color var(--transition);
+}
+
+.post-card:hover {
+    background: var(--accent-soft);
+}
+
+.post-card:has(.cover) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 12rem);
+    align-items: start;
+}
+
+.post-card:has(.cover) .post-card__body {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.post-card:has(.cover) .cover {
+    grid-column: 2;
+    grid-row: 1;
+    margin: 0;
+}
+
+.post-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-xs);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--meta);
+    font-variant-numeric: tabular-nums;
+    margin-bottom: var(--space-2xs);
+}
+
+/* A drawn separator rather than a middot: the same hairline the sheet uses
+   everywhere else. */
+.post-card__meta > * + *::before {
+    content: "";
+    display: inline-block;
+    width: var(--space-sm);
+    height: var(--line-hair);
+    background: var(--rule-strong);
+    vertical-align: middle;
+    margin-inline-end: var(--space-xs);
+}
+
+.post-card__title {
+    font-size: var(--step-2);
+}
+
+.post-card__title a {
+    text-decoration: none;
+}
+
+.post-card:hover .post-card__title a {
+    color: var(--accent);
+}
+
+.post-card__summary {
+    margin-top: var(--space-2xs);
+    color: var(--meta);
+    font-size: var(--step--1);
+    max-width: 68ch;
+}
+
+/* State is a mark, not a hue: the draft flag is a drawn box with its own
+   lettering, legible in greyscale and to anyone who cannot separate the two
+   colours. */
+.draft-badge {
+    display: inline-flex;
+    align-items: center;
+    padding-inline: var(--space-3xs);
+    border: var(--line-hair) solid var(--danger);
+    background: var(--danger-soft);
+    color: var(--danger);
+    font-stretch: var(--font-stretch-label);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+}
+
+.draft-badge::before {
+    content: none;
+}
+
+/* --- tags ---------------------------------------------------------------- */
+
+.tag-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+}
+
+.tag-list a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3xs);
+    padding: var(--space-4xs) var(--space-xs);
+    border: var(--line-thin) solid var(--rule-strong);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--meta);
+    transition: color var(--transition), border-color var(--transition), background-color var(--transition);
+}
+
+.tag-list a:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-soft);
+}
+
+.tag-list--index {
+    gap: var(--space-xs);
+}
+
+.tag-list--index a {
+    font-size: var(--step--1);
+    padding: var(--space-3xs) var(--space-sm);
+}
+
+.tag-list__count {
+    padding-inline-start: var(--space-3xs);
+    border-inline-start: var(--line-hair) solid var(--rule-strong);
+    color: var(--meta-soft);
+    font-variant-numeric: tabular-nums;
+}
+
+/* --- pagination ---------------------------------------------------------- */
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-md);
+    border-top: var(--line-frame) solid var(--rule-frame);
+}
+
+.pagination__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3xs);
+    text-decoration: none;
+    font-stretch: var(--font-stretch-label);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--meta);
+}
+
+.pagination__link:hover {
+    color: var(--accent);
+}
+
+.pagination__link .icon {
+    width: 1em;
+    height: 1em;
+}
+
+/* An unavailable direction stays in place rather than disappearing, so the row
+   does not reflow between pages. */
+.pagination__link.is-disabled {
+    color: var(--rule-strong);
+    cursor: default;
+}
+
+.pagination__position {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--meta-soft);
+    font-variant-numeric: tabular-nums;
+}
+
+.empty-note {
+    padding-block: var(--space-2xl);
+    color: var(--meta);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+}
+
+/* --- archives ------------------------------------------------------------ */
+
+.archive-year {
+    margin-bottom: var(--space-2xl);
+}
+
+.archive-year__label {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-md);
+    font-family: var(--font-mono);
+    font-size: var(--step-2);
+    font-weight: 700;
+    padding-bottom: var(--space-3xs);
+    border-bottom: var(--line-frame) solid var(--rule-frame);
+    font-variant-numeric: tabular-nums;
+}
+
+.archive-year__count {
+    font-size: var(--step--2);
+    font-weight: 400;
+    color: var(--meta-soft);
+}
+
+.archive-month {
+    margin-top: var(--space-lg);
+    font-stretch: var(--font-stretch-label);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--meta);
+}
+
+.archive-list {
+    list-style: none;
+    padding: 0;
+    margin-top: var(--space-2xs);
+}
+
+.archive-item {
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: var(--space-sm);
+    padding-block: var(--space-2xs);
+    border-top: var(--line-hair) solid var(--rule);
+}
+
+.archive-item__date {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--meta-soft);
+    font-variant-numeric: tabular-nums;
+}
+
+.archive-item__link {
+    text-decoration: none;
+}
+
+.archive-item__link:hover {
+    color: var(--accent);
+    text-decoration: underline;
+}
+
+@media (max-width: 40rem) {
+    .post-card:has(.cover) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .post-card:has(.cover) .cover {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .post-card__title {
+        font-size: var(--step-1);
+    }
+
+    .pagination {
+        flex-wrap: wrap;
+        gap: var(--space-sm);
+    }
+}
+
+@media (pointer: coarse) {
+    .tag-list a,
+    .pagination__link {
+        min-height: var(--tap-target);
+    }
+}

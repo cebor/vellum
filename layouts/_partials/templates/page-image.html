@@ -1,0 +1,51 @@
+{{- /* Resolves the one image that represents this page to social crawlers, and
+       returns its absolute URL (or "" when there is none).
+
+       Order: an explicit cover, then front-matter images, then a page-bundle
+       resource named cover/feature/thumbnail, then the site-wide default. Hugo's
+       internal opengraph template only knows the last two of those, which is
+       why this theme overrides it — a cover declared in front matter would
+       otherwise never reach a social card.
+
+       Call as: {{ $img := partial "templates/page-image.html" . }} */ -}}
+
+{{- $url := "" }}
+
+{{- with .Params.cover }}
+{{- $name := cond (reflect.IsMap .) .image . }}
+{{- with $name }}
+{{- $res := "" }}
+{{- with $.Resources.GetMatch . }}{{ $res = . }}{{ end }}
+{{- if not $res }}{{ with resources.Get . }}{{ $res = . }}{{ end }}{{ end }}
+{{- if $res }}
+{{- $url = $res.Permalink }}
+{{- else }}
+{{- $url = . | absURL }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{- if not $url }}
+{{- with .Params.images }}
+{{- $first := index . 0 }}
+{{- with $.Resources.GetMatch $first }}
+{{- $url = .Permalink }}
+{{- else }}
+{{- $url = $first | absURL }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{- if not $url }}
+{{- with .Resources.GetMatch "{*cover*,*feature*,*thumbnail*}" }}
+{{- $url = .Permalink }}
+{{- end }}
+{{- end }}
+
+{{- if not $url }}
+{{- with site.Params.images }}
+{{- $url = (index . 0) | absURL }}
+{{- end }}
+{{- end }}
+
+{{- return $url -}}

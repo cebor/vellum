@@ -1,0 +1,38 @@
+{{- /* Share targets. Every one is a plain link to a public compose URL — no
+       third-party script, no iframe, no tracking pixel, and nothing that runs
+       before the reader chooses to share.
+
+       Restrict the set with site.Params.ShareButtons = ["mastodon", "reddit"]. */ -}}
+{{- $url := .Permalink }}
+{{- $title := .Title }}
+{{- $tags := slice }}
+{{- range .Params.tags }}{{ $tags = $tags | append (replaceRE `\s+` "" (printf "%v" .)) }}{{ end }}
+{{- $wanted := site.Params.ShareButtons | default (slice "mastodon" "bluesky" "linkedin" "reddit" "hackernews" "telegram" "whatsapp" "email") }}
+
+{{- $targets := dict
+    "mastodon" (dict "icon" "mastodon" "label" "Mastodon" "href" (printf "https://mastodonshare.com/?text=%s&url=%s" ($title | urlquery) ($url | urlquery)))
+    "bluesky" (dict "icon" "bluesky" "label" "Bluesky" "href" (printf "https://bsky.app/intent/compose?text=%s" (printf "%s %s" $title $url | urlquery)))
+    "x" (dict "icon" "x" "label" "X" "href" (printf "https://x.com/intent/tweet?text=%s&url=%s" ($title | urlquery) ($url | urlquery)))
+    "linkedin" (dict "icon" "linkedin" "label" "LinkedIn" "href" (printf "https://www.linkedin.com/sharing/share-offsite/?url=%s" ($url | urlquery)))
+    "reddit" (dict "icon" "reddit" "label" "Reddit" "href" (printf "https://www.reddit.com/submit?url=%s&title=%s" ($url | urlquery) ($title | urlquery)))
+    "hackernews" (dict "icon" "hackernews" "label" "Hacker News" "href" (printf "https://news.ycombinator.com/submitlink?u=%s&t=%s" ($url | urlquery) ($title | urlquery)))
+    "telegram" (dict "icon" "telegram" "label" "Telegram" "href" (printf "https://telegram.me/share/url?url=%s&text=%s" ($url | urlquery) ($title | urlquery)))
+    "whatsapp" (dict "icon" "whatsapp" "label" "WhatsApp" "href" (printf "https://api.whatsapp.com/send?text=%s" (printf "%s — %s" $title $url | urlquery)))
+    "email" (dict "icon" "email" "label" (i18n "share_email") "href" (printf "mailto:?subject=%s&body=%s" ($title | urlquery) ($url | urlquery)))
+}}
+
+<div class="share">
+    <span class="share__label">{{ i18n "share" }}</span>
+    <ul class="share__list">
+        {{- range $wanted }}
+        {{- with index $targets . }}
+        <li>
+            <a class="share__link" href="{{ .href | safeURL }}" rel="noopener noreferrer" target="_blank"
+                aria-label="{{ i18n "share_on" }} {{ .label }}" title="{{ .label }}">
+                {{- partialCached "icon.html" .icon .icon -}}
+            </a>
+        </li>
+        {{- end }}
+        {{- end }}
+    </ul>
+</div>

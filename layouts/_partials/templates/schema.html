@@ -1,0 +1,59 @@
+{{- /* JSON-LD. Deliberately omits articleBody: PaperMod emits the entire post
+       text a second time inside the JSON, which doubles the weight of exactly
+       the pages a search arrival lands on, and Google does not need it.
+
+       Tags are coerced through printf "%v" because a numeric-looking tag can
+       reach templates as a number — see the quoted "403" tag in the German
+       Vodafone post — and jsonify would then emit it unquoted. */ -}}
+{{- $author := partial "author.html" . }}
+{{- $img := partial "templates/page-image.html" . }}
+
+{{- if .IsHome }}
+{{- $sameAs := slice }}
+{{- range site.Params.socialIcons }}{{ $sameAs = $sameAs | append .url }}{{ end }}
+{{- $data := dict
+    "@context" "https://schema.org"
+    "@type" (site.Params.schema.publisherType | default "Person")
+    "name" (site.Title)
+    "url" site.Home.Permalink
+    "description" (site.Params.description | plainify) }}
+{{- with site.Params.schema.sameAs | default $sameAs }}{{ $data = merge $data (dict "sameAs" .) }}{{ end }}
+<script type="application/ld+json">{{ $data | jsonify }}</script>
+
+{{- else if .IsPage }}
+{{- $tags := slice }}
+{{- range .Params.tags }}{{ $tags = $tags | append (printf "%v" .) }}{{ end }}
+{{- $data := dict
+    "@context" "https://schema.org"
+    "@type" "BlogPosting"
+    "headline" .Title
+    "description" ((.Description | default (.Summary | plainify) | default site.Params.description) | plainify | chomp)
+    "url" .Permalink
+    "mainEntityOfPage" (dict "@type" "WebPage" "@id" .Permalink)
+    "inLanguage" (site.Language.Locale | default site.Language.Lang)
+    "wordCount" .WordCount
+    "publisher" (dict "@type" "Person" "name" ($author | default site.Title)) }}
+{{- with $author }}{{ $data = merge $data (dict "author" (dict "@type" "Person" "name" .)) }}{{ end }}
+{{- with $tags }}{{ $data = merge $data (dict "keywords" (delimit . ", ")) }}{{ end }}
+{{- with $img }}{{ $data = merge $data (dict "image" .) }}{{ end }}
+{{- if not .Date.IsZero }}{{ $data = merge $data (dict "datePublished" (.Date.Format "2006-01-02T15:04:05Z07:00")) }}{{ end }}
+{{- if not .Lastmod.IsZero }}{{ $data = merge $data (dict "dateModified" (.Lastmod.Format "2006-01-02T15:04:05Z07:00")) }}{{ end }}
+<script type="application/ld+json">{{ $data | jsonify }}</script>
+{{- end }}
+
+{{- /* A breadcrumb trail for anything below the home page, so search results
+       show the section rather than a bare URL. */}}
+{{- with .Ancestors }}
+{{- $items := slice }}
+{{- $pos := 0 }}
+{{- range .Reverse }}
+{{- $pos = add $pos 1 }}
+{{- $items = $items | append (dict
+    "@type" "ListItem"
+    "position" $pos
+    "name" (cond .IsHome (i18n "home" | default "Home") .LinkTitle)
+    "item" .Permalink) }}
+{{- end }}
+{{- $items = $items | append (dict "@type" "ListItem" "position" (add $pos 1) "name" $.LinkTitle "item" $.Permalink) }}
+<script type="application/ld+json">{{ dict "@context" "https://schema.org" "@type" "BreadcrumbList" "itemListElement" $items | jsonify }}</script>
+{{- end }}

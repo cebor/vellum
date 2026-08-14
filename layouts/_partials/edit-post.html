@@ -1,0 +1,15 @@
+{{- /* "Suggest an edit" — the drawing-office equivalent of marking up a print
+       and sending it back. appendFilePath joins the page's own source path so
+       the link lands on the file rather than the repository root. */ -}}
+{{- with site.Params.editPost }}
+{{- if and .URL (not .disabled) }}
+{{- $href := .URL }}
+{{- if and .appendFilePath $.File }}
+{{- $href = printf "%s/%s" (strings.TrimSuffix "/" .URL) $.File.Path }}
+{{- end }}
+<a class="edit-post" href="{{ $href | safeURL }}" rel="noopener noreferrer" target="_blank">
+    {{- partialCached "icon.html" "pencil" "pencil" -}}
+    <span>{{ .Text | default (i18n "edit_post") }}</span>
+</a>
+{{- end }}
+{{- end }}

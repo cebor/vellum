@@ -1,0 +1,87 @@
+baseURL = "https://example.org/"
+title = "Vellum"
+theme = "vellum"
+
+enableRobotsTXT = true
+capitalizeListTitles = false
+pygmentsUseClasses = true
+
+[pagination]
+  pagerSize = 5
+
+[taxonomies]
+  tag = "tags"
+
+[outputs]
+  # The JSON output is the search index.
+  home = ["HTML", "RSS", "JSON"]
+
+# With defaultContentLanguageInSubdir nothing lands at the publish root, so the
+# web server has no error document. This writes one to /404.html.
+[outputFormats.ROOT404]
+  mediaType = "text/html"
+  baseName = "404"
+  notAlternative = true
+  root = true
+
+[markup.highlight]
+  noClasses = false
+
+[[menus.main]]
+  name = "Posts"
+  pageRef = "/posts"
+  weight = 10
+
+[[menus.main]]
+  name = "Tags"
+  pageRef = "/tags"
+  weight = 20
+
+[[menus.main]]
+  name = "Search"
+  pageRef = "/search"
+  weight = 30
+
+[params]
+  env = "production"
+  description = "A Hugo theme that sets every page as an engineering drawing sheet."
+  author = "Your Name"
+  DateFormat = "January 2, 2006"
+  defaultTheme = "auto"
+  latestPosts = 5
+  mainSections = ["posts"]
+
+  ShowReadingTime = true
+  ShowWordCount = true
+  ShowPostNavLinks = true
+  ShowCodeCopyButtons = true
+  ShowBreadCrumbs = true
+  ShowShareButtons = true
+  ShareButtons = ["mastodon", "bluesky", "reddit", "hackernews", "linkedin", "email"]
+
+  [params.cover]
+    linkFullImages = true
+
+  [params.schema]
+    publisherType = "Person"
+
+  [params.profile]
+    title = "Your Name"
+    subtitle = "what you do"
+    imageWidth = 120
+
+    [[params.profile.buttons]]
+      name = "Posts"
+      url = "posts"
+
+  [[params.socialIcons]]
+    name = "github"
+    url = "https://github.com/"
+
+  [[params.socialIcons]]
+    name = "mastodon"
+    url = "https://mastodon.social/"
+
+  [params.fuseOpts]
+    threshold = 0.4
+    keys = ["title", "permalink", "summary", "content"]

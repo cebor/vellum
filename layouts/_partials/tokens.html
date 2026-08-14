@@ -1,0 +1,45 @@
+{{- /* Reads the handful of token values that templates also need, straight out
+       of 00-tokens.css, so the stylesheet stays the single source of truth.
+
+       Two things genuinely cannot use var(): the image "sizes" attribute, which
+       is evaluated with no element context, and the theme-color meta content
+       value. Both would otherwise be a hardcoded copy of a token that silently
+       goes stale the day someone changes the column width. Parsing the
+       stylesheet keeps the number in one place and fails the build loudly if a
+       token is renamed, instead of shipping a wrong srcset nobody notices.
+
+       --content-width is the reading column itself, so it *is* the measure an
+       image is laid out into. Below --frame-collapse the drawn frame is dropped
+       and the column runs full-bleed inside its gutters, which is the other half
+       of the sizes expression.
+
+       Returns: measure (px, int), gutterRem (float), collapse (rem, float),
+       bgLight / bgDark (hex strings).
+
+       Call as: {{ $t := partialCached "tokens.html" . "tokens" }} */ -}}
+
+{{- $css := resources.Get "css/00-tokens.css" }}
+{{- if not $css }}{{ errorf "tokens.html: assets/css/00-tokens.css not found" }}{{ end }}
+{{- $c := $css.Content }}
+
+{{- $m := findRESubmatch `--content-width:\s*(\d+)px` $c 1 }}
+{{- if not $m }}{{ errorf "tokens.html: --content-width missing from 00-tokens.css, or not expressed in px" }}{{ end }}
+{{- $measure := int (index (index $m 0) 1) }}
+
+{{- $g := findRESubmatch `--sheet-gutter:\s*([0-9.]+)rem` $c 1 }}
+{{- if not $g }}{{ errorf "tokens.html: --sheet-gutter missing from 00-tokens.css, or not expressed in rem" }}{{ end }}
+{{- $gutter := float (index (index $g 0) 1) }}
+
+{{- $fc := findRESubmatch `--frame-collapse:\s*([0-9.]+)rem` $c 1 }}
+{{- if not $fc }}{{ errorf "tokens.html: --frame-collapse missing from 00-tokens.css, or not expressed in rem" }}{{ end }}
+{{- $collapse := float (index (index $fc 0) 1) }}
+
+{{- $bg := findRESubmatch `--bg:\s*light-dark\(\s*(#[0-9a-fA-F]{3,8})\s*,\s*(#[0-9a-fA-F]{3,8})\s*\)` $c 1 }}
+{{- if not $bg }}{{ errorf "tokens.html: --bg missing from 00-tokens.css, or not a light-dark() pair" }}{{ end }}
+
+{{- return (dict
+    "measure" $measure
+    "gutter" $gutter
+    "collapse" $collapse
+    "bgLight" (index (index $bg 0) 1)
+    "bgDark" (index (index $bg 0) 2)) -}}

@@ -1,0 +1,10 @@
+{{- /* Rendered only when the post opts in (the default) and actually has enough
+       headings to be worth an index. Open by default on a long sheet, since a
+       reader who arrived from a search engine is usually looking for one
+       section rather than reading top to bottom. */ -}}
+{{- if and (ne (.Param "toc") false) (ne (.Param "ShowToc") false) (ge (len .Fragments.Identifiers) 2) }}
+<details class="toc"{{ if ne (.Param "TocOpen") false }} open{{ end }}>
+    <summary class="toc__summary">{{ i18n "toc" }}</summary>
+    <div class="toc__body">{{ .TableOfContents }}</div>
+</details>
+{{- end }}

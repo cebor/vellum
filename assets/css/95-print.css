@@ -1,0 +1,163 @@
+/* Print. This file must keep a numeric prefix after 90-syntax.css: the files
+   are globbed and concatenated in alphabetical order, so the cascade order is
+   the filename order, and these rules only win against the syntax colours
+   because they come later.
+
+   A drawing sheet is a printed artefact to begin with, so printing is not an
+   afterthought here — the frame, the title block and the rules are exactly what
+   should survive onto paper. */
+
+@media print {
+    /* Force the light palette on paper regardless of the reader's choice. The
+       [data-theme] selectors are repeated because they set color-scheme at a
+       higher specificity than a bare :root would. */
+    :root,
+    :root[data-theme="light"],
+    :root[data-theme="dark"] {
+        color-scheme: light;
+    }
+
+    body {
+        background: #fff;
+        /* The graph substrate is screen furniture; on paper the reader's own
+           sheet is the substrate. */
+        background-image: none;
+        font-size: 11pt;
+        line-height: 1.5;
+    }
+
+    /* Chrome that cannot be actioned on paper. */
+    .header,
+    .footer,
+    .zone-rail,
+    .top-link,
+    .theme-toggle,
+    .skip-link,
+    .toc,
+    .post-nav,
+    .pagination,
+    .share,
+    .edit-post,
+    .copy-code,
+    .searchbox,
+    .search-results,
+    .search-status,
+    .heading__anchor,
+    .latest {
+        display: none !important;
+    }
+
+    .sheet__frame {
+        display: block;
+        max-width: none;
+        padding: 0;
+    }
+
+    .main {
+        max-width: none;
+        border: 0;
+        padding: 0;
+    }
+
+    /* The title block is the reason a printed sheet is identifiable, so it
+       prints heavier rather than lighter. */
+    .title-block {
+        border-block: 1.5pt solid #000;
+    }
+
+    .title-block__row + .title-block__row {
+        border-top: 0.5pt solid #999;
+    }
+
+    .content .highlight,
+    .content pre,
+    .table-wrap,
+    .alert,
+    .collapse {
+        border: 0.5pt solid #999;
+        background: none;
+    }
+
+    /* Code must not be cut off at the page edge, since it cannot be scrolled. */
+    .content pre,
+    .content code {
+        white-space: pre-wrap;
+        word-break: break-word;
+        overflow: visible;
+        color: #000;
+    }
+
+    .content .highlight {
+        overflow: visible;
+    }
+
+    .table-wrap {
+        overflow: visible;
+    }
+
+    /* Syntax colour prints as grey mud; weight and italics carry the structure
+       instead. This is why the file must sort after 90-syntax.css. */
+    .chroma,
+    .chroma * {
+        color: #000 !important;
+        background: none !important;
+    }
+
+    .chroma .c,
+    .chroma .ch,
+    .chroma .cm,
+    .chroma .cp,
+    .chroma .cpf,
+    .chroma .c1,
+    .chroma .cs {
+        color: #555 !important;
+    }
+
+    .chroma .k,
+    .chroma .kc,
+    .chroma .kd,
+    .chroma .kn,
+    .chroma .kp,
+    .chroma .kr,
+    .chroma .kt {
+        font-weight: 700;
+    }
+
+    /* A link's destination is invisible on paper unless it is printed. */
+    .content a[href^="http"]::after {
+        content: " (" attr(href) ")";
+        font-size: 0.85em;
+        color: #555;
+        word-break: break-all;
+    }
+
+    a {
+        text-decoration: underline;
+        color: #000;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+        break-after: avoid;
+        page-break-after: avoid;
+    }
+
+    .content pre,
+    .table-wrap,
+    figure,
+    .alert,
+    blockquote {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    img {
+        max-width: 100% !important;
+    }
+
+    @page {
+        margin: 2cm;
+    }
+}

@@ -1,0 +1,12 @@
+{{- with site.Params.socialIcons }}
+<ul class="social-icons">
+    {{- range . }}
+    <li>
+        <a class="social-icons__link" href="{{ .url }}" rel="noopener noreferrer me" target="_blank"
+            aria-label="{{ .title | default (.name | title) }}" title="{{ .title | default (.name | title) }}">
+            {{- partialCached "icon.html" .name .name -}}
+        </a>
+    </li>
+    {{- end }}
+</ul>
+{{- end }}

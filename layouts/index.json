@@ -1,0 +1,18 @@
+{{- /* The per-language search index, fetched by /{lang}/search/. It exists only
+       because [outputs] home includes "JSON" — drop that and search silently
+       finds nothing, with no build error.
+
+       site.RegularPages is already language-scoped, so /en/index.json contains
+       only English pages. */ -}}
+{{- $pages := where site.RegularPages "Params.searchHidden" "!=" true -}}
+{{- $pages = where $pages "Layout" "!=" "search" -}}
+{{- $pages = where $pages "Layout" "!=" "archives" -}}
+{{- $index := slice -}}
+{{- range $pages -}}
+{{- $index = $index | append (dict
+    "title" .Title
+    "permalink" .RelPermalink
+    "summary" (.Summary | plainify | chomp)
+    "content" (.Plain | chomp)) -}}
+{{- end -}}
+{{- $index | jsonify -}}
