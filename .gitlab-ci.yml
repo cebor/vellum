@@ -10,7 +10,11 @@ stages:
   - deploy
 
 default:
-  image: hugomods/hugo:0.165.0
+  image:
+    # The official image builds with HUGO_BUILD_TAGS=extended. Its entrypoint is
+    # hugo itself, so it has to be cleared for GitLab to run a shell in it.
+    name: ghcr.io/gohugoio/hugo
+    entrypoint: [""]
 
 variables:
   # The title block prints dates through Hugo's zone-aware formatting, so the
@@ -34,8 +38,8 @@ cache:
     - mkdir -p exampleSite/themes
     - ln -sfn ../.. exampleSite/themes/vellum
     # render-image.html encodes its WebP ladder, which the standard edition
-    # cannot do. Without this guard a wrong image yields a green pipeline and a
-    # site whose every image silently fell back to the source file.
+    # cannot do. Without this guard a standard image yields a green pipeline and
+    # a site whose every image silently fell back to the source file.
     - hugo version
     - hugo version | grep -q extended || { echo "this theme requires Hugo extended"; exit 1; }
     # CI_PAGES_URL carries the subpath the demo is served under; the fingerprinted
@@ -54,13 +58,20 @@ build:
   stage: test
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_COMMIT_BRANCH && $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
 
-pages:
+create-pages:
   extends: .hugo
   stage: deploy
+  pages:
+    # The folder that contains the files to be exposed at the Page URL.
+    publish: public
+  # Kept alongside `pages.publish`: GitLab's own Hugo template still declares it,
+  # and without it a runner that predates the keyword publishes nothing.
   artifacts:
     paths:
       - public
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    # This ensures that only pushes to the default branch will trigger
+    # a pages deploy
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
