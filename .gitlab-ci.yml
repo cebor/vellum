@@ -27,12 +27,13 @@ variables:
   # quiet failure: the HTML loads and every asset under it 404s.
   PAGES_BASE_URL: "$CI_PAGES_URL"
 
-# Hugo writes processed images and other derived resources here. Keyed per
-# branch so a Pages build reuses what the preceding branch build produced.
-cache:
-  key: "hugo-$CI_COMMIT_REF_SLUG"
-  paths:
-    - exampleSite/resources/_gen/
+# No cache of exampleSite/resources/_gen/, deliberately. The runner's helper
+# container extracts a cache as root, while the Hugo image runs as hugo:hugo —
+# so a restored _gen/ is a root-owned directory the build cannot create anything
+# new inside. It fails the moment a build needs a subdirectory the cached tree
+# does not already have (_gen/images/ was the one that caught this), and it fails
+# only on the second run, when a cache exists. Hugo regenerates the whole tree in
+# well under a second at this size.
 
 .hugo:
   script:
