@@ -205,13 +205,13 @@ template rather than using it.
 `collapse` is load-bearing: Goldmark's `unsafe` is off by default, so a raw `<details>` written in
 Markdown is stripped and this is the only way to fold long command output.
 
-```
+````markdown
 {{< collapse summary="Full output" >}}
 ```console
 …
 ```
 {{< /collapse >}}
-```
+````
 
 ## Markdown extras
 
