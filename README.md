@@ -91,9 +91,10 @@ Nothing then lands at the publish root for a web server to use as its error docu
   home = ["HTML", "RSS", "JSON", "ROOT404"]
 ```
 
-> **A full worked example** lives in [`exampleSite/hugo.toml`](exampleSite/hugo.toml) — two
-> languages, menus, profile, search and the root 404, all in one file. It is the fastest way to see
-> how the pieces fit together.
+> [!TIP]
+> A full worked example lives in [`exampleSite/hugo.toml`](exampleSite/hugo.toml) — two languages,
+> menus, profile, search and the root 404, all in one file. It is the fastest way to see how the
+> pieces fit together.
 
 ## Configuration
 
@@ -191,7 +192,8 @@ ShareButtons = ["mastodon", "bluesky", "reddit", "hackernews", "linkedin", "emai
   disabled = false
 ```
 
-> **On a multilingual site, set this per language.** `.File.Path` is relative to that language's
+> [!IMPORTANT]
+> On a multilingual site, set this per language. `.File.Path` is relative to that language's
 > `contentDir`, so a single URL could only ever be right for one of them.
 
 ### Search
@@ -262,8 +264,9 @@ summary = "One sentence, shown in list views and OpenGraph."
 | `menus = "main"` | Put a standalone page in the nav. |
 | `cover` | See [Covers](#covers-1). |
 
-> **Two TOML traps.** A date-only value must stay a **quoted string** (`date = "2026-03-27"`) — a
-> bare TOML local date is not a `time.Time` and Hugo will not cast it reliably. And quote
+> [!WARNING]
+> Two TOML traps. A date-only value must stay a **quoted string** (`date = "2026-03-27"`) — a bare
+> TOML local date is not a `time.Time` and Hugo will not cast it reliably. And quote
 > numeric-looking tags (`"403"`), or they reach templates as numbers.
 
 ### Covers
@@ -370,8 +373,9 @@ Emits its body verbatim — a deliberate hole in `unsafe = false`.
 {{< rawhtml >}}<abbr title="…">…</abbr>{{< /rawhtml >}}
 ```
 
-> **Everything inside is trusted exactly as far as whoever wrote the post is.** Reach for a render
-> hook or another shortcode first.
+> [!CAUTION]
+> Everything inside is trusted exactly as far as whoever wrote the post is. Reach for a render hook
+> or another shortcode first.
 
 ### Markdown extras
 
@@ -418,7 +422,8 @@ is why a local file wants a high number.
 there and the whole sheet follows. Sizes come from `--step--2` … `--step-5` for type and `--space-4xs`
 … `--space-4xl` for spacing.
 
-> **Dim text by dropping to `--meta-soft` and a smaller step, never by lowering opacity.** Every text
+> [!IMPORTANT]
+> Dim text by dropping to `--meta-soft` and a smaller step, never by lowering opacity. Every text
 > token is contrast-checked at ≥4.5:1 against its surface in both schemes, and an `opacity: 0.6`
 > silently undoes that.
 

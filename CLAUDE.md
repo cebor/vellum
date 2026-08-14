@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Vellum** — a multilingual Hugo theme that sets every page as an engineering drawing sheet: a drawn frame, and a ruled **title block** carrying the post's metadata instead of a grey caption line. The zone rail down the frame's left edge is a real section index — one lettered zone per top-level heading, each a link — and it renders only on pages that have sections to index, never as lettering over an empty field.
 
-It was extracted from a personal blog it had been built inside, and is now developed standalone. This repo has no remote and no commits yet.
+It was extracted from a personal blog it had been built inside, and is now developed standalone. It lives at `gitlab.stkn.org:felix/vellum`, is committed to directly on `main`, and publishes `exampleSite/` to GitLab Pages from there.
 
 `README.md` is the user-facing documentation — params, front matter, shortcodes, icon set — and `exampleSite/` is a standalone site that exercises the theme without the blog's content. A param that isn't in the README does nothing; add it there when you add it to a template.
 
