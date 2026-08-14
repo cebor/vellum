@@ -1,32 +1,65 @@
 # Vellum
 
-A multilingual Hugo theme that sets every page as an **engineering drawing sheet**: a drawn frame
-with a zone rail down its left edge, and a ruled **title block** carrying the metadata a grey caption
-line usually mumbles — issued, revised, extent, by, subject, also in.
+**A multilingual Hugo theme that sets every page as an engineering drawing sheet** — a drawn frame
+with a zone rail down its left edge, and a ruled title block carrying the metadata a grey caption
+line usually mumbles.
 
-**[Demo](https://pages.stkn.org/felix/vellum)** · **[Source](https://gitlab.stkn.org/felix/vellum)**
+[![Hugo](https://img.shields.io/badge/Hugo-%E2%89%A5%200.158%20extended-ff4088?style=flat-square&logo=hugo&logoColor=white)](https://gohugo.io)
+[![Licence](https://img.shields.io/badge/licence-MIT-blue?style=flat-square)](LICENSE)
 
-Built for technical writing that is mostly code. The reading column is wide — 800px, which measures
+**[Live demo](https://pages.stkn.org/felix/vellum)** · **[Source](https://gitlab.stkn.org/felix/vellum)**
+
+Built for technical writing that is mostly code. The reading column is wide — 800px, measuring
 **92 characters** at the 20px body size — because terminal output and command blocks are the
-substance, not an inset; the line height is correspondingly generous so a line that long stays
-trackable. Both numbers were measured from a rendered line rather than estimated.
+substance, not an inset. The line height is correspondingly generous so a line that long stays
+trackable.
 
-Requires **Hugo extended ≥ 0.158** and uses Hugo's flat layout structure — templates directly in
-`layouts/`, partials in `layouts/_partials/`, render hooks in `layouts/_markup/`, shortcodes in
-`layouts/_shortcodes/`. There is no `layouts/_default/` and no `layouts/partials/`; files placed
-there silently do nothing.
+| | |
+|---|---|
+| **Multilingual** | Per-language content, menus, profiles, feeds and search indexes |
+| **Search** | Client-side, Fuse.js, built from the site's own JSON output |
+| **Light / dark** | Follows the OS, or a toggle; works with JavaScript disabled |
+| **Responsive images** | Bundle images auto-resized to a 480/800/1600 WebP ladder |
+| **Self-hosted fonts** | Two variable faces, ~121 KB, no third-party requests |
+| **Landing page** | Profile block, buttons, latest posts |
+| **Post furniture** | Table of contents, reading time, breadcrumbs, share row, post nav, edit link |
+| **Archives & taxonomies** | Year/month archive, tag pages |
+| **SEO** | OpenGraph, Twitter cards, schema.org, RSS, canonical + hreflang |
+| **Print** | A dedicated print stylesheet, not an afterthought |
 
-Browser baseline: **Chrome 123+, Safari 17.5+, Firefox 120+** (CSS `light-dark()`). Older browsers get
-a plain light palette through an `@supports` fallback rather than a broken page.
+## Contents
 
-## Install
+[Requirements](#requirements) · [Quick start](#quick-start) · [Configuration](#configuration) ·
+[Content](#content) · [Icons](#icons) · [Customising](#customising) · [Development](#development) ·
+[Licence](#licence)
+
+## Requirements
+
+- **Hugo extended ≥ 0.158.** Lower versions fail at render time, not with a friendly message.
+- **Browsers:** Chrome 123+, Safari 17.5+, Firefox 120+ (CSS `light-dark()`). Older browsers get a
+  plain light palette through an `@supports` fallback rather than a broken page.
+
+The theme uses Hugo's flat layout structure — templates directly in `layouts/`, partials in
+`layouts/_partials/`, render hooks in `layouts/_markup/`, shortcodes in `layouts/_shortcodes/`. There
+is no `layouts/_default/` and no `layouts/partials/`; files placed there silently do nothing.
+
+## Quick start
+
+### 1. Add the theme
 
 ```bash
 git submodule add https://gitlab.stkn.org/felix/vellum.git themes/vellum
 ```
 
-Set `theme = "vellum"` in your site config — copying the directory in works just as well as the
-submodule. Then wire up the three settings the theme cannot supply for itself:
+Copying the directory in works just as well as the submodule. Then set it in your site config:
+
+```toml
+theme = "vellum"
+```
+
+### 2. Wire up what the theme cannot supply for itself
+
+These three settings are **required**. Without them, search and syntax highlighting fail quietly.
 
 ```toml
 [outputs]
@@ -42,8 +75,9 @@ pygmentsUseClasses = true
   noClasses = false
 ```
 
-With `defaultContentLanguageInSubdir = true`, nothing lands at the publish root for a web server to
-use as its error document. Add:
+### 3. If you use `defaultContentLanguageInSubdir`
+
+Nothing then lands at the publish root for a web server to use as its error document. Add:
 
 ```toml
 [outputFormats.ROOT404]
@@ -57,9 +91,13 @@ use as its error document. Add:
   home = ["HTML", "RSS", "JSON", "ROOT404"]
 ```
 
-## Site parameters
+> **A full worked example** lives in [`exampleSite/hugo.toml`](exampleSite/hugo.toml) — two
+> languages, menus, profile, search and the root 404, all in one file. It is the fastest way to see
+> how the pieces fit together.
 
-Everything below is optional unless marked. A key that is not listed here does nothing.
+## Configuration
+
+Everything below is optional unless marked. **A key that is not listed here does nothing.**
 
 ### Identity
 
@@ -91,11 +129,22 @@ Everything below is optional unless marked. A key that is not listed here does n
 
 ### Display toggles
 
-`ShowReadingTime`, `ShowWordCount`, `ShowPostNavLinks`, `ShowCodeCopyButtons`, `ShowBreadCrumbs`,
-`ShowShareButtons`, `ShowToc`, `TocOpen`, `ShowFullTextinRSS`, `ShowAllPagesInArchive` — all booleans,
-all overridable per page.
+All booleans, all `false` unless set, and **all overridable per page** in front matter.
 
-### Blocks
+| Param | Shows |
+|---|---|
+| `ShowReadingTime` | Estimated reading time in the title block. |
+| `ShowWordCount` | Word count in the title block. |
+| `ShowPostNavLinks` | Previous / next links under a post. |
+| `ShowCodeCopyButtons` | A copy button on every code block. |
+| `ShowBreadCrumbs` | The section trail above the title. |
+| `ShowShareButtons` | The share row under a post. |
+| `ShowToc` | Table of contents (appears whenever a page has ≥2 headings). |
+| `TocOpen` | Renders that table of contents expanded. |
+| `ShowFullTextinRSS` | Full post bodies in the feed instead of summaries. |
+| `ShowAllPagesInArchive` | Every page in the archive, not just `mainSections`. |
+
+### Landing page
 
 ```toml
 [params.profile]
@@ -108,21 +157,56 @@ all overridable per page.
   [[params.profile.buttons]]
     name = "Posts"
     url = "posts"
+```
 
+### Social icons
+
+```toml
 [[params.socialIcons]]
-  name = "github"                # must match an icon name below
+  name = "github"                # must match an icon name — see Icons below
   url = "https://github.com/you"
   title = "GitHub"               # optional accessible name
+```
 
+### Share buttons
+
+```toml
+ShareButtons = ["mastodon", "bluesky", "reddit", "hackernews", "linkedin", "email"]
+```
+
+### Covers
+
+```toml
 [params.cover]
   linkFullImages = true          # clicking a cover opens the original
+```
 
+### Edit-post link
+
+```toml
 [params.editPost]
   URL = "https://github.com/you/site/edit/main/content"
   Text = "Suggest an edit"
   appendFilePath = true
   disabled = false
+```
 
+> **On a multilingual site, set this per language.** `.File.Path` is relative to that language's
+> `contentDir`, so a single URL could only ever be right for one of them.
+
+### Search
+
+Passed straight to [Fuse.js](https://fusejs.io/api/options.html):
+
+```toml
+[params.fuseOpts]
+  threshold = 0.4
+  keys = ["title", "permalink", "summary", "content"]
+```
+
+### SEO and analytics
+
+```toml
 [params.schema]
   publisherType = "Person"       # or "Organization"
   sameAs = []                    # defaults to your socialIcons URLs
@@ -132,22 +216,22 @@ all overridable per page.
 
 [params.analytics.google]
   SiteVerificationTag = "…"      # also .bing, .yandex
+```
 
+### Favicons
+
+```toml
 [params.assets]
   favicon = "/favicon.ico"
   favicon16x16 = "/favicon-16x16.png"
   favicon32x32 = "/favicon-32x32.png"
   apple_touch_icon = "/apple-touch-icon.png"
   safari_pinned_tab = "/safari-pinned-tab.svg"
-
-[params.fuseOpts]                # passed straight to Fuse.js
-  threshold = 0.4
-  keys = ["title", "permalink", "summary", "content"]
-
-ShareButtons = ["mastodon", "bluesky", "reddit", "hackernews", "linkedin", "email"]
 ```
 
-## Front matter
+## Content
+
+### Front matter
 
 ```toml
 +++
@@ -176,11 +260,11 @@ summary = "One sentence, shown in list views and OpenGraph."
 | `layout = "search"` | Render the search page. |
 | `layout = "archives"` | Render the year/month archive. |
 | `menus = "main"` | Put a standalone page in the nav. |
-| `cover` | See below. |
+| `cover` | See [Covers](#covers-1). |
 
-A date-only value stays a **quoted string** (`date = "2026-03-27"`): a bare TOML local date is not a
-`time.Time` and Hugo will not cast it reliably. Quote numeric-looking tags (`"403"`) — bare numbers
-reach templates as numbers.
+> **Two TOML traps.** A date-only value must stay a **quoted string** (`date = "2026-03-27"`) — a
+> bare TOML local date is not a `time.Time` and Hugo will not cast it reliably. And quote
+> numeric-looking tags (`"403"`), or they reach templates as numbers.
 
 ### Covers
 
@@ -198,12 +282,13 @@ With no `cover` block at all, a bundle resource named `cover.*` is picked up aut
 feed `og:image` and the Twitter card — which is why this theme overrides Hugo's internal OpenGraph
 template rather than using it.
 
-## Shortcodes
+### Shortcodes
 
-`figure`, `collapse` (alias `details`), `video`, `audio`, `rawhtml`, `intextimg`.
+#### `collapse` (alias `details`)
 
-`collapse` is load-bearing: Goldmark's `unsafe` is off by default, so a raw `<details>` written in
-Markdown is stripped and this is the only way to fold long command output.
+Folds long command output away without hiding it from search or print. **Load-bearing:** Goldmark's
+`unsafe` is off, so a raw `<details>` written in Markdown is stripped — this is the only way to get
+one.
 
 ````markdown
 {{< collapse summary="Full output" >}}
@@ -213,55 +298,139 @@ Markdown is stripped and this is the only way to fold long command output.
 {{< /collapse >}}
 ````
 
-## Markdown extras
+| Param | Default | Notes |
+|---|---|---|
+| `summary` | — | **Required.** Markdown is rendered. Also accepted positionally. |
+| `openByDefault` | unset | Render the block already unfolded. |
+
+#### `figure`
+
+Overrides Hugo's built-in figure so the image goes through the same WebP ladder as everything else
+and carries intrinsic dimensions. It exists only because the render hook cannot produce a caption.
+
+```markdown
+{{< figure src="shot.png" alt="A terminal" caption="After the migration" >}}
+```
+
+| Param | Notes |
+|---|---|
+| `src` | A page-bundle resource, or a path under `assets/`. |
+| `alt` | Falls back to the plain-text `caption`. |
+| `caption` | Markdown, rendered under the image. |
+| `attr` | Attribution line, markdown. |
+| `attrlink` | Wraps `attr` in a link. |
+| `link` | Wraps the image in a link; `target` and `rel` go with it. |
+| `class` | Extra class on the `<figure>`. |
+
+#### `video`
+
+Never autoplays — a reader mid-task does not want sound.
+
+```markdown
+{{< video src="clip.mp4" poster="still.png" >}}
+```
+
+| Param | Notes |
+|---|---|
+| `src` | A page-bundle resource or a plain URL. Also accepted positionally. |
+| `poster` | Still frame; also resolved as a bundle resource. |
+| `type` | Explicit MIME type on the `<source>`. |
+| `loop`, `muted` | Set to enable. |
+
+#### `audio`
+
+```markdown
+{{< audio src="clip.mp3" >}}
+```
+
+| Param | Notes |
+|---|---|
+| `src` | A page-bundle resource or a plain URL. Also accepted positionally. |
+
+#### `intextimg`
+
+An image set inline in a run of text — a glyph, a badge, a small mark — sized to the line rather
+than the column.
+
+```markdown
+{{< intextimg url="icon.svg" alt="the icon" height="1.1em" >}}
+```
+
+| Param | Default | Notes |
+|---|---|---|
+| `url` (or `src`) | — | A page-bundle resource or a plain URL. |
+| `alt` | — | |
+| `height` | `1em` | Any CSS length. |
+
+#### `rawhtml`
+
+Emits its body verbatim — a deliberate hole in `unsafe = false`.
+
+```markdown
+{{< rawhtml >}}<abbr title="…">…</abbr>{{< /rawhtml >}}
+```
+
+> **Everything inside is trusted exactly as far as whoever wrote the post is.** Reach for a render
+> hook or another shortcode first.
+
+### Markdown extras
+
+None of these need a shortcode.
 
 - **Alerts.** A blockquote opening with `> [!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` or
-  `[!CAUTION]` becomes a labelled callout. Plain Markdown, no shortcode.
-- **Headings** get an anchor link on hover from `_markup/render-heading.html`.
+  `[!CAUTION]` becomes a labelled callout.
+- **Headings** get an anchor link on hover.
 - **External links** get `rel="noopener noreferrer"`, a new tab, and a marker.
 - **Tables** are wrapped in a focusable scroll container — Goldmark emits a bare `<table>` and a wide
   one would push the whole page sideways.
 - **Images in a page bundle** are resized to a 480/800/1600 WebP ladder with `sizes` and intrinsic
-  dimensions. An image referenced from outside a bundle is passed through untouched and gets none of
-  that, so always put post images in a page bundle.
+  dimensions, so they neither shift the layout nor ship at source resolution. An image referenced
+  from *outside* a bundle is passed through untouched and gets none of that — **always put post
+  images in a page bundle.**
 
 ## Icons
 
-UI glyphs, authored on a 24×24 grid with a 1.75 stroke: `arrow-up`, `arrow-right`, `arrow-left`,
-`external`, `hash`, `search`, `pencil`, `chevron-right`, `check`, `moon`, `sun`, `rss`, `email`.
+UI glyphs, authored on a 24×24 grid with a 1.75 stroke:
 
-Brand marks, from [Simple Icons](https://simpleicons.org) (CC0) as filled paths: `github`, `bluesky`,
-`stackoverflow`, `reddit`, `mastodon`, `linkedin`, `x`, `telegram`, `whatsapp`, `ycombinator`,
-`gitlab`, `codeberg`.
+`arrow-up` · `arrow-right` · `arrow-left` · `external` · `hash` · `search` · `pencil` ·
+`chevron-right` · `check` · `moon` · `sun` · `rss` · `email`
+
+Brand marks, from [Simple Icons](https://simpleicons.org) (CC0) as filled paths:
+
+`github` · `bluesky` · `stackoverflow` · `reddit` · `mastodon` · `linkedin` · `x` · `telegram` ·
+`whatsapp` · `ycombinator` · `gitlab` · `codeberg`
 
 Unknown names fall back to a generic link glyph, so a typo in `socialIcons` is visible rather than
-silent. Extend by adding a branch to `_partials/icon.html`.
+silent. Extend the set by adding a branch to `_partials/icon.html`.
 
-## Styling
+## Customising
+
+### Your own CSS
+
+Add `assets/css/99-local.css` to your **site** — site assets join the theme's glob and land last, so
+your rules win without forking anything.
 
 `assets/css/` holds numerically prefixed files that are globbed, concatenated, minified and
-fingerprinted into one stylesheet with an SRI hash. **The numeric prefix is the cascade order** —
-`95-print.css` sits after `90-syntax.css` precisely so its `@media print` rules can override the
-syntax colours.
+fingerprinted into one stylesheet with an SRI hash. **The numeric prefix is the cascade order**, which
+is why a local file wants a high number.
 
-`00-tokens.css` is the single source of truth for colour, type, space and motion, and nothing else in
-the stylesheet may carry a bare hex, rem or duration. Three values are also parsed out of it at build
-time by `_partials/tokens.html` — `--content-width`, `--sheet-gutter`, `--frame-collapse` and `--bg` —
-because an image `sizes` attribute and a `theme-color` meta cannot use `var()`. Renaming any of them
-fails the build loudly instead of shipping a stale value. `--content-width` is the reading column
-itself, so the frame arithmetic must keep resolving to exactly that width.
+`00-tokens.css` is the single source of truth for colour, type, space and motion — override a token
+there and the whole sheet follows. Sizes come from `--step--2` … `--step-5` for type and `--space-4xs`
+… `--space-4xl` for spacing.
 
-Colours resolve through `light-dark()`, so each is written once. `color-scheme: light dark` on a bare
-`:root` is what `data-theme="auto"` matches; the explicit `[data-theme]` rules override *only*
-`color-scheme`, never the palette. The page therefore themes correctly with JavaScript disabled.
-Two consequences: a rule that needs to *override* `color-scheme` must repeat the `[data-theme]`
-selectors to win on specificity (see `95-print.css`), and a display swap like the theme-toggle icon
-still needs a real `prefers-color-scheme` query because `light-dark()` only produces colours.
+> **Dim text by dropping to `--meta-soft` and a smaller step, never by lowering opacity.** Every text
+> token is contrast-checked at ≥4.5:1 against its surface in both schemes, and an `opacity: 0.6`
+> silently undoes that.
 
-Every text token is contrast-checked at ≥4.5:1 against its surface in both schemes. Dim text by
-dropping to `--meta-soft` and a smaller step, never by lowering opacity.
+Colours resolve through CSS `light-dark()`, so each is written once and the page themes correctly
+with JavaScript disabled. Note that `light-dark()` only produces *colours* — a display swap like the
+theme-toggle icon still needs a real `prefers-color-scheme` query.
 
-A site can add its own `assets/css/99-local.css`; site assets join the same glob and land last.
+### Template overrides
+
+`_partials/extend-head.html`, `_partials/extend-footer.html`, `_partials/extend-post-content.html`
+and `_partials/comments.html` are empty stubs. Create a file of the same name in your site's own
+`layouts/_partials/` and it wins.
 
 ### Fonts
 
@@ -273,15 +442,19 @@ Two self-hosted variable faces, subset to latin and latin-ext, preloaded, `font-
 - **JetBrains Mono** (SIL OFL) for code, figures and tabular numerals. No italic: syntax comments are
   separated by colour instead, so a code block never pulls a second mono file.
 
-Together they are ~121 KB on first load and cached thereafter. That is a deliberate trade for a theme
-whose subject is code; drop the `@font-face` blocks in `10-base.css` and the preloads in
-`_partials/head-assets.html` to fall back to system stacks.
+Together they are ~121 KB on first load and cached thereafter — a deliberate trade for a theme whose
+subject is code. To fall back to system stacks, drop the `@font-face` blocks in `10-base.css` and the
+preloads in `_partials/head-assets.html`.
 
-## Extending without forking
+## Development
 
-`_partials/extend-head.html`, `_partials/extend-footer.html`, `_partials/extend-post-content.html`
-and `_partials/comments.html` are empty stubs. Create a file of the same name in your site's own
-`layouts/_partials/` and it wins.
+```bash
+hugo server -D --source exampleSite --themesDir ../..
+```
+
+`exampleSite/` is a standalone site that exercises the theme, and is what every change is tested
+against. [`DESIGN.md`](DESIGN.md) records the visual system behind the stylesheet — line weights,
+palette, motion, print — if you want to extend it in keeping.
 
 ## Licence
 
