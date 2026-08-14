@@ -35,10 +35,7 @@ pygmentsUseClasses = true
 [languages]
 
   [languages.en]
-    # languageName, not the newer `label`: the theme supports Hugo 0.146 and up,
-    # and `label` only exists from 0.158. Hugo warns about the old key but
-    # honours it; swapping it would break the declared minimum.
-    languageName = "English"
+    label = "English"
     contentDir = "content/en"
     weight = 1
     title = "Vellum"
@@ -98,7 +95,7 @@ pygmentsUseClasses = true
       weight = 40
 
   [languages.de]
-    languageName = "Deutsch"
+    label = "Deutsch"
     contentDir = "content/de"
     weight = 2
     title = "Vellum"

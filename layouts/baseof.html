@@ -1,5 +1,8 @@
-{{- if lt hugo.Version "0.146.0" }}
-{{- errorf "the vellum theme requires hugo v0.146.0 or greater" }}
+{{- /* 0.158 is where site.Language.Locale and .Language.Label arrived, both of
+       which this file and five others use unguarded. The theme claimed 0.146 for
+       a while and did not build there at all. */ -}}
+{{- if lt hugo.Version "0.158.0" }}
+{{- errorf "the vellum theme requires hugo v0.158.0 or greater" }}
 {{- end -}}
 <!DOCTYPE html>
 <html lang="{{ site.Language.Locale | default site.Language.Lang }}"

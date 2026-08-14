@@ -36,7 +36,7 @@ features = [
   "minified-assets",
   "subresource-integrity",
 ]
-min_version = "0.146.0"
+min_version = "0.158.0"
 
 [author]
   name = "Felix Itzenplitz"

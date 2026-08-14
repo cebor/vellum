@@ -11,7 +11,7 @@ Built for technical writing that is mostly code. The reading column is wide — 
 substance, not an inset; the line height is correspondingly generous so a line that long stays
 trackable. Both numbers were measured from a rendered line rather than estimated.
 
-Requires **Hugo extended ≥ 0.146** and uses Hugo's flat layout structure — templates directly in
+Requires **Hugo extended ≥ 0.158** and uses Hugo's flat layout structure — templates directly in
 `layouts/`, partials in `layouts/_partials/`, render hooks in `layouts/_markup/`, shortcodes in
 `layouts/_shortcodes/`. There is no `layouts/_default/` and no `layouts/partials/`; files placed
 there silently do nothing.

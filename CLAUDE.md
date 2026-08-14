@@ -12,7 +12,7 @@ It was extracted from a personal blog it had been built inside, and is now devel
 
 ## Structure
 
-Requires Hugo extended ≥ 0.146 and uses Hugo's flat layout structure: templates directly in `layouts/` (`baseof.html`, `home.html`, `list.html`, `single.html`, `term.html`, `taxonomy.html`, `archives.html`, `search.html`), partials in `layouts/_partials/`, render hooks in `layouts/_markup/`, shortcodes in `layouts/_shortcodes/`. There is no `layouts/_default/` and no `layouts/partials/` — putting files there silently does nothing.
+Requires Hugo extended ≥ 0.158 — `site.Language.Locale` and `.Language.Label` are used unguarded in six templates and neither exists before that, so a lower version fails at render time, not with the version guard's message. Uses Hugo's flat layout structure: templates directly in `layouts/` (`baseof.html`, `home.html`, `list.html`, `single.html`, `term.html`, `taxonomy.html`, `archives.html`, `search.html`), partials in `layouts/_partials/`, render hooks in `layouts/_markup/`, shortcodes in `layouts/_shortcodes/`. There is no `layouts/_default/` and no `layouts/partials/` — putting files there silently does nothing.
 
 Three render hooks carry behaviour the site depends on, not just styling:
 
