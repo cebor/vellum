@@ -16,7 +16,7 @@ Requires Hugo extended ≥ 0.146 and uses Hugo's flat layout structure: template
 
 Three render hooks carry behaviour the site depends on, not just styling:
 
-- `_markup/render-image.html` resizes bundled images to a 480/752/1504 WebP ladder with a `sizes` attribute and intrinsic `width`/`height`, so they neither shift the layout nor ship at source resolution. An image referenced from outside a page bundle is passed through untouched and gets none of that.
+- `_markup/render-image.html` resizes bundled images to a 480/800/1600 WebP ladder (the ladder is derived from `--content-width`, so those numbers move with it) with a `sizes` attribute and intrinsic `width`/`height`, so they neither shift the layout nor ship at source resolution. An image referenced from outside a page bundle is passed through untouched and gets none of that.
 - `_markup/render-table.html` supplies the `.table-wrap` scroll container that `50-single.css` styles. Goldmark's default `<table>` has no wrapper, and a wide one pushes the whole page sideways.
 - `_markup/render-blockquote.html` turns `> [!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]` into labelled alerts, which is why posts never need raw HTML (Goldmark's `unsafe` is off).
 

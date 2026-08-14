@@ -12,9 +12,10 @@
     {{- with .Get "link" }}<a href="{{ . }}"{{ with $.Get "target" }} target="{{ . }}"{{ end }}{{ with $.Get "rel" }} rel="{{ . }}"{{ end }}>{{ end }}
     {{- if and $img (eq $img.ResourceType "image") }}
     {{- $set := partial "image-set.html" (dict "resource" $img "measure" $t.measure) }}
-    <img src="{{ $set.src }}" srcset="{{ $set.srcset }}"
-        sizes="(max-width: {{ $t.collapse }}rem) calc(100vw - {{ mul $t.gutter 2 }}rem), {{ $t.measure }}px"
-        width="{{ $set.width }}" height="{{ $set.height }}"
+    <img src="{{ $set.src }}"
+        {{- with $set.srcset }} srcset="{{ . }}"
+        sizes="(max-width: {{ $t.collapse }}rem) calc(100vw - {{ mul $t.gutter 2 }}rem), {{ $t.measure }}px"{{ end }}
+        {{- with $set.width }} width="{{ . }}"{{ end }}{{ with $set.height }} height="{{ . }}"{{ end }}
         alt="{{ .Get "alt" | default (.Get "caption" | plainify) }}" loading="lazy" decoding="async">
     {{- else }}
     <img src="{{ $src | safeURL }}" alt="{{ .Get "alt" | default (.Get "caption" | plainify) }}"

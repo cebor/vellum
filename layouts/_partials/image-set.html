@@ -9,9 +9,22 @@
        a small image is never upscaled into a blurry "retina" variant, and a
        source narrower than the smallest step is passed through untouched.
 
-       width/height come from the 1x variant and are always emitted, because an
-       image without intrinsic dimensions shifts the layout as it loads. */ -}}
+       width/height come from the 1x variant and are always emitted for a raster
+       source, because an image without intrinsic dimensions shifts the layout as
+       it loads. A vector source has neither, and says so by returning them empty.
+
+       One return, at the end: Hugo rewrites a single return statement per
+       partial and reports the second one as a wrong-arity call. */ -}}
 {{- $img := .resource }}
+{{- $out := dict }}
+
+{{- if eq $img.MediaType.SubType "svg" }}
+{{- /* A vector has no pixel dimensions and cannot be resized — reaching .Width
+       on an SVG stops the build. Hand it back untouched and let each caller omit
+       the attributes it has no value for, which is the correct markup anyway. */ -}}
+{{- $out = dict "src" $img.RelPermalink "srcset" "" "width" "" "height" "" }}
+
+{{- else }}
 {{- $measure := int .measure }}
 {{- $small := int (math.Min 480 $measure) }}
 
@@ -44,8 +57,11 @@
 {{- $srcset = $srcset | append (printf "%s %dw" .RelPermalink .Width) }}
 {{- end }}
 
-{{- return (dict
+{{- $out = dict
     "src" $base.RelPermalink
     "srcset" (delimit $srcset ", ")
     "width" $base.Width
-    "height" $base.Height) -}}
+    "height" $base.Height }}
+{{- end }}
+
+{{- return $out -}}

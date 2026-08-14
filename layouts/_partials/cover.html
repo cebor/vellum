@@ -39,9 +39,10 @@
     {{- if and $single site.Params.cover.linkFullImages }}
     <a href="{{ $img.RelPermalink }}" aria-label="{{ $alt | default $p.Title }}">
     {{- end }}
-    <img class="cover__image" src="{{ $set.src }}" srcset="{{ $set.srcset }}"
-        sizes="(max-width: {{ $t.collapse }}rem) calc(100vw - {{ mul $t.gutter 2 }}rem), {{ $t.measure }}px"
-        width="{{ $set.width }}" height="{{ $set.height }}" alt="{{ $alt }}"
+    <img class="cover__image" src="{{ $set.src }}"
+        {{- with $set.srcset }} srcset="{{ . }}"
+        sizes="(max-width: {{ $t.collapse }}rem) calc(100vw - {{ mul $t.gutter 2 }}rem), {{ $t.measure }}px"{{ end }}
+        {{- with $set.width }} width="{{ . }}"{{ end }}{{ with $set.height }} height="{{ . }}"{{ end }} alt="{{ $alt }}"
         loading="{{ if $single }}eager{{ else }}lazy{{ end }}"
         {{ if $single }}fetchpriority="high"{{ else }}decoding="async"{{ end }}>
     {{- if and $single site.Params.cover.linkFullImages }}</a>{{ end }}

@@ -16,9 +16,10 @@
 {{- $img := .PageInner.Resources.GetMatch .Destination }}
 {{- if and $img (eq $img.ResourceType "image") }}
 {{- $set := partial "image-set.html" (dict "resource" $img "measure" $t.measure) }}
-<img src="{{ $set.src }}" srcset="{{ $set.srcset }}"
-    sizes="(max-width: {{ $t.collapse }}rem) calc(100vw - {{ mul $t.gutter 2 }}rem), {{ $t.measure }}px"
-    alt="{{ .Text }}" width="{{ $set.width }}" height="{{ $set.height }}" loading="lazy"
+<img src="{{ $set.src }}"
+    {{- with $set.srcset }} srcset="{{ . }}"
+    sizes="(max-width: {{ $t.collapse }}rem) calc(100vw - {{ mul $t.gutter 2 }}rem), {{ $t.measure }}px"{{ end }}
+    alt="{{ .Text }}"{{ with $set.width }} width="{{ . }}"{{ end }}{{ with $set.height }} height="{{ . }}"{{ end }} loading="lazy"
     decoding="async"{{ with .Title }} title="{{ . }}"{{ end }}>
 {{- else }}
 <img src="{{ .Destination | safeURL }}" alt="{{ .Text }}" loading="lazy" decoding="async"
