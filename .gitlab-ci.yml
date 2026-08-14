@@ -21,6 +21,11 @@ variables:
   # runner's zone leaks into published output if it is left unset.
   TZ: Europe/Berlin
   HUGO_ENV: production
+  # Not CI_PAGES_URL: this instance reports a unique-domain path
+  # (pages.stkn.org/vellum-<hash>/) that it does not actually serve, which sends
+  # every stylesheet and font URL to a 404 while the HTML itself loads fine.
+  # Override it as a CI/CD variable if the demo ever moves.
+  PAGES_BASE_URL: "https://pages.stkn.org/felix/vellum/"
 
 # Hugo writes processed images and other derived resources here. Keyed per
 # branch so a Pages build reuses what the preceding branch build produced.
@@ -42,13 +47,13 @@ cache:
     # a site whose every image silently fell back to the source file.
     - hugo version
     - hugo version | grep -q extended || { echo "this theme requires Hugo extended"; exit 1; }
-    # CI_PAGES_URL carries the subpath the demo is served under; the fingerprinted
-    # stylesheet and every RelPermalink are resolved against it.
+    # The demo is served from a subpath, and the fingerprinted stylesheet, the
+    # fonts and every RelPermalink are resolved against this.
     - >
       hugo
       --source exampleSite
       --destination "$CI_PROJECT_DIR/public"
-      --baseURL "${CI_PAGES_URL:-https://example.org/}"
+      --baseURL "$PAGES_BASE_URL"
       --minify
       --gc
       --printPathWarnings
