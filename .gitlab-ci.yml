@@ -21,11 +21,11 @@ variables:
   # runner's zone leaks into published output if it is left unset.
   TZ: Europe/Berlin
   HUGO_ENV: production
-  # Not CI_PAGES_URL: this instance reports a unique-domain path
-  # (pages.stkn.org/vellum-<hash>/) that it does not actually serve, which sends
-  # every stylesheet and font URL to a 404 while the HTML itself loads fine.
-  # Override it as a CI/CD variable if the demo ever moves.
-  PAGES_BASE_URL: "https://pages.stkn.org/felix/vellum/"
+  # CI_PAGES_URL carries the subpath the demo is served under. Set
+  # PAGES_BASE_URL as a CI/CD variable to override it — worth reaching for if
+  # the instance ever reports a URL it does not actually serve, which is a
+  # quiet failure: the HTML loads and every asset under it 404s.
+  PAGES_BASE_URL: "$CI_PAGES_URL"
 
 # Hugo writes processed images and other derived resources here. Keyed per
 # branch so a Pages build reuses what the preceding branch build produced.
