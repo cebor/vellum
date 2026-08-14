@@ -1,20 +1,23 @@
 baseURL = "https://example.org/"
-title = "Vellum"
 theme = "vellum"
+
+# The theme is multilingual, so the demo is too: English and German, each with
+# its own content directory, menu, profile and search index. A post may exist in
+# only one language — two of the posts below deliberately do.
+defaultContentLanguage = "en"
+defaultContentLanguageInSubdir = true
 
 enableRobotsTXT = true
 capitalizeListTitles = false
 pygmentsUseClasses = true
 
 [pagination]
-  pagerSize = 5
+  # Deliberately small. The demo has nine posts and this is what makes the
+  # pagination visible on a list; a real site would set this far higher.
+  pagerSize = 3
 
 [taxonomies]
   tag = "tags"
-
-[outputs]
-  # The JSON output is the search index.
-  home = ["HTML", "RSS", "JSON"]
 
 # With defaultContentLanguageInSubdir nothing lands at the publish root, so the
 # web server has no error document. This writes one to /404.html.
@@ -27,29 +30,135 @@ pygmentsUseClasses = true
 [markup.highlight]
   noClasses = false
 
-[[menus.main]]
-  name = "Posts"
-  pageRef = "/posts"
-  weight = 10
+# --- languages -------------------------------------------------------------
 
-[[menus.main]]
-  name = "Tags"
-  pageRef = "/tags"
-  weight = 20
+[languages]
 
-[[menus.main]]
-  name = "Search"
-  pageRef = "/search"
-  weight = 30
+  [languages.en]
+    # languageName, not the newer `label`: the theme supports Hugo 0.146 and up,
+    # and `label` only exists from 0.158. Hugo warns about the old key but
+    # honours it; swapping it would break the declared minimum.
+    languageName = "English"
+    contentDir = "content/en"
+    weight = 1
+    title = "Vellum"
+
+    [languages.en.params]
+      description = "A Hugo theme that sets every page as an engineering drawing sheet."
+      # Localised long date. A Go layout string would freeze the month in one
+      # language; the shorthand resolves per language.
+      DateFormat = ":date_long"
+
+      [languages.en.params.profile]
+        title = "Your Name"
+        subtitle = "what you do, in one line"
+        image = "images/profile.png"
+        imageAlt = "Placeholder portrait, drawn as a construction"
+        imageWidth = 120
+
+        [[languages.en.params.profile.buttons]]
+          name = "Posts"
+          url = "posts"
+
+        [[languages.en.params.profile.buttons]]
+          name = "Archive"
+          url = "archive"
+
+      # Per-language, because .File.Path is relative to that language's
+      # contentDir and a single URL could only ever be right for one of them.
+      [languages.en.params.editPost]
+        URL = "https://gitlab.stkn.org/felix/vellum/-/edit/main/exampleSite/content/en"
+        Text = "Suggest an edit"
+        appendFilePath = true
+
+    # The JSON output is the search index; ROOT404 writes the root error
+    # document. Default language only — adding ROOT404 to both makes them
+    # fight over /404.html.
+    [languages.en.outputs]
+      home = ["HTML", "RSS", "JSON", "ROOT404"]
+
+    [[languages.en.menus.main]]
+      name = "Posts"
+      pageRef = "/posts"
+      weight = 10
+
+    [[languages.en.menus.main]]
+      name = "Tags"
+      pageRef = "/tags"
+      weight = 20
+
+    [[languages.en.menus.main]]
+      name = "Archive"
+      pageRef = "/archive"
+      weight = 30
+
+    [[languages.en.menus.main]]
+      name = "Search"
+      pageRef = "/search"
+      weight = 40
+
+  [languages.de]
+    languageName = "Deutsch"
+    contentDir = "content/de"
+    weight = 2
+    title = "Vellum"
+
+    [languages.de.params]
+      description = "Ein Hugo-Theme, das jede Seite als technische Zeichnung setzt."
+      DateFormat = ":date_long"
+
+      [languages.de.params.profile]
+        title = "Dein Name"
+        subtitle = "was du machst, in einer Zeile"
+        image = "images/profile.png"
+        imageAlt = "Platzhalter-Porträt, als Konstruktion gezeichnet"
+        imageWidth = 120
+
+        [[languages.de.params.profile.buttons]]
+          name = "Beiträge"
+          url = "posts"
+
+        [[languages.de.params.profile.buttons]]
+          name = "Archiv"
+          url = "archive"
+
+      [languages.de.params.editPost]
+        URL = "https://gitlab.stkn.org/felix/vellum/-/edit/main/exampleSite/content/de"
+        Text = "Korrektur vorschlagen"
+        appendFilePath = true
+
+    [languages.de.outputs]
+      home = ["HTML", "RSS", "JSON"]
+
+    [[languages.de.menus.main]]
+      name = "Beiträge"
+      pageRef = "/posts"
+      weight = 10
+
+    [[languages.de.menus.main]]
+      name = "Tags"
+      pageRef = "/tags"
+      weight = 20
+
+    [[languages.de.menus.main]]
+      name = "Archiv"
+      pageRef = "/archive"
+      weight = 30
+
+    [[languages.de.menus.main]]
+      name = "Suche"
+      pageRef = "/search"
+      weight = 40
+
+# --- shared params ---------------------------------------------------------
 
 [params]
   env = "production"
-  description = "A Hugo theme that sets every page as an engineering drawing sheet."
   author = "Your Name"
-  DateFormat = "January 2, 2006"
   defaultTheme = "auto"
   latestPosts = 5
   mainSections = ["posts"]
+  displayFullLangName = true
 
   ShowReadingTime = true
   ShowWordCount = true
@@ -57,6 +166,8 @@ pygmentsUseClasses = true
   ShowCodeCopyButtons = true
   ShowBreadCrumbs = true
   ShowShareButtons = true
+  ShowToc = true
+  TocOpen = false
   ShareButtons = ["mastodon", "bluesky", "reddit", "hackernews", "linkedin", "email"]
 
   [params.cover]
@@ -65,15 +176,6 @@ pygmentsUseClasses = true
   [params.schema]
     publisherType = "Person"
 
-  [params.profile]
-    title = "Your Name"
-    subtitle = "what you do"
-    imageWidth = 120
-
-    [[params.profile.buttons]]
-      name = "Posts"
-      url = "posts"
-
   [[params.socialIcons]]
     name = "github"
     url = "https://github.com/"
@@ -81,6 +183,10 @@ pygmentsUseClasses = true
   [[params.socialIcons]]
     name = "mastodon"
     url = "https://mastodon.social/"
+
+  [[params.socialIcons]]
+    name = "rss"
+    url = "index.xml"
 
   [params.fuseOpts]
     threshold = 0.4
