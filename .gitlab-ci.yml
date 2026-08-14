@@ -1,0 +1,66 @@
+# Builds exampleSite/ and publishes it as the theme's demo on GitLab Pages.
+#
+# exampleSite is the only site in this repository, so this pipeline is also the
+# theme's only build test — a template that fails to compile fails here. That is
+# why branches and merge requests run the same build as Pages does, minus the
+# publish step.
+
+stages:
+  - test
+  - deploy
+
+default:
+  image: hugomods/hugo:0.165.0
+
+variables:
+  # The title block prints dates through Hugo's zone-aware formatting, so the
+  # runner's zone leaks into published output if it is left unset.
+  TZ: Europe/Berlin
+  HUGO_ENV: production
+
+# Hugo writes processed images and other derived resources here. Keyed per
+# branch so a Pages build reuses what the preceding branch build produced.
+cache:
+  key: "hugo-$CI_COMMIT_REF_SLUG"
+  paths:
+    - exampleSite/resources/_gen/
+
+.hugo:
+  script:
+    # The theme is the repository root. Symlinking it into place, rather than
+    # passing --themesDir, keeps the build independent of what the checkout
+    # directory is called — CI clones into a path named after the project, and
+    # a fork under another name would otherwise stop resolving `theme = "vellum"`.
+    - mkdir -p exampleSite/themes
+    - ln -sfn ../.. exampleSite/themes/vellum
+    # render-image.html encodes its WebP ladder, which the standard edition
+    # cannot do. Without this guard a wrong image yields a green pipeline and a
+    # site whose every image silently fell back to the source file.
+    - hugo version
+    - hugo version | grep -q extended || { echo "this theme requires Hugo extended"; exit 1; }
+    # CI_PAGES_URL carries the subpath the demo is served under; the fingerprinted
+    # stylesheet and every RelPermalink are resolved against it.
+    - >
+      hugo
+      --source exampleSite
+      --destination "$CI_PROJECT_DIR/public"
+      --baseURL "${CI_PAGES_URL:-https://example.org/}"
+      --minify
+      --gc
+      --printPathWarnings
+
+build:
+  extends: .hugo
+  stage: test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH && $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH
+
+pages:
+  extends: .hugo
+  stage: deploy
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH

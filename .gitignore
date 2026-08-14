@@ -3,7 +3,11 @@
 /public/
 /exampleSite/public/
 /resources/_gen/
+/exampleSite/resources/_gen/
 hugo_stats.json
+
+# CI symlinks the repository root in here so exampleSite can resolve the theme.
+/exampleSite/themes/
 
 # Temporary lock file while building. Unanchored: exampleSite creates its own.
 .hugo_build.lock

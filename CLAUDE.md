@@ -46,7 +46,7 @@ hugo server -D --source exampleSite --themesDir ../..   # the theme's own demo s
 
 `exampleSite/` is the only site in this repo, so it is what every change is tested against; content that a template needs in order to be exercised has to be added there.
 
-Hugo extended is required. There are no tests, linters, or package manifests for the theme itself.
+Hugo extended is required. There are no tests, linters, or package manifests for the theme itself — `.gitlab-ci.yml` builds `exampleSite/` on every branch and publishes it to GitLab Pages from `main`, so that build is the only thing standing between a broken template and the demo. It symlinks the repo root to `exampleSite/themes/vellum` instead of passing `--themesDir`, and takes its `--baseURL` from `CI_PAGES_URL` because the demo is served from a subpath.
 
 ## Design harness
 
