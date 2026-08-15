@@ -2,7 +2,7 @@
 {{ partial "profile.html" . }}
 {{ partial "sheet-stamp.html" . }}
 {{ with .Content }}
-<div class="content">{{ . }}</div>
+<div class="content sheet-note">{{ . }}</div>
 {{ end }}
 {{ partial "latest-posts.html" (dict "page" . "count" (site.Params.latestPosts | default 5)) }}
 {{ end }}

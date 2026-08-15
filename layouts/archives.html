@@ -12,7 +12,7 @@
 </header>
 
 {{- with .Content }}
-<div class="content">{{ . }}</div>
+<div class="content sheet-note">{{ . }}</div>
 {{- end }}
 
 {{- $pages := where site.RegularPages "Type" "in" (site.Params.mainSections | default (slice "posts")) }}

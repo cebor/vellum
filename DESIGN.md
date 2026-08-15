@@ -161,6 +161,15 @@ learnable rather than reinvented per page.
 Cards are separated by ruled lines, never boxed: a drawing divides a schedule with rules, and boxing
 each row would make the index heavier than the drawing it indexes.
 
+Every index sheet carries the same head in the same order — title, standfirst, sheet stamp, and then
+the **sheet note**, the body of the page's own `_index.md`. The note is a general note on the sheet,
+not the first row of the schedule: it sits tight under the stamp that closes the head and is
+separated from the index by the page's one generous interval, set in `--meta` on the standfirst's
+measure so the index below stays the sheet's loudest mass. Rendered as plain prose it carried the
+opposite spacing — the whole gap above it and none below — and proximity read it as a caption on the
+first card. Only its paragraphs are toned down, so a table or a code block in an `_index.md` keeps
+its ordinary treatment.
+
 Icons are two deliberate families: UI glyphs authored on a 24×24 grid at 1.75 stroke, and brand marks
 as the official filled logotypes, which cannot be redrawn as strokes without misrepresenting someone's
 mark. No unicode glyph ever stands in for an icon. `<details>` gets a drawn chevron rather than the

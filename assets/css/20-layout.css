@@ -347,6 +347,36 @@
     text-transform: none;
 }
 
+/* --- sheet note ---------------------------------------------------------- */
+
+/* The body of an index page's own _index.md — a general note on the sheet,
+   not the first row of the schedule it introduces.
+
+   As plain .content it carried no spacing of its own, so it inherited the
+   header's --space-2xl above and nothing at all below: the one generous
+   interval on the page sat in the wrong gap, and proximity read the note as a
+   caption on the first card. The intervals are reversed here — tight to the
+   head it closes, generous before the index it introduces. */
+.sheet-note {
+    margin-top: var(--space-lg);
+    margin-bottom: var(--space-2xl);
+}
+
+/* The head owns no gap of its own when a note follows; the note does, so the
+   two margins cannot collapse to the larger of the pair. */
+.page-header:has(+ .sheet-note) {
+    margin-bottom: 0;
+}
+
+/* One voice quieter than the index below it, on the standfirst's measure, so
+   the sheet's loudest mass stays the thing the sheet is indexing. Scoped to
+   paragraphs: a table, an alert or a code block in an _index.md keeps its
+   ordinary .content treatment rather than being dimmed with the prose. */
+.sheet-note > p {
+    color: var(--meta);
+    max-width: 60ch;
+}
+
 /* --- breadcrumbs --------------------------------------------------------- */
 
 .breadcrumbs {

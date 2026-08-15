@@ -285,6 +285,31 @@ summary = "One sentence, shown in list views and OpenGraph."
 > TOML local date is not a `time.Time` and Hugo will not cast it reliably. And quote
 > numeric-looking tags (`"403"`), or they reach templates as numbers.
 
+### Index pages
+
+The landing page, a section's `_index.md`, the tag index, a tag page, the archive and the search
+page all take a `title`, an optional `description`, and an optional body. Each lands somewhere
+different on the sheet:
+
+| Field | Where it renders |
+|---|---|
+| `title` | The page title. |
+| `description` | The standfirst, directly under the title and above the sheet stamp. |
+| body | The **sheet note** — a general note under the stamp, set one voice quieter than the index it introduces and held to the standfirst's measure. |
+
+Keep the two apart or the head says the same thing twice: the description states what the sheet
+*is*, the note says what is *on* it. Either may be omitted. A note is ordinary Markdown, so alerts,
+tables and code in one still render as they do in a post.
+
+```toml
++++
+title = "Posts"
+description = "Every post in the demo, newest first."
++++
+
+Nine posts across two languages, written to exercise the theme rather than to fill it.
+```
+
 ### Covers
 
 ```toml
