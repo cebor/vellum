@@ -43,10 +43,10 @@ second block to keep in sync.
 | `--text` | `#14181c` | `#e4e7e9` | Body |
 | `--meta` | `#4a5560` | `#a0a8af` | Labels, summaries |
 | `--meta-soft` | `#59636d` | `#8d959c` | The dimmest text permitted |
-| `--rule` | `#c7ccc6` | `#2c333a` | Hairline |
+| `--rule` | `#c7ccc6` | `#333b43` | Hairline |
 | `--rule-strong` | `#a3aba4` | `#454e56` | Thin |
 | `--rule-frame` | `#8d968f` | `#566069` | Frame |
-| `--grid` | `#e5e8e2` | `#1b2229` | Graph substrate |
+| `--grid` | `#e5e8e2` | `#161b21` | Graph substrate |
 | `--accent` | `#8a5200` | `#e9a93a` | The one signal |
 | `--danger` | `#a32218` | `#f2a49c` | Draft flag, warnings, errors |
 
@@ -56,6 +56,13 @@ opacity — `opacity` silently undoes the contrast guarantee.
 
 Syntax colours are drawn from the same ink family as the chrome, so code and page share one palette
 rather than fighting.
+
+**The two sides of a non-text token are matched in perceived lightness, not in hex distance.** The
+graph substrate sits about 3 points of CIE L\* off its own ground in each scheme, and `--rule` about
+15 points off the substrate. Picking a dark value that *looks* equivalent to its light partner
+overshoots — a dark grid chosen that way landed twice as far off the ground as the light one, close
+enough to `--rule` that a card separator and a graph line read as the same mark. Nothing here is
+caught by the 4.5:1 text check, because none of it is text.
 
 A `@supports not (color: light-dark(…))` block restates the light palette for browsers below
 Chrome 123 / Safari 17.5 / Firefox 120, which would otherwise get *no value at all* for every colour

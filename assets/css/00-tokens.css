@@ -43,14 +43,20 @@
     /* The line-weight system. A drawing distinguishes edges by weight, not by
        colour, so these three are one hue at three strengths and the widths in
        10-base.css do the talking. */
-    --rule: light-dark(#c7ccc6, #2c333a);
+    --rule: light-dark(#c7ccc6, #333b43);
     --rule-strong: light-dark(#a3aba4, #454e56);
     --rule-frame: light-dark(#8d968f, #566069);
 
     /* The blueprint grid the sheet is printed on. Deliberately a hair off the
        ground: it is substrate, not content, and the moment it is readable as a
-       table it is competing with the drawing. */
-    --grid: light-dark(#e5e8e2, #1b2229);
+       table it is competing with the drawing.
+
+       The two sides are matched in perceived lightness, not in hex distance:
+       each sits about 3 points of CIE L* off its own ground. A dark grid picked
+       to look right beside the light one lands roughly twice that far out,
+       which is what previously let the substrate crowd --rule until a card
+       separator and a graph line read as the same mark. */
+    --grid: light-dark(#e5e8e2, #161b21);
 
     --accent: light-dark(#8a5200, #e9a93a);
     --accent-strong: light-dark(#6d4100, #f5be5c);
