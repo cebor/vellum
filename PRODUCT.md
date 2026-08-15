@@ -52,7 +52,8 @@ neighbouring theme could not truthfully copy by adopting the look:
   the frame closes the column it would have taken.
 - The **title block is a ruled instrument**, not a styled caption: fielded, labelled, and printed
   heavier rather than lighter.
-- **Depth is line weight**, in a real three-step system. Nothing casts a shadow.
+- **Depth is line weight**, in a real three-step system — two widths crossed with three inks, not a
+  row of tokens that all resolve to 1px. Nothing casts a shadow.
 - **The wide measure is a considered position**, not an oversight — it was measured against a
   rendered line, not estimated, and the line height was set to carry it.
 

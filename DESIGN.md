@@ -16,13 +16,26 @@ This refuses the centred-column developer blog. The test for any new element is 
 a drawing: it is ruled, lettered, and dimensioned, or it does not ship.
 
 The substrate is graph paper, printed inside the frame and nowhere else. Nothing casts a shadow —
-depth is carried entirely by line weight, which is a real three-step system:
+depth is carried entirely by line, in three steps. **Those steps are not three widths.** Width and
+colour are two independent axes: two widths, three ink weights, and a line is specified by picking
+one of each.
 
-| Token | Weight | Used for |
-|---|---|---|
-| `--line-hair` | 1px `--rule` | Row rules inside the title block, table rows, zone ticks |
-| `--line-thin` | 1px `--rule-strong` | Ordinary divisions: card separators, code block borders, image borders |
-| `--line-frame` | 2px `--rule-frame` | The sheet's own edge: frame, header rule, footer rule, title-block cap rules |
+| Width | Used for |
+|---|---|
+| `--line-thin` (1px) | Every drawn line on the sheet except its own edge |
+| `--line-frame` (2px) | The sheet's edge: frame, header rule, footer rule, title-block cap rules |
+
+| Ink | Used for |
+|---|---|
+| `--rule` | The lightest marks: title-block row rules, table rows, zone ticks, card separators, the graph substrate |
+| `--rule-strong` | A division that has to hold its own: code block and image borders, the rule closing a section header above the list it introduces |
+| `--rule-frame` | The sheet's edge, paired with `--line-frame` |
+
+A third width token, `--line-hair`, stood in the palette at 1px — the same value as `--line-thin` —
+so which one an author reached for made no visible difference, and eleven declarations had drifted
+between the two without anyone being able to see it. It was removed rather than given a real value:
+the distinction those two tokens were meant to carry is already carried by the ink, and a token that
+cannot fail visibly is the quiet failure this theme is built against.
 
 ## Colour
 

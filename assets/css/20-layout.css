@@ -62,7 +62,7 @@
 }
 
 .header__logo {
-    border: var(--line-hair) solid var(--rule);
+    border: var(--line-thin) solid var(--rule);
 }
 
 .nav {
@@ -113,7 +113,7 @@
 }
 
 .nav__rule {
-    width: var(--line-hair);
+    width: var(--line-thin);
     align-self: stretch;
     background: var(--rule-strong);
     margin-inline: var(--space-3xs);
@@ -200,8 +200,8 @@
     /* The graph substrate is printed inside the frame and nowhere else. Two
        hairline gradients, so it never becomes an image request. */
     background-image:
-        repeating-linear-gradient(to right, var(--grid) 0 var(--line-hair), transparent var(--line-hair) var(--grid-pitch)),
-        repeating-linear-gradient(to bottom, var(--grid) 0 var(--line-hair), transparent var(--line-hair) var(--grid-pitch));
+        repeating-linear-gradient(to right, var(--grid) 0 var(--line-thin), transparent var(--line-thin) var(--grid-pitch)),
+        repeating-linear-gradient(to bottom, var(--grid) 0 var(--line-thin), transparent var(--line-thin) var(--grid-pitch));
 }
 
 /* A sheet with nothing to index renders no rail, so the column it would have
@@ -291,7 +291,7 @@
     right: 0;
     top: 50%;
     width: var(--space-xs);
-    height: var(--line-hair);
+    height: var(--line-thin);
     background: var(--rule-strong);
 }
 
@@ -421,7 +421,7 @@
 
 .footer__sep {
     width: var(--space-md);
-    height: var(--line-hair);
+    height: var(--line-thin);
     background: var(--rule-strong);
 }
 

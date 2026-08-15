@@ -167,9 +167,14 @@
        image `sizes` attribute has to switch at exactly the same width. */
     --frame-collapse: 60rem;
 
-    /* Line weights, as a real system: hairline for zone ticks and table rules,
-       thin for ordinary divisions, frame for the sheet border. */
-    --line-hair: 1px;
+    /* Line weights. Two widths, not three: an ordinary drawn line and the
+       sheet's own edge. The third step of the line system is carried by
+       colour — --rule for the lightest marks (zone ticks, title-block rows,
+       the graph substrate), --rule-strong for a division that has to hold
+       its own. A separate --line-hair token stood here at 1px, identical to
+       --line-thin, so which of the two an author reached for made no visible
+       difference and eleven declarations had drifted between them unnoticed.
+       Width and colour are chosen independently; do not re-pair them. */
     --line-thin: 1px;
     --line-frame: 2px;
 

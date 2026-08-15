@@ -39,7 +39,7 @@
 }
 
 .title-block__row + .title-block__row {
-    border-top: var(--line-hair) solid var(--rule);
+    border-top: var(--line-thin) solid var(--rule);
 }
 
 .title-block__label {
@@ -105,7 +105,7 @@
 }
 
 .toc[open] .toc__summary {
-    border-bottom: var(--line-hair) solid var(--rule);
+    border-bottom: var(--line-thin) solid var(--rule);
 }
 
 .toc__body {
@@ -307,7 +307,7 @@
 }
 
 .collapse[open] .collapse__summary {
-    border-bottom: var(--line-hair) solid var(--rule);
+    border-bottom: var(--line-thin) solid var(--rule);
 }
 
 .collapse__body {
@@ -358,7 +358,7 @@ img.in-text {
 .content th,
 .content td {
     padding: var(--space-2xs) var(--space-sm);
-    border-bottom: var(--line-hair) solid var(--rule);
+    border-bottom: var(--line-thin) solid var(--rule);
     text-align: start;
     vertical-align: top;
 }
@@ -381,7 +381,7 @@ img.in-text {
 
 .content :not(pre) > code {
     background: var(--surface);
-    border: var(--line-hair) solid var(--rule);
+    border: var(--line-thin) solid var(--rule);
     padding: 0.1em 0.3em;
     border-radius: var(--radius-sm);
     word-break: break-word;
@@ -421,7 +421,7 @@ img.in-text {
     right: var(--space-3xs);
     display: none;
     padding: var(--space-4xs) var(--space-xs);
-    border: var(--line-hair) solid var(--rule-strong);
+    border: var(--line-thin) solid var(--rule-strong);
     background: var(--bg);
     color: var(--meta);
     font-stretch: var(--font-stretch-label);
@@ -511,7 +511,7 @@ img.in-text {
     width: var(--space-xl);
     height: var(--space-xl);
     color: var(--meta);
-    border: var(--line-hair) solid transparent;
+    border: var(--line-thin) solid transparent;
     transition: color var(--transition), border-color var(--transition);
 }
 

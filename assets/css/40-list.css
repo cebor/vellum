@@ -65,7 +65,7 @@
     content: "";
     display: inline-block;
     width: var(--space-sm);
-    height: var(--line-hair);
+    height: var(--line-thin);
     background: var(--rule-strong);
     vertical-align: middle;
     margin-inline-end: var(--space-xs);
@@ -97,7 +97,7 @@
     display: inline-flex;
     align-items: center;
     padding-inline: var(--space-3xs);
-    border: var(--line-hair) solid var(--danger);
+    border: var(--line-thin) solid var(--danger);
     background: var(--danger-soft);
     color: var(--danger);
     font-stretch: var(--font-stretch-label);
@@ -151,7 +151,7 @@
 
 .tag-list__count {
     padding-inline-start: var(--space-3xs);
-    border-inline-start: var(--line-hair) solid var(--rule-strong);
+    border-inline-start: var(--line-thin) solid var(--rule-strong);
     color: var(--meta-soft);
     font-variant-numeric: tabular-nums;
 }
@@ -258,7 +258,7 @@
     align-items: baseline;
     gap: var(--space-sm);
     padding-block: var(--space-2xs);
-    border-top: var(--line-hair) solid var(--rule);
+    border-top: var(--line-thin) solid var(--rule);
 }
 
 .archive-item__date {
