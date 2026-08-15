@@ -142,8 +142,10 @@ themes.gohugo.io; no contribution process.
 ## Evidence on Hand
 
 - **Live demo:** `https://pages.stkn.org/felix/vellum`, published from `main`.
-- **Source:** `https://gitlab.stkn.org/felix/vellum`, mirrored to `https://github.com/cebor/vellum`,
-  which is the public face: the module path users install, and where issues and pull requests go.
+- **Source:** `https://gitlab.stkn.org/felix/vellum`, copied by hand to
+  `https://github.com/cebor/vellum` — automatic mirroring is off by choice. GitHub is the public
+  face: the module path users install, and where issues and pull requests go. A release is not
+  published until that push has happened.
 - **Registry listing:** themes.gohugo.io, entered as the module path `github.com/cebor/vellum`.
   `images/screenshot.png` and `images/tn.png` are its preview images and are required to exist.
 - **`README.md`** — complete user documentation: params, front matter, shortcodes, icon set,

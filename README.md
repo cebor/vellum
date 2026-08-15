@@ -483,10 +483,11 @@ keeping.
 > [!NOTE]
 > Please open issues and pull requests on **[GitHub](https://github.com/cebor/vellum)**.
 
-Development happens on a self-hosted GitLab, which mirrors to GitHub one way. The GitHub copy of
-`main` is therefore overwritten on every mirror run — a pull request merged there would vanish at
-the next push. Nothing is lost: patches are applied upstream and land back on GitHub through the
-mirror, with authorship intact. It just means your branch is the contribution, not the merge.
+Development happens on a self-hosted GitLab; the GitHub repository is a copy of it, pushed by hand.
+So a pull request cannot simply be merged there — GitHub is not where `main` is written. Patches are
+applied on GitLab instead and reach GitHub with the next push, authorship intact. In practice that
+changes nothing about how you contribute: open the pull request, and treat the branch as the
+contribution rather than the merge button.
 
 ## Licence
 
