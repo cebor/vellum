@@ -310,11 +310,11 @@ Folds long command output away without hiding it from search or print. **Load-be
 one.
 
 ````markdown
-{{< collapse summary="Full output" >}}
+{{</* collapse summary="Full output" */>}}
 ```console
 …
 ```
-{{< /collapse >}}
+{{</* /collapse */>}}
 ````
 
 | Param | Default | Notes |
@@ -328,7 +328,7 @@ Overrides Hugo's built-in figure so the image goes through the same WebP ladder 
 and carries intrinsic dimensions. It exists only because the render hook cannot produce a caption.
 
 ```markdown
-{{< figure src="shot.png" alt="A terminal" caption="After the migration" >}}
+{{</* figure src="shot.png" alt="A terminal" caption="After the migration" */>}}
 ```
 
 | Param | Notes |
@@ -346,7 +346,7 @@ and carries intrinsic dimensions. It exists only because the render hook cannot 
 Never autoplays — a reader mid-task does not want sound.
 
 ```markdown
-{{< video src="clip.mp4" poster="still.png" >}}
+{{</* video src="clip.mp4" poster="still.png" */>}}
 ```
 
 | Param | Notes |
@@ -359,7 +359,7 @@ Never autoplays — a reader mid-task does not want sound.
 #### `audio`
 
 ```markdown
-{{< audio src="clip.mp3" >}}
+{{</* audio src="clip.mp3" */>}}
 ```
 
 | Param | Notes |
@@ -372,7 +372,7 @@ An image set inline in a run of text — a glyph, a badge, a small mark — size
 than the column.
 
 ```markdown
-{{< intextimg url="icon.svg" alt="the icon" height="1.1em" >}}
+{{</* intextimg url="icon.svg" alt="the icon" height="1.1em" */>}}
 ```
 
 | Param | Default | Notes |
@@ -386,7 +386,7 @@ than the column.
 Emits its body verbatim — a deliberate hole in `unsafe = false`.
 
 ```markdown
-{{< rawhtml >}}<abbr title="…">…</abbr>{{< /rawhtml >}}
+{{</* rawhtml */>}}<abbr title="…">…</abbr>{{</* /rawhtml */>}}
 ```
 
 > [!CAUTION]
