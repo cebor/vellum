@@ -64,7 +64,7 @@ pygmentsUseClasses = true
       # Per-language, because .File.Path is relative to that language's
       # contentDir and a single URL could only ever be right for one of them.
       [languages.en.params.editPost]
-        URL = "https://gitlab.stkn.org/felix/vellum/-/edit/main/exampleSite/content/en"
+        URL = "https://github.com/cebor/vellum/edit/main/exampleSite/content/en"
         Text = "Suggest an edit"
         appendFilePath = true
 
@@ -120,7 +120,7 @@ pygmentsUseClasses = true
           url = "archive"
 
       [languages.de.params.editPost]
-        URL = "https://gitlab.stkn.org/felix/vellum/-/edit/main/exampleSite/content/de"
+        URL = "https://github.com/cebor/vellum/edit/main/exampleSite/content/de"
         Text = "Korrektur vorschlagen"
         appendFilePath = true
 

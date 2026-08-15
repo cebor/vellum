@@ -8,6 +8,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 It was extracted from a personal blog it had been built inside, and is now developed standalone. It lives at `gitlab.stkn.org:felix/vellum`, is committed to directly on `main`, and publishes `exampleSite/` to GitLab Pages from there.
 
+GitLab push-mirrors to `github.com/cebor/vellum`, one way. That mirror is not incidental: **`github.com/cebor/vellum` is the module path listed on themes.gohugo.io**, so it is the address users install from and file issues against, and every user-facing URL in `README.md`, `theme.toml` and `exampleSite/hugo.toml` points there rather than at GitLab. Two things follow. A release only counts once its tag has reached GitHub — the registry reads the *latest tag*, not `main`, so check `git ls-remote --tags https://github.com/cebor/vellum.git` after tagging. And `images/screenshot.png` (1500×1000) and `images/tn.png` (900×600) are registry fixtures, not stray build output: they must be in the tagged release or the theme gallery shows a placeholder. Both are 3:2 and PNG because the registry accepts only `.png`/`.jpg`; regenerate them the way `.parity/shots.mjs` takes its shots. `hugo.toml` at the root exists solely to declare `[module.hugoVersion]` — the only form Hugo enforces and the only one the registry reads.
+
 `README.md` is the user-facing documentation — params, front matter, shortcodes, icon set — and `exampleSite/` is a standalone site that exercises the theme without the blog's content. A param that isn't in the README does nothing; add it there when you add it to a template.
 
 ## Structure

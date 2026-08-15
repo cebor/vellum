@@ -1,8 +1,8 @@
 name = "Vellum"
 license = "MIT"
-licenselink = "LICENSE"
+licenselink = "https://github.com/cebor/vellum/blob/main/LICENSE"
 description = "A multilingual Hugo theme that sets every page as an engineering drawing sheet: a drawn frame, a zone rail, and a ruled title block instead of a grey caption line."
-homepage = "https://gitlab.stkn.org/felix/vellum"
+homepage = "https://github.com/cebor/vellum"
 demosite = "https://pages.stkn.org/felix/vellum"
 tags = ["blog", "technical", "documentation", "light", "dark", "multilingual", "search", "personal", "responsive"]
 features = [
@@ -36,6 +36,9 @@ features = [
   "minified-assets",
   "subresource-integrity",
 ]
+# Legacy field, kept for older tooling. The theme site and Hugo itself both read
+# the requirement from [module.hugoVersion] in hugo.toml, which is also the only
+# place the `extended` half can be expressed. Keep the two numbers in step.
 min_version = "0.158.0"
 
 [author]

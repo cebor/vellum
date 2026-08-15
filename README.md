@@ -5,9 +5,11 @@ with a zone rail down its left edge, and a ruled title block carrying the metada
 line usually mumbles.
 
 [![Hugo](https://img.shields.io/badge/Hugo-%E2%89%A5%200.158%20extended-ff4088?style=flat-square&logo=hugo&logoColor=white)](https://gohugo.io)
-[![Licence](https://img.shields.io/badge/licence-MIT-blue?style=flat-square)](LICENSE)
+[![Licence](https://img.shields.io/badge/licence-MIT-blue?style=flat-square)](https://github.com/cebor/vellum/blob/main/LICENSE)
 
-**[Live demo](https://pages.stkn.org/felix/vellum)** · **[Source](https://gitlab.stkn.org/felix/vellum)**
+**[Live demo](https://pages.stkn.org/felix/vellum)** · **[Source](https://github.com/cebor/vellum)**
+
+![Vellum](https://raw.githubusercontent.com/cebor/vellum/main/images/screenshot.png)
 
 Built for technical writing that is mostly code. The reading column is wide — 800px, measuring
 **92 characters** at the 20px body size — because terminal output and command blocks are the
@@ -47,11 +49,25 @@ is no `layouts/_default/` and no `layouts/partials/`; files placed there silentl
 
 ### 1. Add the theme
 
-```bash
-git submodule add https://gitlab.stkn.org/felix/vellum.git themes/vellum
+As a Hugo Module — the least fuss to keep updated:
+
+```toml
+[module]
+  [[module.imports]]
+    path = "github.com/cebor/vellum"
 ```
 
-Copying the directory in works just as well as the submodule. Then set it in your site config:
+Then `hugo mod get -u` whenever you want the latest. Your own site has to be a module for
+this; `hugo mod init github.com/you/your-site` if it is not one yet.
+
+As a submodule instead:
+
+```bash
+git submodule add https://github.com/cebor/vellum.git themes/vellum
+```
+
+Copying the directory in works just as well. With a submodule or a copy — not with the module
+import above, which names the theme itself — set it in your site config:
 
 ```toml
 theme = "vellum"
@@ -458,10 +474,24 @@ hugo server -D --source exampleSite --themesDir ../..
 ```
 
 `exampleSite/` is a standalone site that exercises the theme, and is what every change is tested
-against. [`DESIGN.md`](DESIGN.md) records the visual system behind the stylesheet — line weights,
-palette, motion, print — if you want to extend it in keeping.
+against. [`DESIGN.md`](https://github.com/cebor/vellum/blob/main/DESIGN.md) records the visual
+system behind the stylesheet — line weights, palette, motion, print — if you want to extend it in
+keeping.
+
+### Contributing
+
+> [!NOTE]
+> Please open issues and pull requests on **[GitHub](https://github.com/cebor/vellum)**.
+
+Development happens on a self-hosted GitLab, which mirrors to GitHub one way. The GitHub copy of
+`main` is therefore overwritten on every mirror run — a pull request merged there would vanish at
+the next push. Nothing is lost: patches are applied upstream and land back on GitHub through the
+mirror, with authorship intact. It just means your branch is the contribution, not the merge.
 
 ## Licence
 
-MIT. Bundles Fuse.js (Apache-2.0), Archivo and JetBrains Mono (SIL OFL-1.1), and Simple Icons paths
-(CC0).
+MIT — see [`LICENSE`](https://github.com/cebor/vellum/blob/main/LICENSE).
+
+Bundled third-party assets and their licence texts live in
+[`licenses/`](https://github.com/cebor/vellum/tree/main/licenses): Archivo and JetBrains Mono
+(SIL OFL-1.1), Fuse.js (Apache-2.0), and Simple Icons paths (CC0).

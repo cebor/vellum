@@ -142,7 +142,10 @@ themes.gohugo.io; no contribution process.
 ## Evidence on Hand
 
 - **Live demo:** `https://pages.stkn.org/felix/vellum`, published from `main`.
-- **Source:** `https://gitlab.stkn.org/felix/vellum`.
+- **Source:** `https://gitlab.stkn.org/felix/vellum`, mirrored to `https://github.com/cebor/vellum`,
+  which is the public face: the module path users install, and where issues and pull requests go.
+- **Registry listing:** themes.gohugo.io, entered as the module path `github.com/cebor/vellum`.
+  `images/screenshot.png` and `images/tn.png` are its preview images and are required to exist.
 - **`README.md`** — complete user documentation: params, front matter, shortcodes, icon set,
   customising, licence.
 - **`DESIGN.md`** — the built visual world and its load-bearing rules.
