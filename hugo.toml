@@ -1,0 +1,20 @@
+# Theme-level configuration.
+#
+# This exists for one reason: to declare the Hugo versions the theme works with
+# in the module format, which is the only form Hugo enforces and the only one
+# themes.gohugo.io reads. theme.toml's `min_version` is metadata for the old
+# theme site and is no longer consulted anywhere.
+#
+# Deliberately minimal. A theme's root config is merged into the config of every
+# site that uses it, so anything beyond this would be a setting imposed on users
+# rather than a property of the theme.
+
+[module]
+  [module.hugoVersion]
+    # `extended` is the half that could not be declared before. The WebP ladder
+    # in _markup/render-image.html needs it; without the guard a standard build
+    # silently falls back to source-resolution images instead of failing.
+    extended = true
+    # 0.158 is where site.Language.Locale and .Language.Label arrived, both of
+    # which six templates use unguarded. See layouts/baseof.html.
+    min = "0.158.0"
