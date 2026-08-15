@@ -1,7 +1,5 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
 ## What this is
 
 **Vellum** — a multilingual Hugo theme that sets every page as an engineering drawing sheet: a drawn frame, and a ruled **title block** carrying the post's metadata instead of a grey caption line. The zone rail down the frame's left edge is a real section index — one lettered zone per top-level heading, each a link — and it renders only on pages that have sections to index, never as lettering over an empty field.
@@ -60,7 +58,3 @@ Hugo extended is required. There are no tests, linters, or package manifests for
 ## Why URL safety matters here
 
 The theme was written for a site that deploys with `rsync --delete`, where any path the build stops generating is deleted from the live host — and that is the normal case for a static host, not an unusual one. A theme change that renames an output format, drops a template, or changes a taxonomy path is therefore a live 404 for every site running it. Before changing anything that affects output paths, build a site old and new into separate directories and diff the file lists — that is what `.parity/check.sh` is for.
-
-## Formatting
-
-`.editorconfig`: LF, UTF-8, 4-space indent, 2 spaces for `.toml`/`.yml`/`.yaml`.
