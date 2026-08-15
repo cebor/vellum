@@ -124,20 +124,29 @@
 
 /* --- latest -------------------------------------------------------------- */
 
+/* Built as the sheet stamp's twin — the same ruled label band, the same
+   padding either side of the line — because on the home page it sits directly
+   under the stamp and borrows the stamp's bottom rule as its own top rule.
+   Padded on one side only, the label hung off the rule above it. */
 .latest__head {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
     gap: var(--space-md);
-    padding-bottom: var(--space-2xs);
+    padding-block: var(--space-2xs);
     border-bottom: var(--line-thin) solid var(--rule-strong);
     margin-bottom: var(--space-lg);
 }
 
+/* Overrides the heading line-height so both items in the band set the same
+   line box: baseline alignment otherwise left the tighter heading a stub of
+   the link's leading above it, and the band's height would change on the 404,
+   where the link is absent and the heading stands alone. */
 .latest__title {
     font-stretch: var(--font-stretch-label);
     font-size: var(--step--2);
     font-weight: 600;
+    line-height: var(--line-height);
     letter-spacing: var(--tracking-label);
     text-transform: uppercase;
     color: var(--meta);
