@@ -50,6 +50,7 @@ Hugo extended is required. There are no tests, linters, or package manifests for
 
 ## Design harness
 
+- `PRODUCT.md` records what the theme is for and who it is built for first, and marks which of its properties are binding commitments (URL-surface stability, 4.5:1 text contrast) against which are merely true today and may be traded deliberately (no-JavaScript operation, no third-party requests). A change to the latter is not a defect.
 - `DESIGN.md` records the built visual world (line-weight system, palette, motion, print) and the load-bearing rules. It describes what the stylesheet *is*; where the two disagree, the stylesheet is right and `DESIGN.md` is stale.
 - `.impeccable/` is the impeccable skill's state: `config.json` (detector ignore rules, with the reason each was granted), local consent, and `review/` screenshot rounds. The skill lives in `.claude/skills/impeccable/` and its hooks are wired in `.claude/settings.local.json`.
 - `.parity/` compares built URL surfaces. `shots.mjs` takes batched desktop/mobile, light/dark screenshots against a running server; `check.sh` diffs a candidate build's file list against the frozen `base-papermod` and `base-enigma` baselines. `base-enigma` keeps its name deliberately: Enigma was this theme's own former name, and the baseline is the URL surface of the in-site version that preceded the extraction. Those baselines can no longer be rebuilt — the themes that produced them are gone — so treat them as a record, not a regenerable fixture.
