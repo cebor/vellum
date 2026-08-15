@@ -474,7 +474,13 @@
         border-inline: 0;
     }
 
-    .zone-rail {
+    /* Both states of the rail, deliberately. A media query carries no
+       specificity of its own, so a bare .zone-rail here loses to the
+       .zone-rail[data-placed] the script sets once it has measured the sheet,
+       and the rail comes back on a phone as a stack of letters absolutely
+       positioned into the frame's top corner. */
+    .zone-rail,
+    .zone-rail[data-placed] {
         display: none;
     }
 
