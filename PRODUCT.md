@@ -146,7 +146,9 @@ themes.gohugo.io; no contribution process.
   `https://github.com/cebor/vellum` — automatic mirroring is off by choice. GitHub is the public
   face: the module path users install, and where issues and pull requests go. A release is not
   published until that push has happened.
-- **Registry listing:** themes.gohugo.io, entered as the module path `github.com/cebor/vellum`.
+- **Registry listing:** *submitted, not yet listed.* `gohugoio/hugoThemesSiteBuilder` PR #763 adds
+  the module path `github.com/cebor/vellum` to `themes.txt`. Upstream paused merging new themes in
+  May 2026 (their issue #718), so the queue is the constraint, not the submission.
   `images/screenshot.png` and `images/tn.png` are its preview images and are required to exist.
 - **`README.md`** — complete user documentation: params, front matter, shortcodes, icon set,
   customising, licence.
