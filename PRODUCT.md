@@ -108,10 +108,12 @@ shortcodes.
 
 **Binding commitments — do not break without an explicit decision:**
 
-1. **URL surface stability.** Before changing anything that affects output paths, build a site old
-   and new into separate directories and diff the file lists. `.parity/check.sh` exists for this.
-   Its `base-papermod` and `base-enigma` baselines can no longer be regenerated — the themes that
-   produced them are gone — so they are a record, not a fixture.
+1. **URL surface stability.** Before changing anything that affects output paths, build the theme
+   old and new and diff the file lists. `.parity/check.sh [ref]` does exactly that: it builds
+   `exampleSite` from a git worktree at `ref` (default `HEAD`) and from the working tree, and exits
+   1 on any path the working tree stopped emitting. Both sides are built on demand, so the check
+   cannot go stale. It catches cascades as well as the obvious case — dropping the only post with a
+   given tag takes that whole tag's pages with it.
 2. **WCAG AA text contrast, 4.5:1**, for every text token against every surface it sits on, in both
    schemes. Dim text by dropping to a softer token and a smaller step, never with `opacity`, which
    silently undoes the guarantee.
@@ -158,7 +160,9 @@ themes.gohugo.io; no contribution process.
   missing-translation path. Includes a page bundle with cover and inline images, an SVG and an audio
   file.
 - **`.parity/`** — `shots.mjs` for batched desktop/mobile, light/dark screenshots against a running
-  server; `check.sh` for URL-surface diffs against frozen baselines.
+  server, status-asserted so a stale route fails the run rather than saving a 404 under a real
+  page's name; `check.sh [ref]` for URL-surface diffs between a git ref and the working tree, both
+  built on demand.
 - **Measured figures that must not be re-estimated:** the 92-character measure and the predecessor
   theme's 83 were both counted from a rendered line. The minimum measured contrast across the
   palette is 4.87:1. Re-measure before changing either; a characters-per-pixel estimate is reliably
