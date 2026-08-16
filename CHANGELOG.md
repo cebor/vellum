@@ -9,6 +9,12 @@ the format they follow is in [`CONTRIBUTING.md`](CONTRIBUTING.md). Only changes 
 can see are listed — refactors, documentation, CI and build chores are not. Releases up to 0.1.2
 predate the generated format and were written by hand.
 
+## [0.2.2](https://github.com/cebor/vellum/compare/v0.2.1...v0.2.2) - 2026-08-16
+
+### Fixed
+
+- **ai:** quieten the revision marks to the weight of the text they annotate (5a8c4a7)
+
 ## [0.2.1](https://github.com/cebor/vellum/compare/v0.2.0...v0.2.1) - 2026-08-16
 
 ### Added
