@@ -77,6 +77,18 @@ dimensioned, or it does not ship.
 - **`README.md` is the user-facing contract.** A param that is not in the README does nothing;
   adding one to a template without adding it there ships an undocumented feature, which for this
   product means an absent one.
+- **`CONTRIBUTING.md` fixes the commit format, because commits are the changelog source.** Every
+  commit in a release range is parsed; an unparseable one, or one carrying a scope that is not on the
+  list, refuses the release or lands silently in the wrong group. Issues and pull requests are filed
+  on GitHub, but `main` is written on GitLab — a patch is applied there and reaches GitHub with the
+  next push, so the branch is the contribution rather than the merge button.
+- **Releases are cut by `.release/release.sh` and never by hand.** It runs the preflight, derives the
+  version, generates the `CHANGELOG.md` section, tags with that section as the tag message, pushes
+  both remotes and verifies the tag arrived. A release is not published until the tag is on GitHub:
+  the registry reads the *latest tag* there, not `main`, and nothing is mirrored automatically.
+- **`.parity/` is the maintainer's local harness and is gitignored**, so it is not present in every
+  checkout — releases are cut on the machine that has it, and without it the script refuses rather
+  than skipping the URL-parity check.
 - **`DESIGN.md` records the built visual world**, and the stylesheet outranks it where they disagree.
 
 ## Capabilities and Constraints
@@ -87,8 +99,10 @@ toggle; responsive images (bundle images to a 480/800/1600 WebP ladder); self-ho
 a landing page with profile block and buttons; post furniture (table of contents, reading time,
 breadcrumbs, share row, post nav, edit link); year/month archives and tag pages; OpenGraph, Twitter
 cards, schema.org, RSS, canonical and hreflang; a dedicated print stylesheet; five Markdown alert
-types via a render hook; the `collapse`, `figure`, `video`, `audio`, `intextimg` and `rawhtml`
-shortcodes.
+types via a render hook; AI-use disclosure at two grains — an `ai` front matter key that stamps the
+whole post's title block, and an `ai` shortcode that marks an individual passage and resolves it to a
+revision note at the foot of the sheet, each usable without the other; the `collapse` (alias
+`details`), `figure`, `video`, `audio`, `intextimg`, `ai` and `rawhtml` shortcodes.
 
 **Hard technical constraints:**
 
@@ -123,9 +137,23 @@ them as a defect): the page themes, reads and navigates with JavaScript disabled
 falls back to even spacing and the table of contents carries navigation; and a page load makes no
 third-party requests, with fonts self-hosted and Fuse.js bundled.
 
-**Undecided / not established:** there is no release, tagging or versioning scheme; no
-backwards-compatibility policy for params across versions; no stated intent to list on
-themes.gohugo.io; no contribution process.
+**Release and compatibility:**
+
+- **Versioned and released from tags** — `v0.1.0` through `v0.2.2` so far — with the version derived
+  from the commits in the range rather than chosen. A breaking change currently bumps the *minor*,
+  anything else the patch, because below 1.0 the major carries no signal.
+- **`CHANGELOG.md` is generated from the commit history** and prints only what a *user of the theme*
+  can see: `feat`, `fix`, `perf`, `revert` and anything breaking. Refactors, docs, CI and chores do
+  not appear.
+- **What counts as breaking is defined, and it is the adopter's compatibility guarantee:** changing
+  the built URL surface, removing or renaming a param or a front matter key, dropping a shortcode, or
+  raising the minimum Hugo version. Each requires a `!` subject *and* a `BREAKING CHANGE:` footer
+  naming the affected paths or keys and the upgrade step, so an upgrade never asks the reader to
+  diff the theme to find out what moved. Neither of the two binding commitments above ships as a
+  quiet `fix`.
+- **Listing on themes.gohugo.io is intended and submitted** — see Evidence for where that stands.
+- **`CONTRIBUTING.md` is the contribution process**: commit format, scopes, the breaking-change rule,
+  and the release procedure.
 
 ## Brand Commitments
 
@@ -148,12 +176,16 @@ themes.gohugo.io; no contribution process.
   `https://github.com/cebor/vellum` — automatic mirroring is off by choice. GitHub is the public
   face: the module path users install, and where issues and pull requests go. A release is not
   published until that push has happened.
-- **Registry listing:** *submitted, not yet listed.* `gohugoio/hugoThemesSiteBuilder` PR #763 adds
-  the module path `github.com/cebor/vellum` to `themes.txt`. Upstream paused merging new themes in
-  May 2026 (their issue #718), so the queue is the constraint, not the submission.
-  `images/screenshot.png` and `images/tn.png` are its preview images and are required to exist.
+- **Registry listing:** *submitted, not yet listed* — still true as of 2026-08-17.
+  `gohugoio/hugoThemesSiteBuilder` PR #763 adds the module path `github.com/cebor/vellum` to
+  `themes.txt`. Upstream paused merging new themes in May 2026 (their issue #718), so the queue is
+  the constraint, not the submission. `images/screenshot.png` and `images/tn.png` are its preview
+  images and are required to exist.
 - **`README.md`** — complete user documentation: params, front matter, shortcodes, icon set,
   customising, licence.
+- **`CONTRIBUTING.md`** — commit format, scopes, the breaking-change rule and the release procedure.
+- **`CHANGELOG.md`** — generated release notes back to `v0.1.0`; entries up to 0.1.2 predate the
+  generated format and were written by hand.
 - **`DESIGN.md`** — the built visual world and its load-bearing rules.
 - **`exampleSite/`** — a two-language site (en/de) with posts covering code and terminal output,
   multilingual behaviour, the zone rail, shortcodes, and a German-only post that exercises the
@@ -162,7 +194,9 @@ themes.gohugo.io; no contribution process.
 - **`.parity/`** — `shots.mjs` for batched desktop/mobile, light/dark screenshots against a running
   server, status-asserted so a stale route fails the run rather than saving a 404 under a real
   page's name; `check.sh [ref]` for URL-surface diffs between a git ref and the working tree, both
-  built on demand.
+  built on demand. **Gitignored and maintainer-local:** it lives on the checkout releases are cut
+  from and is absent from others, so a session that cannot find it has not lost it — check before
+  assuming the parity commitment can be verified here.
 - **Measured figures that must not be re-estimated:** the 92-character measure and the predecessor
   theme's 83 were both counted from a rendered line. The minimum measured contrast across the
   palette is 4.87:1. Re-measure before changing either; a characters-per-pixel estimate is reliably
