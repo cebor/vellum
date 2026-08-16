@@ -59,7 +59,7 @@ Only these. The type decides whether and where the commit shows up in the change
 | `refactor` | same output, different implementation                        | —                 |
 | `docs`     | `README.md`, `CLAUDE.md`, `PRODUCT.md`, `DESIGN.md`, this file | —               |
 | `build`    | `hugo.toml`, `go.mod`, `theme.toml`, registry fixtures       | —                 |
-| `ci`       | `.gitlab-ci.yml`, `.parity/`, `.impeccable/`                 | —                 |
+| `ci`       | `.gitlab-ci.yml`, `.release/`, `.parity/`, `.impeccable/`    | —                 |
 | `chore`    | anything else with no user-visible effect                    | —                 |
 | `revert`   | reverting a previous commit; name its hash in the body       | Reverted          |
 
@@ -70,7 +70,8 @@ an existing param is `docs`; the param itself is `feat`.
 ### Scopes
 
 Optional but expected. Use one of: `layouts`, `partials`, `shortcodes`, `markup`, `css`, `tokens`,
-`i18n`, `fonts`, `search`, `print`, `a11y`, `exampleSite`, `registry`, `parity`, `ci`, `deps`.
+`i18n`, `fonts`, `search`, `print`, `a11y`, `exampleSite`, `registry`, `parity`, `release`, `ci`,
+`deps`.
 Omit the scope when a change genuinely spans the theme. Never invent a one-off scope — an unknown
 scope silently lands in the wrong changelog group.
 
@@ -133,15 +134,69 @@ History before this file predates these rules; it is not rewritten.
 
 ## Releases
 
-Tags are `vMAJOR.MINOR.PATCH`, annotated, on `main`. A release is not done until the tag has reached
-GitHub — the registry reads the *latest tag* there, not `main`, and nothing is mirrored
-automatically:
+One command, from a clean `main`:
 
 ```bash
-git push origin main --follow-tags
-git push github main --follow-tags
-git ls-remote --tags https://github.com/cebor/vellum.git   # verify
+.release/release.sh --dry-run   # every check, the changelog section, no writes
+.release/release.sh             # the real thing
 ```
 
-`images/screenshot.png` (1500×1000) and `images/tn.png` (900×600) must be present in the tagged
-release, or the theme gallery shows a placeholder.
+It refuses more often than it runs, which is the point — each refusal is a way a release has gone
+wrong before:
+
+| Check                              | Why it stops the release                                                    |
+| ---------------------------------- | --------------------------------------------------------------------------- |
+| clean tree, on `main`, not behind   | a tag on a checkout that is not what `origin` has                           |
+| registry fixtures present, 1500×1000 / 900×600 | the theme gallery shows a placeholder, visible only on the theme site |
+| Hugo extended on `PATH`             | the standard edition builds green and silently drops the WebP ladder         |
+| every commit in range parseable     | a change that never appears in the changelog                                 |
+| at least one `feat`/`fix`/`perf`    | a version bump nobody can be told the reason for                             |
+| `.parity/check.sh` against the last tag | a path the build stopped emitting, deleted from every site on upgrade    |
+
+Then it derives the version, writes `CHANGELOG.md`, commits it as `chore(release): vX.Y.Z`, tags
+annotated with the changelog section as the tag message, pushes **both** remotes, and verifies with
+`git ls-remote` that the tag arrived. A release is not done until the tag is on GitHub — the registry
+reads the *latest tag* there, not `main`, and nothing is mirrored automatically.
+
+`--edit` opens the generated section in `$EDITOR` first — the one place to correct wording before it
+becomes both the changelog entry and the tag message. `--allow-unconventional` and `--allow-empty`
+override the two commit-quality checks; `--yes` skips the confirmation. There is no override for URL
+parity.
+
+### Versioning
+
+Below 1.0 the majors are free, so the signal moves down one place:
+
+| Range in the commits                | Bump    | Means                              |
+| ----------------------------------- | ------- | ---------------------------------- |
+| a `!` subject or a `BREAKING CHANGE:` footer | minor (`0.1.2` → `0.2.0`) | read the changelog before upgrading |
+| anything else                       | patch (`0.1.2` → `0.1.3`) | safe to take                        |
+
+From 1.0 on this becomes plain semver: breaking → major, `feat` → minor, rest → patch. Pass `major`,
+`minor`, `patch` or an explicit `0.3.0` to override. 1.0 is the point at which the params and the
+output paths are considered settled enough that breaking one deserves a major — not a maturity
+badge.
+
+### If something goes wrong
+
+The script writes nothing until every check has passed, and stops at the first failure, so a failed
+run leaves the repository untouched. After the tag exists it will tell you the exact command to
+re-run. To undo a tag that has not been pushed:
+
+```bash
+git tag -d vX.Y.Z && git reset --hard HEAD~1
+```
+
+Once it is pushed, it stays: the registry and anyone's `go.mod` may already have read it. Fix
+forward with the next patch.
+
+### Notes
+
+- The changelog can be previewed on its own at any time: `.release/changelog.sh 0.2.0`.
+- `CHANGELOG.md` is generated. Editing prose in an old section is fine; new sections are the
+  script's.
+- `.parity/` is the maintainer's local harness and is gitignored, so releases are cut on a machine
+  that has it. Without it the script refuses rather than skipping the check.
+- The commits between `v0.1.2` and the adoption of this format predate it. The first release after it
+  wants `.release/release.sh --allow-unconventional --edit`, so the six unparseable commits can be
+  written into the section by hand once.

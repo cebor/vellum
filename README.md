@@ -515,8 +515,10 @@ changes nothing about how you contribute: open the pull request, and treat the b
 contribution rather than the merge button.
 
 [`CONTRIBUTING.md`](https://github.com/cebor/vellum/blob/main/CONTRIBUTING.md) has the details,
-including the commit message format — commits are the source the changelog is generated from, so
-they follow a fixed `type(scope): summary` shape.
+including the commit message format — commits are the source
+[`CHANGELOG.md`](https://github.com/cebor/vellum/blob/main/CHANGELOG.md) is generated from, so they
+follow a fixed `type(scope): summary` shape. Read the changelog's **Breaking** entries before
+upgrading: they are the ones that move a URL or drop a param.
 
 ## Licence
 
