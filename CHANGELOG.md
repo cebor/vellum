@@ -9,6 +9,12 @@ the format they follow is in [`CONTRIBUTING.md`](CONTRIBUTING.md). Only changes 
 can see are listed — refactors, documentation, CI and build chores are not. Releases up to 0.1.2
 predate the generated format and were written by hand.
 
+## [0.2.1](https://github.com/cebor/vellum/compare/v0.2.0...v0.2.1) - 2026-08-16
+
+### Added
+
+- **ai:** disclose AI use as a title-block stamp and marked passages (e456a7d)
+
 ## [0.2.0](https://github.com/cebor/vellum/compare/v0.1.2...v0.2.0) - 2026-08-16
 
 First release with a generated changelog. From here on entries come from the commit history, and
