@@ -27,14 +27,6 @@ variables:
   # quiet failure: the HTML loads and every asset under it 404s.
   PAGES_BASE_URL: "$CI_PAGES_URL"
 
-# No cache of exampleSite/resources/_gen/, deliberately. The runner's helper
-# container extracts a cache as root, while the Hugo image runs as hugo:hugo —
-# so a restored _gen/ is a root-owned directory the build cannot create anything
-# new inside. It fails the moment a build needs a subdirectory the cached tree
-# does not already have (_gen/images/ was the one that caught this), and it fails
-# only on the second run, when a cache exists. Hugo regenerates the whole tree in
-# well under a second at this size.
-
 .hugo:
   script:
     # The theme is the repository root. Symlinking it into place, rather than
@@ -66,18 +58,10 @@ build:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
 
-create-pages:
+pages:
   extends: .hugo
   stage: deploy
   pages:
-    # The folder that contains the files to be exposed at the Page URL.
     publish: public
-  # Kept alongside `pages.publish`: GitLab's own Hugo template still declares it,
-  # and without it a runner that predates the keyword publishes nothing.
-  artifacts:
-    paths:
-      - public
   rules:
-    # This ensures that only pushes to the default branch will trigger
-    # a pages deploy
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
