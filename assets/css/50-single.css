@@ -158,10 +158,10 @@
 .ai-flag {
     display: inline-grid;
     place-items: center;
-    width: 2.2em;
-    height: 2em;
-    font-size: var(--step--1);
-    color: var(--meta);
+    width: 2em;
+    height: 1.8em;
+    font-size: var(--step--2);
+    color: var(--meta-soft);
     text-decoration: none;
     transition: color var(--transition);
 }
@@ -174,16 +174,16 @@
 /* Sized in em rather than to the box, so growing the box for a touch target
    grows the reach and not the drawing. */
 .ai-flag .icon {
-    width: 2.2em;
-    height: 2em;
+    width: 2em;
+    height: 1.8em;
 }
 
 /* A triangle's area is in its lower half, so the number is dropped below the
    optical centre to sit inside it rather than across its apex. */
 .ai-flag__n {
-    transform: translateY(0.38em);
+    transform: translateY(0.34em);
     font-family: var(--font-mono);
-    font-size: 0.7em;
+    font-size: 0.78em;
     font-variant-numeric: tabular-nums;
 }
 
@@ -230,10 +230,21 @@
     text-underline-offset: 0.25em;
 }
 
-.ai-mark .ai-flag {
-    font-size: var(--step--2);
-    vertical-align: 0.5em;
+/* The raised number that answers the dashed line, set like the reference it is
+   rather than like the flag on the bar. */
+.ai-ref {
     margin-inline-start: var(--space-4xs);
+    vertical-align: 0.45em;
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    font-variant-numeric: tabular-nums;
+    color: var(--meta);
+    text-decoration: none;
+    transition: color var(--transition);
+}
+
+.ai-ref:hover {
+    color: var(--accent);
 }
 
 /* --- the revision note ----------------------------------------------------
@@ -259,7 +270,7 @@
 
 .ai-notes__row {
     display: grid;
-    grid-template-columns: var(--space-2xl) minmax(0, 1fr);
+    grid-template-columns: var(--space-lg) minmax(0, 1fr);
     gap: var(--space-md);
     padding-block: var(--space-2xs);
     align-items: baseline;
@@ -270,8 +281,10 @@
 }
 
 .ai-notes__flag {
-    display: flex;
     color: var(--meta);
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    text-align: end;
 }
 
 .ai-notes__detail {

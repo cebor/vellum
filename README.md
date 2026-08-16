@@ -447,8 +447,11 @@ than the column.
 
 Marks a passage as written with AI assistance, using the notation a drawing already has for an
 altered region: a dashed change bar down the passage's edge, a numbered revision flag on the bar, and
-the number resolving to a row in the **revision note** at the foot of the sheet. The flag is a link
+the number resolving to a row in the **revision note** at the foot of the sheet. Every number links
 to its own row.
+
+Inside a sentence there is no bar for a flag to sit on, so `display="inline"` sets the dashed line
+under the words and raises the number after them, like a footnote reference.
 
 ```markdown
 {{</* ai note="Drafted from an outline, then edited by hand" */>}}

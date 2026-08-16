@@ -188,14 +188,25 @@ disclosure with the box shut.
 A marked *passage* uses the notation a drawing already has for an altered region: the dashed change
 bar, a numbered **revision flag** on the bar, and the number resolving to a row in the **revision
 note** at the foot of the sheet — ruled with the same instrument as the title block it answers to.
-The flag is a link to its own row, because a reference that does not resolve is not a reference. The
-numbering is derived from each shortcode's ordinal rather than kept as a running count, so a second
-render of the same content for another output format cannot number a passage twice.
+Every number is a link to its own row, because a reference that does not resolve is not a reference.
+The numbering is derived from each shortcode's ordinal rather than kept as a running count, so a
+second render of the same content for another output format cannot number a passage twice.
 
-The flag is **drawn, not typed.** The obvious mark is the Greek delta, and it is unusable here: both
-bundled faces are subset to latin and latin-ext, so the character would fall back to whatever the
-system had and quietly stop matching the sheet. It is an outlined triangle filling the 24×24 grid
-with the number set inside it, dropped below the optical centre because a triangle's area is.
+**The number appears in three registers, and only one of them is the flag.** A drawing draws the
+triangle where it has to be found among other marks, and sets a plain number everywhere the column
+already says what it is:
+
+| Where | Mark |
+|---|---|
+| On the change bar | The triangle with the number inside it — the flag proper |
+| In running prose | The dashed line under the words and the number raised after them. There is no bar for a flag to sit on, and a triangle mid-sentence reads as a warning sign and stops the line dead |
+| In the revision note | A plain number in the key column, set like the title block's own keys. Drawing the flag twice would make the key louder than the note it keys |
+
+The flag itself is **drawn, not typed.** The obvious mark is the Greek delta, and it is unusable
+here: both bundled faces are subset to latin and latin-ext, so the character would fall back to
+whatever the system had and quietly stop matching the sheet. It is an outlined triangle filling the
+24×24 grid with the number set inside it, dropped below the optical centre because a triangle's area
+is.
 
 Icons are two deliberate families: UI glyphs authored on a 24×24 grid at 1.75 stroke, and brand marks
 as the official filled logotypes, which cannot be redrawn as strokes without misrepresenting someone's

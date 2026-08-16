@@ -24,10 +24,12 @@
         {{- if not $detail }}{{ $detail = $ai.note }}{{ end }}
         {{- if not $detail }}{{ $detail = $ai.label | default (i18n "ai_assisted") }}{{ end }}
         <div class="ai-notes__row" id="ai-rev-{{ $n }}">
-            <dt class="ai-notes__flag">
-                <span class="ai-flag">{{ partialCached "icon.html" "revision" "revision" }}<span
-                        class="ai-flag__n">{{ $n }}</span></span>
-            </dt>
+            {{- /* A plain number, not the drawn flag. The triangle belongs on
+                   the face of the sheet, where it has to be found among prose;
+                   a revision table has an ordinary numbered column, and setting
+                   the flag twice would make the key louder than the note it
+                   keys. The number is the tie, and the flag links to it. */}}
+            <dt class="ai-notes__flag">{{ $n }}</dt>
             <dd class="ai-notes__detail">
                 {{- $detail }}
                 {{- with $m.model }} <span class="ai-notes__model">· {{ . }}</span>{{ end }}

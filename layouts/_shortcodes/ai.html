@@ -35,12 +35,17 @@
 {{- $n := 0 }}
 {{- range $k, $_ := $marks }}{{ if le $k $key }}{{ $n = add $n 1 }}{{ end }}{{ end }}
 
-{{- $flag := printf `<a class="ai-flag" href="#ai-rev-%d" aria-label="%s">%s<span class="ai-flag__n">%d</span></a>`
-    $n (i18n "ai_flag" (dict "Number" $n)) (partialCached "icon.html" "revision" "revision") $n }}
+{{- $label := i18n "ai_flag" (dict "Number" $n) }}
 
 {{- if eq $display "inline" -}}
-<span class="ai-mark"><span class="ai-mark__text">{{ .Inner | .Page.RenderString (dict "display" "inline") }}</span>{{ $flag | safeHTML }}</span>
+{{- /* In running prose there is no change bar for a flag to sit on, so the mark
+       is a reference rather than a flag: the dashed line under the words, and
+       the number raised after them. A triangle set mid-sentence reads as a
+       warning sign and stops the line dead. */ -}}
+<span class="ai-mark"><span class="ai-mark__text">{{ .Inner | .Page.RenderString (dict "display" "inline") }}</span><a class="ai-ref" href="#ai-rev-{{ $n }}" aria-label="{{ $label }}">{{ $n }}</a></span>
 {{- else -}}
+{{- $flag := printf `<a class="ai-flag" href="#ai-rev-%d" aria-label="%s">%s<span class="ai-flag__n">%d</span></a>`
+    $n $label (partialCached "icon.html" "revision" "revision") $n }}
 <div class="ai-passage" role="note" aria-label="{{ i18n "ai_passage" }}">
     <p class="ai-passage__flag">{{ $flag | safeHTML }}</p>
     <div class="ai-passage__body">{{ .Inner | .Page.RenderString (dict "display" "block") }}</div>
