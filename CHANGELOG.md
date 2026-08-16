@@ -9,6 +9,19 @@ the format they follow is in [`CONTRIBUTING.md`](CONTRIBUTING.md). Only changes 
 can see are listed — refactors, documentation, CI and build chores are not. Releases up to 0.1.2
 predate the generated format and were written by hand.
 
+## [0.2.0](https://github.com/cebor/vellum/compare/v0.1.2...v0.2.0) - 2026-08-16
+
+First release with a generated changelog. From here on entries come from the commit history, and
+**Breaking** carries everything that moves a URL or drops a param. The two fixes below predate that
+and were written by hand.
+
+### Fixed
+
+- **css:** keep the zone rail hidden below the collapse width once the script has placed it, where it
+  had been coming back as a stack of marks in the frame's top corner (eaa1cc3)
+- **list:** attach an `_index.md` body to the page head as a sheet note, instead of flush against the
+  first post card, where proximity read it as that card's caption (6a29629)
+
 ## [0.1.2](https://github.com/cebor/vellum/compare/v0.1.1...v0.1.2) - 2026-08-15
 
 ### Fixed
