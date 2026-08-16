@@ -514,6 +514,10 @@ applied on GitLab instead and reach GitHub with the next push, authorship intact
 changes nothing about how you contribute: open the pull request, and treat the branch as the
 contribution rather than the merge button.
 
+[`CONTRIBUTING.md`](https://github.com/cebor/vellum/blob/main/CONTRIBUTING.md) has the details,
+including the commit message format — commits are the source the changelog is generated from, so
+they follow a fixed `type(scope): summary` shape.
+
 ## Licence
 
 MIT — see [`LICENSE`](https://github.com/cebor/vellum/blob/main/LICENSE).
