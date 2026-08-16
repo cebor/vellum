@@ -164,7 +164,8 @@ step "URL parity against $LAST_TAG"
 # reordered — this is the one place to say it, before the section becomes both
 # the changelog entry and the tag message.
 if [ "$EDIT" = 1 ]; then
-    "${EDITOR:-vi}" "$SECTION" || fail "editor exited non-zero; nothing written"
+    # Unquoted on purpose: EDITOR conventionally carries flags ("code -w").
+    ${EDITOR:-vi} "$SECTION" || fail "editor exited non-zero; nothing written"
     head -1 "$SECTION" | grep -q "^## " || fail "the section no longer starts with its '## [version]' heading"
 fi
 
