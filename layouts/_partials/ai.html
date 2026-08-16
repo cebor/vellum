@@ -1,0 +1,56 @@
+{{- /* Normalises the `ai` front matter into one dict and returns it. Renders
+       nothing itself — the same role tokens.html plays for the stylesheet.
+
+       Three ways to write the same disclosure, so the simple case stays simple:
+
+           ai = true                       # equivalent to level = "assisted"
+           ai = "generated"                # the level on its own
+           [ai]
+             level = "assisted"
+             note  = "Drafted and translated"
+             model = "Claude Opus 5"
+
+       Usage: {{ $ai := partialCached "ai.html" . .RelPermalink }}
+              {{ if $ai.on }}…{{ end }}
+
+       An unknown level fails the build rather than printing itself. A typo in a
+       provenance statement is a false statement, and this theme would rather
+       break than mumble one. Free wording belongs in `note`. */ -}}
+
+{{- $levels := dict
+    "assisted" (i18n "ai_assisted")
+    "generated" (i18n "ai_generated") }}
+
+{{- $raw := .Params.ai }}
+{{- $level := "assisted" }}
+{{- $note := "" }}
+{{- $model := "" }}
+{{- with site.Params.ai }}{{ with .model }}{{ $model = . }}{{ end }}{{ end }}
+
+{{- /* The level, the note and the model are resolved even when the post itself
+       discloses nothing, because the `ai` shortcode falls back to them for a
+       passage on an otherwise unmarked post. Only `on` decides whether the
+       sheet carries a stamp. */ -}}
+{{- $on := false }}
+{{- if $raw }}
+{{- $on = true }}
+{{- if reflect.IsMap $raw }}
+{{- with $raw.level }}{{ $level = . }}{{ end }}
+{{- with $raw.note }}{{ $note = . }}{{ end }}
+{{- with $raw.model }}{{ $model = . }}{{ end }}
+{{- else if ne (printf "%T" $raw) "bool" }}
+{{- $level = printf "%v" $raw }}
+{{- end }}
+
+{{- if not (index $levels $level) }}
+{{- errorf "ai front matter in %s: unknown level %q — use %q or %q, and put free wording in `note`"
+    .Path $level "assisted" "generated" }}
+{{- end }}
+{{- end }}
+
+{{- return dict
+    "on" $on
+    "level" $level
+    "label" (index $levels $level)
+    "note" $note
+    "model" $model }}

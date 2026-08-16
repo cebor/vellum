@@ -31,6 +31,12 @@ one of each.
 | `--rule-strong` | A division that has to hold its own: code block and image borders, the rule closing a section header above the list it introduces |
 | `--rule-frame` | The sheet's edge, paired with `--line-frame` |
 
+There is a **third axis, style, and it has exactly one use**: the change bar beside an AI-marked
+passage is dashed. It has to be. A block quotation already owns the solid thin rule in the same ink,
+and on a drawing the dashed line is the provisional or added one — so the dash is carrying the
+distinction rather than decorating it. Any second use has to earn the same way, or the axis becomes
+what `--line-hair` was.
+
 A third width token, `--line-hair`, stood in the palette at 1px — the same value as `--line-thin` —
 so which one an author reached for made no visible difference, and eleven declarations had drifted
 between the two without anyone being able to see it. It was removed rather than given a real value:
@@ -151,6 +157,8 @@ State is a **mark, not a hue**, so it survives greyscale and colour blindness:
 - Current zone: lit letter *and* a lengthened tick.
 - Focus: a 2px amber outline, offset — one ring, never doubled with a border recolour.
 - Alerts: a lettered label plus a border, so the type of alert is readable without colour.
+- AI use: a drawn stamp and a dashed change bar in graphite, never the one signal colour — amber
+  means "this is live", and a note on how the sheet was drawn is not live.
 
 ## Components
 
@@ -169,6 +177,25 @@ measure so the index below stays the sheet's loudest mass. Rendered as plain pro
 opposite spacing — the whole gap above it and none below — and proximity read it as a caption on the
 first card. Only its paragraphs are toned down, so a table or a code block in an `_index.md` keeps
 its ordinary treatment.
+
+**AI provenance is drawing furniture, not a badge.** A post that discloses AI use carries a stamp in
+the **corner of the title block** — where a drawing carries its stamps, and because the note
+qualifies the whole block rather than adding one more field to it. The detail opens on hover *and* on
+focus, so a pointer, a keyboard and a tap all reach it; it is closed with `display`, never `opacity`,
+because `aria-describedby` reaches into hidden content and a screen reader therefore hears the whole
+disclosure with the box shut.
+
+A marked *passage* uses the notation a drawing already has for an altered region: the dashed change
+bar, a numbered **revision flag** on the bar, and the number resolving to a row in the **revision
+note** at the foot of the sheet — ruled with the same instrument as the title block it answers to.
+The flag is a link to its own row, because a reference that does not resolve is not a reference. The
+numbering is derived from each shortcode's ordinal rather than kept as a running count, so a second
+render of the same content for another output format cannot number a passage twice.
+
+The flag is **drawn, not typed.** The obvious mark is the Greek delta, and it is unusable here: both
+bundled faces are subset to latin and latin-ext, so the character would fall back to whatever the
+system had and quietly stop matching the sheet. It is an outlined triangle filling the 24×24 grid
+with the number set inside it, dropped below the optical centre because a triangle's area is.
 
 Icons are two deliberate families: UI glyphs authored on a 24×24 grid at 1.75 stroke, and brand marks
 as the official filled logotypes, which cannot be redrawn as strokes without misrepresenting someone's

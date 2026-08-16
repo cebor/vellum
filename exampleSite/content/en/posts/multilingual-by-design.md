@@ -5,6 +5,11 @@ draft = false
 tags = ["multilingual", "reference"]
 summary = "Two languages, neither of them a translation layer over the other — and what that costs in configuration."
 translationKey = "multilingual-by-design"
+
+# The full form of the disclosure: a level, what was done, and with what.
+[ai]
+  level = "assisted"
+  note = "German draft translated from the English, then checked line by line"
 +++
 
 This demo runs in English and German. Not English with a German veneer: each language has its own

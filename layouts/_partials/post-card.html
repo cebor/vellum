@@ -20,6 +20,15 @@
             {{- if and ($p.Param "ShowReadingTime") (gt $p.ReadingTime 0) }}
             <span class="post-card__extent">{{ i18n "read_time" $p.ReadingTime }}</span>
             {{- end }}
+            {{- /* The same mark the sheet carries in its title block, so the
+                   index discloses what the post does and nothing new has to be
+                   learned between the two. */}}
+            {{- with partialCached "ai.html" $p $p.RelPermalink }}
+            {{- if .on }}
+            <span class="post-card__ai">{{ partialCached "icon.html" "ai" "ai" }}<span
+                    class="visually-hidden">{{ i18n "ai_stamp" }}: {{ .label }}</span></span>
+            {{- end }}
+            {{- end }}
             {{- if $p.Draft }}<span class="draft-badge">{{ i18n "draft" }}</span>{{ end }}
         </p>
         {{- end }}

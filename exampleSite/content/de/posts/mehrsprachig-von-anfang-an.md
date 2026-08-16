@@ -5,6 +5,9 @@ draft = false
 tags = ["mehrsprachig", "referenz"]
 summary = "Zwei Sprachen, von denen keine eine Übersetzungsschicht über der anderen ist — und was das an Konfiguration kostet."
 translationKey = "multilingual-by-design"
+
+# Die kürzeste Form derselben Angabe: mehr braucht es nicht.
+ai = true
 +++
 
 Diese Demo läuft auf Englisch und Deutsch. Nicht Englisch mit deutschem Anstrich: Jede Sprache hat

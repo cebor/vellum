@@ -29,6 +29,13 @@ einer dunklen Seite hell.
 
 ## Ein Beispiel
 
+{{< ai note="Kommentare im Beispiel maschinell entworfen, danach von Hand geschärft" >}}
+Der folgende Ausschnitt ist ein Beispiel, kein Auszug aus dem Theme — er zeigt, worauf es beim
+Fehlertext ankommt, nicht wie `tokens.html` tatsächlich gebaut ist. Diese Passage trägt deshalb
+einen Randstrich: Sie ist mit Unterstützung entstanden, und der Änderungsvermerk am Blattfuß sagt,
+womit.
+{{< /ai >}}
+
 ```go
 // tokens.html liest vier Werte zur Build-Zeit aus 00-tokens.css, weil ein
 // sizes-Attribut ohne Element-Kontext ausgewertet wird und kein var() kennt.

@@ -29,6 +29,11 @@
 
     {{- partial "extend-post-content.html" . }}
 
+    {{- /* The revision note resolves the change flags set in the content, so it
+           has to come after .Content has been rendered — and it is sheet
+           content, not footer furniture. */}}
+    {{- partial "ai-notes.html" . }}
+
     {{- $tags := .GetTerms (site.Language.Params.Taxonomies.tag | default "tags") }}
     {{- $share := and ($.Param "ShowShareButtons") (not (.Param "disableShare")) $isPost }}
     {{- $edit := and site.Params.editPost.URL (not site.Params.editPost.disabled) $isPost }}

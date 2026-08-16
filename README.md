@@ -278,6 +278,7 @@ summary = "One sentence, shown in list views and OpenGraph."
 | `layout = "search"` | Render the search page. |
 | `layout = "archives"` | Render the year/month archive. |
 | `menus = "main"` | Put a standalone page in the nav. |
+| `ai` | Disclose AI use on this post. See [AI disclosure](#ai-disclosure). |
 | `cover` | See [Covers](#covers-1). |
 
 > [!WARNING]
@@ -309,6 +310,42 @@ description = "Every post in the demo, newest first."
 
 Nine posts across two languages, written to exercise the theme rather than to fill it.
 ```
+
+### AI disclosure
+
+States that a post was written with AI assistance. It puts a small stamp in the corner of the title
+block — where a drawing carries its stamps — and the same drawn mark in the index, so a reader sees
+it before opening the post. Hovering or focusing the stamp opens the detail; the detail is also read
+out by a screen reader with the box closed, so nothing is hidden behind a pointer.
+
+Three ways to write the same thing. The shortest is the point:
+
+```toml
+ai = true                        # enough on its own; means level = "assisted"
+
+ai = "generated"                 # just the level
+
+[ai]                             # the full form
+  level = "assisted"             # "assisted" or "generated"
+  note = "Drafted from an outline, then edited by hand"
+  model = "Claude Opus 5"
+```
+
+| Key | Default | Notes |
+|---|---|---|
+| `level` | `assisted` | `assisted` or `generated`. Anything else **fails the build** — a typo in a provenance statement is a false statement, and free wording belongs in `note`. |
+| `note` | — | What was done. Free text. |
+| `model` | `params.ai.model` | What it was done with. |
+
+Name the model once for the whole site rather than in every post:
+
+```toml
+[params.ai]
+  model = "Claude Opus 5"
+```
+
+To mark individual passages instead of the whole post, use the [`ai` shortcode](#ai). A post may do
+either, both, or neither.
 
 ### Covers
 
@@ -406,6 +443,31 @@ than the column.
 | `alt` | — | |
 | `height` | `1em` | Any CSS length. |
 
+#### `ai`
+
+Marks a passage as written with AI assistance, using the notation a drawing already has for an
+altered region: a dashed change bar down the passage's edge, a numbered revision flag on the bar, and
+the number resolving to a row in the **revision note** at the foot of the sheet. The flag is a link
+to its own row.
+
+```markdown
+{{</* ai note="Drafted from an outline, then edited by hand" */>}}
+A whole paragraph.
+{{</* /ai */>}}
+
+… a sentence with {{</* ai display="inline" */>}}this run{{</* /ai */>}} in it.
+```
+
+| Param | Default | Notes |
+|---|---|---|
+| `display` | `block` | `inline` for a run inside a sentence. Anything else fails the build. |
+| `note` | the post's `ai.note` | What happened at this point; it is what the revision note prints. |
+| `model` | the post's `ai.model` | Overrides the model for this passage alone. |
+
+The post-level counterpart is front matter rather than a shortcode — see
+[AI disclosure](#ai-disclosure). The two are independent: a post may mark passages without carrying a
+stamp, and vice versa.
+
 #### `rawhtml`
 
 Emits its body verbatim — a deliberate hole in `unsafe = false`.
@@ -438,7 +500,7 @@ None of these need a shortcode.
 UI glyphs, authored on a 24×24 grid with a 1.75 stroke:
 
 `arrow-up` · `arrow-right` · `arrow-left` · `external` · `hash` · `search` · `pencil` ·
-`chevron-right` · `check` · `moon` · `sun` · `rss` · `email`
+`chevron-right` · `check` · `moon` · `sun` · `rss` · `email` · `ai` · `revision`
 
 Brand marks, from [Simple Icons](https://simpleicons.org) (CC0) as filled paths:
 

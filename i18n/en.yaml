@@ -204,6 +204,33 @@
 - id: alert_caution
   translation: "Caution"
 
+# --- AI disclosure ----------------------------------------------------------
+# Provenance, not decoration: what the sheet states about how it was drawn. The
+# level names are deliberately plain — a reader should not have to learn a
+# vocabulary to read a disclosure.
+
+- id: ai_stamp
+  translation: "AI use"
+
+- id: ai_assisted
+  translation: "With assistance"
+
+- id: ai_generated
+  translation: "Machine-generated"
+
+- id: ai_model
+  translation: "Model"
+
+# The revision note: the table a drawing carries to resolve its change flags.
+- id: ai_notes
+  translation: "Revision note"
+
+- id: ai_passage
+  translation: "AI-assisted passage"
+
+- id: ai_flag
+  translation: "Change flag {{ .Number }}"
+
 # --- chrome -----------------------------------------------------------------
 
 - id: theme_toggle

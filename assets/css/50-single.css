@@ -24,6 +24,7 @@
    the sheet's heavier rule. */
 
 .title-block {
+    position: relative;
     margin-top: var(--space-lg);
     border-block: var(--line-frame) solid var(--rule-frame);
     display: grid;
@@ -60,6 +61,227 @@
 
 .title-block__value a {
     text-decoration-color: var(--rule-strong);
+}
+
+/* --- the AI stamp ---------------------------------------------------------
+
+   A drawing carries its stamps in the corner of the title block, and a note on
+   how the sheet was drawn qualifies the whole block rather than adding one more
+   field to it. Closed, it is a bordered square holding the instrument mark;
+   opened — on hover and on focus, so a pointer, a keyboard and a tap all reach
+   it — it draws the note beneath itself.
+
+   The note is closed with `display`, never with `opacity`. The button points at
+   it with aria-describedby, and a description is read out of hidden content, so
+   a screen reader hears the whole disclosure with the box shut. */
+
+.ai-stamp {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+}
+
+.ai-stamp__mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--space-xl);
+    height: var(--space-xl);
+    padding: 0;
+    border: var(--line-thin) solid var(--rule-strong);
+    background: var(--bg);
+    color: var(--meta);
+    cursor: help;
+    transition: color var(--transition), border-color var(--transition);
+}
+
+.ai-stamp__mark .icon {
+    width: var(--space-lg);
+    height: var(--space-lg);
+}
+
+.ai-stamp__mark:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.ai-stamp__note {
+    display: none;
+    position: absolute;
+    inset-block-start: calc(100% + var(--space-3xs));
+    inset-inline-end: 0;
+    z-index: 1;
+    width: max-content;
+    max-width: min(42ch, 70vw);
+    padding: var(--space-xs) var(--space-sm);
+    border: var(--line-thin) solid var(--rule-strong);
+    background: var(--bg);
+    font-size: var(--step--1);
+    line-height: var(--line-height-snug);
+}
+
+.ai-stamp:hover .ai-stamp__note,
+.ai-stamp:focus-within .ai-stamp__note {
+    display: block;
+}
+
+.ai-stamp__note p {
+    margin: 0;
+}
+
+.ai-stamp__label {
+    margin-bottom: var(--space-3xs);
+}
+
+.ai-stamp__detail,
+.ai-stamp__model {
+    margin-top: var(--space-4xs);
+    color: var(--meta);
+    font-size: var(--step--2);
+}
+
+/* The stamp overlaps the first row's value column, which is the only row it can
+   reach. Hold that value clear of it rather than letting a long one run under
+   the mark. */
+.ai-stamp + .title-block__row .title-block__value {
+    padding-inline-end: var(--space-2xl);
+}
+
+/* --- the revision flag ----------------------------------------------------
+
+   The numbered triangle a drawing sets beside a changed region, drawn rather
+   than typed: the delta character is outside the latin/latin-ext subset both
+   bundled faces ship, so it would fall back to whatever the system had. The
+   number sits inside the triangle, nudged below the optical centre because a
+   triangle's area is. */
+
+.ai-flag {
+    display: inline-grid;
+    place-items: center;
+    width: 2.2em;
+    height: 2em;
+    font-size: var(--step--1);
+    color: var(--meta);
+    text-decoration: none;
+    transition: color var(--transition);
+}
+
+.ai-flag .icon,
+.ai-flag__n {
+    grid-area: 1 / 1;
+}
+
+/* Sized in em rather than to the box, so growing the box for a touch target
+   grows the reach and not the drawing. */
+.ai-flag .icon {
+    width: 2.2em;
+    height: 2em;
+}
+
+/* A triangle's area is in its lower half, so the number is dropped below the
+   optical centre to sit inside it rather than across its apex. */
+.ai-flag__n {
+    transform: translateY(0.38em);
+    font-family: var(--font-mono);
+    font-size: 0.7em;
+    font-variant-numeric: tabular-nums;
+}
+
+.ai-flag:hover {
+    color: var(--accent);
+}
+
+/* --- AI-marked passages ---------------------------------------------------
+
+   The drawing convention for an altered region: a change bar down its edge, a
+   numbered flag on the bar, and the number resolving to a row in the revision
+   note at the foot of the sheet.
+
+   The bar is dashed, and this is the one place in the stylesheet where line
+   *style* carries meaning rather than width and ink alone. It has to: a
+   blockquote already owns the solid thin rule in this very ink, and on a
+   drawing the dashed line is the provisional one. One use, one meaning — the
+   distinction --line-hair could never make. */
+
+.ai-passage {
+    margin-block: var(--space-lg);
+    padding-inline-start: var(--space-md);
+    border-inline-start: var(--line-thin) dashed var(--rule-strong);
+}
+
+/* Pulled back onto the bar and left transparent, so the dashes run behind it
+   and the flag reads as pinned to the line rather than floating above it. */
+.ai-passage__flag {
+    margin-block: 0 var(--space-2xs);
+    margin-inline-start: calc((var(--space-md) + var(--line-thin)) * -1);
+}
+
+.ai-passage__body > :first-child {
+    margin-top: 0;
+}
+
+.ai-passage__body > :last-child {
+    margin-bottom: 0;
+}
+
+/* A run inside a sentence: the same dashed line, laid under the words. */
+.ai-mark__text {
+    text-decoration: underline dashed var(--rule-strong);
+    text-underline-offset: 0.25em;
+}
+
+.ai-mark .ai-flag {
+    font-size: var(--step--2);
+    vertical-align: 0.5em;
+    margin-inline-start: var(--space-4xs);
+}
+
+/* --- the revision note ----------------------------------------------------
+
+   Ruled like the title block it answers to, because it is the same instrument:
+   a flag column and a detail column, hairlines between the rows, the sheet's
+   own rule closing it top and bottom. */
+
+.ai-notes {
+    margin-top: var(--space-2xl);
+}
+
+.ai-notes__label {
+    margin-bottom: var(--space-2xs);
+}
+
+.ai-notes__list {
+    margin: 0;
+    display: grid;
+    border-block: var(--line-frame) solid var(--rule-frame);
+    font-size: var(--step--1);
+}
+
+.ai-notes__row {
+    display: grid;
+    grid-template-columns: var(--space-2xl) minmax(0, 1fr);
+    gap: var(--space-md);
+    padding-block: var(--space-2xs);
+    align-items: baseline;
+}
+
+.ai-notes__row + .ai-notes__row {
+    border-top: var(--line-thin) solid var(--rule);
+}
+
+.ai-notes__flag {
+    display: flex;
+    color: var(--meta);
+}
+
+.ai-notes__detail {
+    margin: 0;
+    min-width: 0;
+    color: var(--text);
+}
+
+.ai-notes__model {
+    color: var(--meta-soft);
 }
 
 /* --- cover --------------------------------------------------------------- */
@@ -458,6 +680,17 @@ img.in-text {
     .js .copy-code {
         opacity: 1;
         min-height: var(--tap-target);
+    }
+
+    /* On touch, the stamp is the only way to open the note, and the passage's
+       flag the only way to reach its row — both are standalone controls and
+       both grow. The inline flag stays as drawn: it sits inside a sentence, and
+       an inline target is exactly what the size minimum exempts. Growing it
+       would push the line apart to fix a rule it was never under. */
+    .ai-stamp__mark,
+    .ai-passage__flag .ai-flag {
+        width: var(--tap-target);
+        height: var(--tap-target);
     }
 }
 

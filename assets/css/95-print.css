@@ -123,6 +123,53 @@
         font-weight: 700;
     }
 
+    /* A printed sheet hides nothing behind a hover. The stamp gives up its
+       corner and its box; the disclosure prints as a plain run under the title
+       block, where it can actually be read. */
+    .ai-stamp {
+        position: static;
+        padding-block: var(--space-2xs);
+        border-bottom: 0.5pt solid #999;
+    }
+
+    /* The value column only stood clear of a stamp that is no longer there. */
+    .ai-stamp + .title-block__row .title-block__value {
+        padding-inline-end: 0;
+    }
+
+    .ai-stamp__mark {
+        display: none;
+    }
+
+    .ai-stamp__note {
+        display: block;
+        position: static;
+        max-width: none;
+        padding: 0;
+        border: 0;
+        background: none;
+    }
+
+    /* Change bars, flags and the revision note are ink, and ink belongs on the
+       paper. Only the flags' link colour goes. */
+    .ai-passage {
+        border-inline-start: 0.5pt dashed #555;
+    }
+
+    .ai-notes__list {
+        border-block: 1pt solid #000;
+    }
+
+    .ai-notes__row + .ai-notes__row {
+        border-top: 0.5pt solid #999;
+    }
+
+    .ai-passage,
+    .ai-notes {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
     /* A link's destination is invisible on paper unless it is printed. */
     .content a[href^="http"]::after {
         content: " (" attr(href) ")";

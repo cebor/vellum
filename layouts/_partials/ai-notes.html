@@ -1,0 +1,39 @@
+{{- /* The revision note: the table a drawing carries to resolve the change flags
+       set on its face. One row per marked passage, in document order, each the
+       target of its own flag.
+
+       It reads what the `ai` shortcode left in Page.Store, which only holds
+       once .Content has been rendered — so this partial has to be called after
+       it in the template, never in the header.
+
+       A passage that states no note of its own inherits the post's, and failing
+       that the level's own wording. Every flag gets a row; a flag pointing at
+       nothing would be the reference that does not resolve, which is the one
+       failure a drawing reference cannot have. */ -}}
+
+{{- $marks := .Store.Get "aiMarks" }}
+{{- if $marks }}
+{{- $ai := partialCached "ai.html" . .RelPermalink }}
+{{- $n := 0 }}
+<div class="ai-notes" role="note" aria-labelledby="ai-notes-label">
+    <p class="ai-notes__label label" id="ai-notes-label">{{ i18n "ai_notes" }}</p>
+    <dl class="ai-notes__list">
+        {{- range $k, $m := $marks }}
+        {{- $n = add $n 1 }}
+        {{- $detail := $m.note }}
+        {{- if not $detail }}{{ $detail = $ai.note }}{{ end }}
+        {{- if not $detail }}{{ $detail = $ai.label | default (i18n "ai_assisted") }}{{ end }}
+        <div class="ai-notes__row" id="ai-rev-{{ $n }}">
+            <dt class="ai-notes__flag">
+                <span class="ai-flag">{{ partialCached "icon.html" "revision" "revision" }}<span
+                        class="ai-flag__n">{{ $n }}</span></span>
+            </dt>
+            <dd class="ai-notes__detail">
+                {{- $detail }}
+                {{- with $m.model }} <span class="ai-notes__model">· {{ . }}</span>{{ end }}
+            </dd>
+        </div>
+        {{- end }}
+    </dl>
+</div>
+{{- end }}

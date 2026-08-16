@@ -90,6 +90,22 @@
     max-width: 68ch;
 }
 
+/* The same instrument mark the sheet carries in its title block, so the index
+   discloses what the post does without teaching a second sign. Sized to the
+   meta line it sits in rather than to a fixed step. */
+.post-card__ai {
+    display: inline-flex;
+    align-items: center;
+    color: var(--meta);
+}
+
+/* Larger than the type around it, because a 1.75 stroke scaled to the meta
+   line's own size thins out to under a pixel and the nib stops being a nib. */
+.post-card__ai .icon {
+    width: 1.5em;
+    height: 1.5em;
+}
+
 /* State is a mark, not a hue: the draft flag is a drawn box with its own
    lettering, legible in greyscale and to anyone who cannot separate the two
    colours. */

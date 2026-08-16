@@ -167,6 +167,11 @@ pygmentsUseClasses = true
   TocOpen = false
   ShareButtons = ["mastodon", "bluesky", "reddit", "hackernews", "linkedin", "email"]
 
+  # Named once here rather than in every post that discloses AI use. A post may
+  # still override it, and a post without an `ai` key discloses nothing at all.
+  [params.ai]
+    model = "Claude Opus 5"
+
   [params.cover]
     linkFullImages = true
 

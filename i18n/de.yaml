@@ -205,6 +205,34 @@
 - id: alert_caution
   translation: "Achtung"
 
+# --- KI-Offenlegung ---------------------------------------------------------
+# Eine Angabe zur Herkunft des Blattes, keine Dekoration. Die Stufennamen sind
+# absichtlich schlicht — niemand soll erst ein Vokabular lernen müssen, um eine
+# Offenlegung zu lesen.
+
+- id: ai_stamp
+  translation: "KI-Einsatz"
+
+- id: ai_assisted
+  translation: "Mit Unterstützung"
+
+- id: ai_generated
+  translation: "Maschinell erzeugt"
+
+- id: ai_model
+  translation: "Modell"
+
+# Der Änderungsvermerk: die Tabelle, mit der eine Zeichnung ihre Änderungsfahnen
+# auflöst.
+- id: ai_notes
+  translation: "Änderungsvermerk"
+
+- id: ai_passage
+  translation: "Passage mit KI-Unterstützung"
+
+- id: ai_flag
+  translation: "Änderungsfahne {{ .Number }}"
+
 # --- Rahmen -----------------------------------------------------------------
 
 - id: theme_toggle
