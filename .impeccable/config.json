@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "border-left: 3px solid var(--border-strong)",
+        "createdAt": "2026-08-14T10:42:05.428Z",
+        "reason": "Prose blockquote, not a card/callout/alert: a left rule is the standard typographic convention for block quotations. Colour is the neutral --border-strong grey, not an accent. Incumbent design — the theme shipped 'border-left: 3px solid var(--border)' before this polish pass, which only re-pointed it at the stronger neutral."
+      }
+    ]
+  }
+}

@@ -47,6 +47,10 @@ node_modules/
 # between them.
 .impeccable/review/
 
+# The question hook drops one hash-named log per prompt here — runtime state, and
+# empty in the ordinary case. Outside the markers for the same reason as above.
+.impeccable/questions/
+
 # impeccable-ignore-start
 # Ephemeral output, runtime state, and per-dev overrides.
 # Unanchored: .impeccable may sit at the repo root or under a nested
