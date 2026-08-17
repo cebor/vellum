@@ -83,7 +83,14 @@ step "Registry fixtures"
 # gallery shows a placeholder, which is only visible on the theme site itself
 # and so is exactly the kind of thing that goes unnoticed for a release or two.
 # Dimensions come out of the PNG's IHDR chunk, at a fixed offset in every PNG.
-png_size() { od -An -v -tu4 -j16 -N8 --endian=big "$1" 2>/dev/null | awk 'NF{print $1"x"$2; exit}'; }
+#
+# --endian is GNU od's, and macOS ships BSD od, which does not have it — so this
+# check warned instead of running on exactly the machine releases are cut from,
+# and a wrongly sized fixture would have reached the tag with a warning nobody
+# reads. Homebrew installs GNU coreutils g-prefixed, so `god` is the one to reach
+# for first; the bare name is right on Linux and in CI.
+OD=od; command -v god >/dev/null && OD=god
+png_size() { "$OD" -An -v -tu4 -j16 -N8 --endian=big "$1" 2>/dev/null | awk 'NF{print $1"x"$2; exit}'; }
 check_png() { # check_png <path> <expected>
     [ -f "$1" ] || fail "$1 is missing; the theme gallery needs it in the tag"
     got="$(png_size "$1")"
