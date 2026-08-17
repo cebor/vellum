@@ -1,5 +1,5 @@
 {{- /* Marks a passage as AI-assisted, the way a drawing marks a changed region:
-       a change bar down its edge, a numbered revision flag on the bar, and the
+       a change bar down its edge, the sheet's AI mark flagged on the bar, and a
        number resolving to a row in the revision note at the foot of the sheet.
        The flag links to its row, because that is what a drawing reference is
        for — it tells you where to look.
@@ -40,12 +40,16 @@
 {{- if eq $display "inline" -}}
 {{- /* In running prose there is no change bar for a flag to sit on, so the mark
        is a reference rather than a flag: the dashed line under the words, and
-       the number raised after them. A triangle set mid-sentence reads as a
-       warning sign and stops the line dead. */ -}}
+       the number raised after them. A glyph set mid-sentence would stop the
+       line dead, and the dashed underline already says which words are marked. */ -}}
 <span class="ai-mark"><span class="ai-mark__text">{{ .Inner | .Page.RenderString (dict "display" "inline") }}</span><a class="ai-ref" href="#ai-rev-{{ $n }}" aria-label="{{ $label }}">{{ $n }}</a></span>
 {{- else -}}
+{{- /* The mark on the bar is the sheet's own AI mark — the same nib-over-plotted-
+       line the title block stamps in its corner — so one mark says "AI" here,
+       once for the whole sheet and once for the passage. The number rides after
+       it as the reference it is, the same raised figure the inline case sets. */ -}}
 {{- $flag := printf `<a class="ai-flag" href="#ai-rev-%d" aria-label="%s">%s<span class="ai-flag__n">%d</span></a>`
-    $n $label (partialCached "icon.html" "revision" "revision") $n }}
+    $n $label (partialCached "icon.html" "ai" "ai") $n }}
 <div class="ai-passage" role="note" aria-label="{{ i18n "ai_passage" }}">
     <p class="ai-passage__flag">{{ $flag | safeHTML }}</p>
     <div class="ai-passage__body">{{ .Inner | .Page.RenderString (dict "display" "block") }}</div>

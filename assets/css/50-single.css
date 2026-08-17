@@ -149,41 +149,50 @@
 
 /* --- the revision flag ----------------------------------------------------
 
-   The numbered triangle a drawing sets beside a changed region, drawn rather
-   than typed: the delta character is outside the latin/latin-ext subset both
-   bundled faces ship, so it would fall back to whatever the system had. The
-   number sits inside the triangle, nudged below the optical centre because a
-   triangle's area is. */
+   The mark a drawing sets beside a changed region, and on this sheet that mark
+   is the AI stamp's own glyph — nib above a plotted line — so the whole-sheet
+   stamp and the passage flag are one mark at two grains rather than two marks
+   competing to mean the same thing. It was a numbered triangle, which had to
+   carry the number inside it and read as a warning sign for the trouble.
+
+   The number therefore rides after the glyph as the reference it is, set in the
+   same mono figure the inline case raises after its words, so both grains answer
+   the revision note in one voice.
+
+   The negative margin is half the glyph's width, so the bar runs up the middle
+   of the mark rather than past its edge: the flag is *on* the line, which is the
+   whole claim a change bar makes, and the glyph's own plotted line crosses it. */
 
 .ai-flag {
-    display: inline-grid;
-    place-items: center;
-    width: 2em;
-    height: 1.8em;
+    display: inline-flex;
+    align-items: center;
+    margin-inline-start: -1.05em;
     font-size: var(--step--2);
     color: var(--meta-soft);
     text-decoration: none;
     transition: color var(--transition);
 }
 
-.ai-flag .icon,
-.ai-flag__n {
-    grid-area: 1 / 1;
-}
-
 /* Sized in em rather than to the box, so growing the box for a touch target
    grows the reach and not the drawing. */
 .ai-flag .icon {
-    width: 2em;
-    height: 1.8em;
+    width: 2.1em;
+    height: 2.1em;
 }
 
-/* A triangle's area is in its lower half, so the number is dropped below the
-   optical centre to sit inside it rather than across its apex. */
+/* Astride the bar only where the sheet has a gutter to hang into. With the frame
+   collapsed the gutter *is* the screen edge, and half a glyph over the bar left
+   the mark two pixels off it — so there the flag sits against the bar instead. */
+@media (max-width: 60rem) {
+    .ai-flag {
+        margin-inline-start: 0;
+    }
+}
+
 .ai-flag__n {
-    transform: translateY(0.34em);
+    margin-inline-start: 0.15em;
     font-family: var(--font-mono);
-    font-size: 0.78em;
+    font-size: 0.92em;
     font-variant-numeric: tabular-nums;
 }
 

@@ -446,9 +446,9 @@ than the column.
 #### `ai`
 
 Marks a passage as written with AI assistance, using the notation a drawing already has for an
-altered region: a dashed change bar down the passage's edge, a numbered revision flag on the bar, and
-the number resolving to a row in the **revision note** at the foot of the sheet. Every number links
-to its own row.
+altered region: a dashed change bar down the passage's edge, the sheet's AI mark flagged on the bar —
+the same nib the title block stamps in its corner — and a number beside it resolving to a row in the
+**revision note** at the foot of the sheet. Every number links to its own row.
 
 Inside a sentence there is no bar for a flag to sit on, so `display="inline"` sets the dashed line
 under the words and raises the number after them, like a footnote reference.
@@ -503,7 +503,7 @@ None of these need a shortcode.
 UI glyphs, authored on a 24×24 grid with a 1.75 stroke:
 
 `arrow-up` · `arrow-right` · `arrow-left` · `external` · `hash` · `search` · `pencil` ·
-`chevron-right` · `check` · `moon` · `sun` · `rss` · `email` · `ai` · `revision`
+`chevron-right` · `check` · `moon` · `sun` · `rss` · `email` · `ai`
 
 Brand marks, from [Simple Icons](https://simpleicons.org) (CC0) as filled paths:
 
