@@ -22,11 +22,18 @@
             {{- end }}
             {{- /* The same mark the sheet carries in its title block, so the
                    index discloses what the post does and nothing new has to be
-                   learned between the two. */}}
+                   learned between the two.
+
+                   The title carries the same string as the hidden label, because
+                   without it a screen reader was told what the mark means and a
+                   sighted reader was not — the one place in the theme where the
+                   glyph appears with nothing to open and no field name beside
+                   it. */}}
             {{- with partialCached "ai.html" $p $p.RelPermalink }}
             {{- if .on }}
-            <span class="post-card__ai">{{ partialCached "icon.html" "ai" "ai" }}<span
-                    class="visually-hidden">{{ i18n "ai_stamp" }}: {{ .label }}</span></span>
+            {{- $disclosure := printf "%s: %s" (i18n "ai_stamp") .label }}
+            <span class="post-card__ai" title="{{ $disclosure }}">{{ partialCached "icon.html" "ai" "ai" }}<span
+                    class="visually-hidden">{{ $disclosure }}</span></span>
             {{- end }}
             {{- end }}
             {{- if $p.Draft }}<span class="draft-badge">{{ i18n "draft" }}</span>{{ end }}
