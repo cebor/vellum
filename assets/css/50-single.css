@@ -159,14 +159,19 @@
    same mono figure the inline case raises after its words, so both grains answer
    the revision note in one voice.
 
-   The negative margin is half the glyph's width, so the bar runs up the middle
-   of the mark rather than past its edge: the flag is *on* the line, which is the
-   whole claim a change bar makes, and the glyph's own plotted line crosses it. */
+   The flag stands beside the bar rather than astride it. Hung over the line it
+   read as a mark applied *to* the rule, and the rule cut the nib in half on its
+   way past; set clear of it by a quarter em, the bar stays one unbroken dashed
+   line down the passage and the flag is what annotates it — which is how a
+   drawing sets a flag against a change bar in the first place. It needs no
+   width-dependent variant now: the mark sits inside the passage's own padding at
+   every width, where hanging over the bar had to be given up below the frame's
+   collapse because the gutter there is the screen edge. */
 
 .ai-flag {
     display: inline-flex;
     align-items: center;
-    margin-inline-start: -1.05em;
+    margin-inline-start: 0.25em;
     font-size: var(--step--2);
     color: var(--meta-soft);
     text-decoration: none;
@@ -178,15 +183,6 @@
 .ai-flag .icon {
     width: 2.1em;
     height: 2.1em;
-}
-
-/* Astride the bar only where the sheet has a gutter to hang into. With the frame
-   collapsed the gutter *is* the screen edge, and half a glyph over the bar left
-   the mark two pixels off it — so there the flag sits against the bar instead. */
-@media (max-width: 60rem) {
-    .ai-flag {
-        margin-inline-start: 0;
-    }
 }
 
 .ai-flag__n {
@@ -218,10 +214,15 @@
     border-inline-start: var(--line-thin) dashed var(--rule-strong);
 }
 
-/* Pulled back onto the bar and left transparent, so the dashes run behind it
-   and the flag reads as pinned to the line rather than floating above it. */
+/* Pulled back to the bar so the flag starts where the line does, and laid out as
+   a flex row rather than a line of text: as an ordinary paragraph the glyph sat
+   in a line box struck for 20px type at 1.75, which padded a 27px mark out to
+   nearly twice its height and left it floating a clear line above the passage it
+   flags. A flex row is exactly the mark's own height, so the flag sits down on
+   the text it belongs to. */
 .ai-passage__flag {
-    margin-block: 0 var(--space-2xs);
+    display: flex;
+    margin-block: 0;
     margin-inline-start: calc((var(--space-md) + var(--line-thin)) * -1);
 }
 

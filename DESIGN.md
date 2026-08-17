@@ -220,7 +220,7 @@ mark says "magic" where this one has to say "tooling".
 |---|---|
 | Corner of the title block | The nib glyph as a stamp, opening the disclosure — the whole sheet's grain |
 | In the index | The same nib glyph with the field name lettered beside it. It is the only mark in the meta row that names nothing on its own — a date and an extent read as themselves — and it opens nothing, so the word is set rather than left to a tooltip a keyboard and a touch would never reach |
-| On the change bar | The same nib glyph, pinned so the bar runs up its middle, with the number set after it |
+| Beside the change bar | The same nib glyph, set clear of the line with the number after it, and pulled down onto the passage it flags. Astride the bar it read as a mark applied to the rule, and the rule cut the nib in half going past; standing beside it, the bar stays one unbroken dashed line and the flag is what annotates it |
 | In running prose | The dashed line under the words and the number raised after them. There is no bar for a flag to sit on, and a glyph mid-sentence would stop the line dead |
 | In the revision note | A plain number in the key column, set like the title block's own keys. Drawing the mark again would make the key louder than the note it keys |
 
