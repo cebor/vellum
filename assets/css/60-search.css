@@ -141,6 +141,15 @@
     margin-top: var(--space-md);
 }
 
+/* [hidden] is a UA rule and the flex row above is an author rule, which wins on
+   origin whatever the specificity — so the attribute has to be restated here or
+   it does nothing and the exits stand on the page from the moment it loads,
+   before the reader has typed anything. .search-status gets away without this
+   only because it never sets display. */
+.search-exits[hidden] {
+    display: none;
+}
+
 @media (pointer: coarse) {
     .search-results a {
         min-height: var(--tap-target);
