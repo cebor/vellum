@@ -32,6 +32,32 @@
     color: var(--meta);
 }
 
+/* The UA clear control was the one browser surface still at its default on a
+   sheet that themes scrollbar, caret, selection and focus ring — it rendered in
+   Chrome blue. Drawn instead the way this stylesheet draws its other UA
+   replacement, the <details> chevron in 10-base.css: from geometry at hairline
+   weight rather than from an image, so it needs no request and no asset whose
+   RelPermalink someone has to remember to evaluate.
+
+   Two crossed strokes, coloured through currentColor so the hover state is one
+   line. WebKit and Blink only; Firefox renders no such control at all. */
+.search-input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 0.7em;
+    height: 0.7em;
+    cursor: pointer;
+    color: var(--meta-soft);
+    background-image:
+        linear-gradient(45deg, transparent calc(50% - var(--line-thin)), currentColor calc(50% - var(--line-thin)) calc(50% + var(--line-thin)), transparent calc(50% + var(--line-thin))),
+        linear-gradient(-45deg, transparent calc(50% - var(--line-thin)), currentColor calc(50% - var(--line-thin)) calc(50% + var(--line-thin)), transparent calc(50% + var(--line-thin)));
+    transition: color var(--transition);
+}
+
+.search-input::-webkit-search-cancel-button:hover {
+    color: var(--accent);
+}
+
 .search-results {
     list-style: none;
     padding: 0;
