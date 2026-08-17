@@ -6,6 +6,11 @@
 /exampleSite/resources/_gen/
 hugo_stats.json
 
+# The parity harness rebuilds both sides on every run — checked-in copies would
+# only ever be stale.
+/.parity/base/
+/.parity/cand/
+
 # CI symlinks the repository root in here so exampleSite can resolve the theme.
 /exampleSite/themes/
 
@@ -18,4 +23,3 @@ node_modules/
 
 .claude/skills/impeccable/
 .impeccable/
-.parity/
