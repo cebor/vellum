@@ -151,7 +151,12 @@
 }
 
 @media (pointer: coarse) {
+    /* The link carries no padding of its own — the meta line above it sets the
+       row's spacing — so the tap target has to centre what it grows around,
+       or the title sits at the top of a 44px box with the space beneath it. */
     .search-results a {
+        display: flex;
+        align-items: center;
         min-height: var(--tap-target);
     }
 }
