@@ -224,7 +224,14 @@
 /* Before measurement the marks flow evenly down the rail; once placed they are
    absolutely positioned at their own section's offset, which is what makes a
    letter mark a location rather than list one. */
+/* baseof.html renders the rail *after* <main>, so a keyboard reader tabbing the
+   sheet is not thrown back up it mid-page; order puts the column back on the
+   left. Deliberately order rather than grid-column: below the collapse width the
+   frame has a single column, and an explicit column 2 for main would invent an
+   implicit one and squeeze the reading measure into it. Order also leaves the
+   DOM sequence — which is what assistive technology follows — untouched. */
 .zone-rail {
+    order: -1;
     display: flex;
     flex-direction: column;
     justify-content: space-between;

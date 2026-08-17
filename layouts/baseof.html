@@ -37,11 +37,17 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
            depend on the current page. */}}
     {{ partial "header.html" . -}}
 
+    {{- /* The rail comes after the content in the DOM and is put back in the
+           first grid column by CSS. Rendered before <main>, its marks were tab
+           stops 9–12 while sitting hundreds of pixels down the sheet, so the
+           next stop threw a keyboard reader back to the breadcrumb at the top —
+           2200px backwards, mid-page. Read as a source document it is also the
+           right order: the index of a sheet answers the sheet. */}}
     <div class="sheet__frame">
-        {{- partial "zone-rail.html" . }}
         <main class="main" id="main">
             {{- block "main" . }}{{ end }}
         </main>
+        {{- partial "zone-rail.html" . }}
     </div>
 
     {{ partialCached "footer.html" . .Lang (.Param "ShowCodeCopyButtons") (.Param "hideFooter") -}}
