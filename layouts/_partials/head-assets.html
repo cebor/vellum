@@ -67,6 +67,13 @@
 {{- with .favicon }}<link rel="icon" href="{{ . | absURL }}">{{ end }}
 {{- with .favicon16x16 }}<link rel="icon" type="image/png" sizes="16x16" href="{{ . | absURL }}">{{ end }}
 {{- with .favicon32x32 }}<link rel="icon" type="image/png" sizes="32x32" href="{{ . | absURL }}">{{ end }}
+{{- /* Deliberately emitted after the raster rungs: a browser that understands
+       image/svg+xml takes this one and the .ico above stays the fallback for
+       the ones that don't. Reversing the order hands Safari and Chrome the
+       32px bitmap on a display that could have drawn the vector, and an SVG
+       favicon can carry its own prefers-color-scheme rules — which is the
+       whole point, since it is the only icon rung that can follow the theme. */}}
+{{- with .favicon_svg }}<link rel="icon" type="image/svg+xml" href="{{ . | absURL }}">{{ end }}
 {{- with .apple_touch_icon }}<link rel="apple-touch-icon" href="{{ . | absURL }}">{{ end }}
 {{- with .safari_pinned_tab }}<link rel="mask-icon" href="{{ . | absURL }}">{{ end }}
 {{- /* Guarded like every asset above it, and it has to be: the theme ships no

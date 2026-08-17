@@ -243,6 +243,7 @@ Passed straight to [Fuse.js](https://fusejs.io/api/options.html):
   favicon = "/favicon.ico"
   favicon16x16 = "/favicon-16x16.png"
   favicon32x32 = "/favicon-32x32.png"
+  favicon_svg = "/favicon.svg"
   apple_touch_icon = "/apple-touch-icon.png"
   safari_pinned_tab = "/safari-pinned-tab.svg"
   manifest = "/site.webmanifest"
@@ -251,6 +252,12 @@ Passed straight to [Fuse.js](https://fusejs.io/api/options.html):
 Every one of these is optional and emits nothing when unset — including `manifest`, because the theme
 ships no web manifest of its own. Point it at a file your site actually serves; naming one that does
 not exist is a 404 on every page load.
+
+`favicon_svg` is emitted after the raster rungs so a browser that supports `image/svg+xml` prefers it
+and `favicon` stays the fallback. It is the only rung that can follow the active colour scheme: put a
+`@media (prefers-color-scheme: dark)` block inside the SVG itself and the tab icon flips with the
+page. Custom properties on `:root` work there — `:root` is the `<svg>` element — so the file can be
+written against the same token names as the stylesheet.
 
 ## Content
 
