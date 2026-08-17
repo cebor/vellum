@@ -164,10 +164,13 @@ pygmentsUseClasses = true
   ShowBreadCrumbs = true
   ShowShareButtons = true
   ShowToc = true
-  # Open, which is also the theme's default: below the frame's collapse width the
-  # zone rail is removed, and then this panel is the only wayfinding a six-screen
-  # article has. The demo showing it shut demonstrated the opposite of the model.
-  TocOpen = true
+  # Shut here, against the theme's own default of open. The panel sits between
+  # the title block and the first paragraph, so open it pushes the sheet's
+  # opening line down by as much as the index is long — and these demo posts
+  # carry enough headings for that to cost the first screen. A site whose posts
+  # are longer, or which expects search arrivals after one section, wants the
+  # default instead; this is a demo preference, not a correction to it.
+  TocOpen = false
   ShareButtons = ["mastodon", "bluesky", "reddit", "hackernews", "linkedin", "email"]
 
   # Named once here rather than in every post that discloses AI use. A post may
