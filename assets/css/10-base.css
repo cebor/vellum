@@ -96,11 +96,15 @@ html {
     html {
         scroll-behavior: smooth;
     }
+}
 
-    /* Anchors land below the sticky header rather than under it. */
-    :target {
-        scroll-margin-top: var(--space-3xl);
-    }
+/* Anchors land below the sticky header rather than under it. Deliberately
+   outside the reduced-motion query above: how far an anchor scrolls is a
+   motion preference, where it lands is not. Inside it, a reader who asked for
+   reduced motion got scroll-margin-top: 0 and every zone-rail mark, contents
+   link and search-engine deep link put its heading behind the header. */
+:target {
+    scroll-margin-top: var(--space-3xl);
 }
 
 body {
