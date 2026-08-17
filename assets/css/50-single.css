@@ -720,7 +720,7 @@ img.in-text {
         border: 0;
         border-bottom: var(--line-thin) solid var(--rule-strong);
         background: none;
-        text-align: right;
+        text-align: end;
         opacity: 1;
     }
 
