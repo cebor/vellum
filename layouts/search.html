@@ -1,5 +1,8 @@
 {{ define "main" }}
 <header class="page-header">
+    {{- if and ($.Param "ShowBreadCrumbs") .Ancestors }}
+    {{- partial "breadcrumbs.html" . }}
+    {{- end }}
     <h1 class="page-title">{{ .Title }}</h1>
     {{- with .Description }}<p class="page-standfirst">{{ . | markdownify }}</p>{{ end }}
     {{- partial "sheet-stamp.html" . }}
