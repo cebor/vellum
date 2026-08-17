@@ -12,15 +12,23 @@
        reading time is a pluralised translation, so both belong on the Hugo side
        — the same rule search.html states for every string the script displays.
        Neither is a Fuse key; they are carried for display only, so a search for
-       "5 min" still matches nothing. */ -}}
+       "5 min" still matches nothing.
+
+       hidemeta suppresses the whole meta line in post-card.html and single.html,
+       so it has to suppress it here too: a page that hides its title block
+       everywhere else must not have its date and reading time reappear in a
+       search result, which was the one surface still printing them. Both keys
+       stay present and empty rather than being dropped — the script's metaLine()
+       tests for falsiness and renders no row when both are blank. */ -}}
 {{- $index := slice -}}
 {{- range $pages -}}
+{{- $meta := not (.Param "hidemeta") -}}
 {{- $index = $index | append (dict
     "title" .Title
     "permalink" .RelPermalink
     "summary" (.Summary | plainify | chomp)
-    "date" (cond .Date.IsZero "" (.Date | time.Format (site.Params.DateFormat | default ":date_long")))
-    "extent" (cond (and (.Param "ShowReadingTime") (gt .ReadingTime 0)) (i18n "read_time" .ReadingTime) "")
+    "date" (cond (and $meta (not .Date.IsZero)) (.Date | time.Format (site.Params.DateFormat | default ":date_long")) "")
+    "extent" (cond (and $meta (and (.Param "ShowReadingTime") (gt .ReadingTime 0))) (i18n "read_time" .ReadingTime) "")
     "content" (.Plain | chomp)) -}}
 {{- end -}}
 {{- $index | jsonify -}}
