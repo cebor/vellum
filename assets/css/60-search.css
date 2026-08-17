@@ -112,6 +112,16 @@
     margin-top: var(--space-md);
 }
 
+/* The exits from a failed query, laid out like the 404's actions because they
+   are the same thing: the row the reader leaves by. Set tight under the status
+   line that told them there was nothing, so the two read as one answer. */
+.search-exits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+}
+
 @media (pointer: coarse) {
     .search-results a {
         min-height: var(--tap-target);

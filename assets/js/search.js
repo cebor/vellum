@@ -6,6 +6,10 @@ import * as params from "@params";
     var status = document.getElementById("search-status");
     if (!input || !results || !status) return;
 
+    // Optional: a template may omit the exits, and a missing dead-end escape
+    // must not take the whole search with it.
+    var exits = document.getElementById("search-exits");
+
     var text = input.dataset;
     var fuse = null;
 
@@ -91,9 +95,17 @@ import * as params from "@params";
         });
     }
 
+    // Shown only for a query that returned nothing. An empty field is not a
+    // dead end — the reader is still typing — so the exits stay away until the
+    // search has actually failed.
+    function showExits(on) {
+        if (exits) exits.hidden = !on;
+    }
+
     function reset() {
         results.replaceChildren();
         say("");
+        showExits(false);
     }
 
     // Keeping the query in the URL makes a result set linkable, and is what
@@ -118,6 +130,7 @@ import * as params from "@params";
         var matches = fuse.search(query);
         render(matches);
         say(matches.length ? countLabel(matches.length) : text.empty);
+        showExits(!matches.length);
         if (updateUrl) syncUrl(query);
     }
 
@@ -150,6 +163,9 @@ import * as params from "@params";
         .catch(function () {
             input.placeholder = text.error;
             say(text.error, "error");
+            // An index that never arrived is the same dead end as a query that
+            // matched nothing, and the field cannot be used to get out of it.
+            showExits(true);
         });
 
     var timer;

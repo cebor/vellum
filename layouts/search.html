@@ -28,6 +28,23 @@
 <ul class="search-results" id="search-results" aria-label="{{ i18n "search_label" }}"></ul>
 <p class="search-status" id="search-status" role="status" aria-live="polite" hidden></p>
 
+{{- /* The exits for a query that matched nothing. Rendered here rather than
+       built in the script, for the same reason every displayable string is: a
+       link's label is the section's own title in the site's own language, and
+       Hugo is the only side that knows it. The script only unhides this.
+
+       The 404 answers the identical situation with two buttons rather than one
+       grey line, and this is that treatment: a dead end is not a state to leave
+       a reader in. */}}
+<div class="search-exits" id="search-exits" hidden>
+    {{- with site.GetPage "/posts" }}
+    <a class="button" href="{{ .RelPermalink }}"><span>{{ .Title }}</span>{{ partialCached "icon.html" "arrow-right" "arrow-right" }}</a>
+    {{- end }}
+    {{- with site.GetPage "/tags" }}
+    <a class="button button--quiet" href="{{ .RelPermalink }}">{{ partialCached "icon.html" "hash" "hash" }}<span>{{ .Title }}</span></a>
+    {{- end }}
+</div>
+
 {{- /* Without JavaScript the input above never enables, so it must not be the
        only way out of this page. */}}
 <noscript>
