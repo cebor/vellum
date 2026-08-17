@@ -195,8 +195,9 @@ forward with the next patch.
 - The changelog can be previewed on its own at any time: `.release/changelog.sh 0.2.0`.
 - `CHANGELOG.md` is generated. Editing prose in an old section is fine; new sections are the
   script's.
-- `.parity/` is the maintainer's local harness and is gitignored, so releases are cut on a machine
-  that has it. Without it the script refuses rather than skipping the check.
+- `.parity/` is tracked, so any checkout can cut a release; the builds it regenerates each run are
+  the only part `.gitignore` keeps out. If `check.sh` is missing the script refuses rather than
+  skipping the check — which now means the checkout is broken, not that it is the wrong machine.
 - The commits between `v0.1.2` and the adoption of this format predate it. The first release after it
   wants `.release/release.sh --allow-unconventional --edit`, so the six unparseable commits can be
   written into the section by hand once.

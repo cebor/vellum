@@ -6,11 +6,6 @@
 /exampleSite/resources/_gen/
 hugo_stats.json
 
-# The parity harness rebuilds both sides on every run — checked-in copies would
-# only ever be stale.
-/.parity/base/
-/.parity/cand/
-
 # CI symlinks the repository root in here so exampleSite can resolve the theme.
 /exampleSite/themes/
 
@@ -21,5 +16,41 @@ hugo_stats.json
 # The impeccable skill and the parity harness vendor their own dependencies.
 node_modules/
 
-.claude/skills/impeccable/
-.impeccable/
+### Parity harness ###
+# .parity/ is tracked, deliberately. It checks the one thing PRODUCT.md calls
+# binding — that the build stopped emitting no path — and release.sh refuses to
+# cut a release without it, so the checker is versioned with the layouts it
+# checks rather than living on whichever machine still has a copy. It was ignored
+# until 2026-08-17, when this checkout's only copy turned out to be gone and the
+# harness had to come back from another PC — there was nothing to restore it from.
+#
+# Only what the harness rebuilds on every run is ignored, and this is a deny
+# list on purpose: a new output that has no line here shows up loudly in
+# git status, where an allow list would quietly leave a new script untracked.
+# Anything else it starts writing needs its own line below.
+.parity/base/
+.parity/cand/
+.parity/**/*.png
+
+# impeccable-ignore-start
+# Ephemeral output, runtime state, and per-dev overrides.
+# Unanchored: .impeccable may sit at the repo root or under a nested
+# workspace (apps/web/.impeccable/...); anchored patterns would miss it.
+# Shared artifacts stay tracked: config.json, live/config.json,
+# design.json, critique/*.md.
+.impeccable/config.local.json
+.impeccable/hook.cache.json
+.impeccable/hook.pending.json
+.impeccable/*.png
+.impeccable/live/server.json
+.impeccable/live/sessions/
+.impeccable/live/previews/
+.impeccable/live/annotations/
+.impeccable/live/cache/
+.impeccable/live/manual-edit-apply-transaction.json
+.impeccable/live/manual-edit-events.jsonl
+.impeccable/live/manual-edit-evidence/
+.impeccable/live/pending-manual-edits.json
+.impeccable/live/deferred-svelte-component-accepts.json
+.impeccable/live/*.png
+# impeccable-ignore-end

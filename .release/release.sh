@@ -65,11 +65,12 @@ behind="$(git rev-list --count HEAD..origin/main 2>/dev/null)" || behind=unknown
 
 [ -f CHANGELOG.md ] || fail "no CHANGELOG.md to write into"
 
-# .parity/ is gitignored — the harness is the maintainer's local tooling, not
-# part of what users install. Releasing without it would mean shipping the one
-# thing PRODUCT.md calls binding, unchecked, so its absence stops the release
-# rather than being skipped over. Restore it from a machine that has it.
-[ -x .parity/check.sh ] || fail ".parity/check.sh is missing or not executable; the URL-parity harness is local-only and a release is not cut without it"
+# .parity/ is tracked, so this is no longer a check for the right machine but for
+# an intact checkout: the file is in the history and git carries its exec bit, so
+# a miss here means it was deleted or unset locally. Releasing without it would
+# ship the one thing PRODUCT.md calls binding, unchecked, so its absence stops
+# the release rather than being skipped over. `git checkout -- .parity` restores it.
+[ -x .parity/check.sh ] || fail ".parity/check.sh is missing or not executable; it is tracked, so restore it with 'git checkout -- .parity' — a release is not cut without the URL-parity check"
 
 LAST_TAG="$(git describe --tags --abbrev=0 2>/dev/null)" || fail "no tag to release from"
 COUNT="$(git rev-list --count --no-merges "$LAST_TAG..HEAD")"
