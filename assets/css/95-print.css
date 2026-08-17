@@ -150,6 +150,17 @@
         background: none;
     }
 
+    /* Same rule in the index: the mark keeps its place in the field row and its
+       name prints beside it, since there is no hover to open on paper. */
+    .post-card__ai-note {
+        display: block;
+        position: static;
+        max-width: none;
+        padding: 0;
+        border: 0;
+        background: none;
+    }
+
     /* Change bars, flags and the revision note are ink, and ink belongs on the
        paper. Only the flags' link colour goes. */
     .ai-passage {

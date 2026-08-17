@@ -94,6 +94,7 @@
    discloses what the post does without teaching a second sign. Sized to the
    meta line it sits in rather than to a fixed step. */
 .post-card__ai {
+    position: relative;
     display: inline-flex;
     align-items: center;
     gap: var(--space-4xs);
@@ -108,20 +109,59 @@
 }
 
 /* The glyph is the only mark in this row that names nothing on its own — a date
-   and an extent read as themselves — and it opens nothing, so it is labelled
-   rather than left to a tooltip a keyboard and a touch would never reach.
+   and an extent read as themselves — so it carries its name in a box that opens
+   on hover and on focus, the same gesture the stamp on the sheet answers to.
+   Spelling the name out in the row instead would set the same two words down
+   the whole index in a line whose job is to differ from card to card.
 
-   Capitalised and tracked into a key, but at the row's own face, size and
-   weight: this is drawing furniture, not a badge. The draft flag beside it is
-   the one mark in this row allowed to be loud, and it earns that with a box and
-   the danger ink because it reports a state. Disclosure is a field. Nothing here
-   sets font-stretch — the row is mono and the width axis has nothing to act on.
+   A button, not a bare span: only a focusable element opens on a keyboard and
+   on a tap, which is the whole of what a title attribute could not do. Nothing
+   is activated, so the cursor says help rather than pointer. */
+.post-card__ai-mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* The glyph draws at 1.5em of the meta line, which is under the 24px a
+       target has to answer to; the box is grown to it without the glyph
+       changing size, and to the platform figure where the pointer is a finger
+       and there is no hover to fall back on. */
+    min-width: var(--space-lg);
+    min-height: var(--space-lg);
+    cursor: help;
+    transition: color var(--transition);
+}
 
-   Glyph and word are one field: the row's drawn separator rules to the left of
-   the pair, never between them. */
-.post-card__ai-label {
-    letter-spacing: var(--tracking-label);
-    text-transform: uppercase;
+@media (pointer: coarse) {
+    .post-card__ai-mark {
+        min-width: var(--tap-target);
+        min-height: var(--tap-target);
+    }
+}
+
+.post-card__ai-mark:hover {
+    color: var(--accent);
+}
+
+/* Boxed and ruled like the sheet's own stamp note, at the row's size. It hangs
+   from the mark's leading edge rather than the card's, so it reads as belonging
+   to the glyph, and it is lifted above the neighbouring cards' rules. */
+.post-card__ai-note {
+    display: none;
+    position: absolute;
+    inset-block-start: calc(100% + var(--space-3xs));
+    inset-inline-start: 0;
+    z-index: 1;
+    width: max-content;
+    max-width: min(32ch, 70vw);
+    padding: var(--space-3xs) var(--space-2xs);
+    border: var(--line-thin) solid var(--rule-strong);
+    background: var(--bg);
+    line-height: var(--line-height-snug);
+}
+
+.post-card__ai:hover .post-card__ai-note,
+.post-card__ai:focus-within .post-card__ai-note {
+    display: block;
 }
 
 /* State is a mark, not a hue: the draft flag is a drawn box with its own

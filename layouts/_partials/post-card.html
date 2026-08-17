@@ -22,21 +22,25 @@
             {{- end }}
             {{- /* The same mark the sheet carries in its title block, so the
                    index discloses what the post does and nothing new has to be
-                   learned between the two.
+                   learned between the two — including how the detail is reached:
+                   it opens on hover and on focus, exactly as the stamp on the
+                   sheet does. Spelling the field name out beside every card
+                   instead would repeat the same two words down the whole index.
 
-                   It is the one place in the theme where the glyph appears with
-                   nothing to open and no field name beside it, so it gets the
-                   field name: every other field in this grid is legible without
-                   being hovered, and a title attribute would have disclosed the
-                   mark to a mouse and to neither a keyboard nor a touch. The
-                   glyph and its label are one field — the row's drawn separator
-                   rules to the left of the pair, not between them — and the full
-                   label: detail string stays in the hidden span for AT. */}}
+                   The mark is a button so the disclosure reaches a keyboard and
+                   a touch as well as a mouse, which a title attribute would not
+                   have. The string is the button's own accessible name, so AT
+                   hears it with the box shut and the box itself is hidden from
+                   AT rather than read a second time. */}}
             {{- with partialCached "ai.html" $p $p.RelPermalink }}
             {{- if .on }}
-            <span class="post-card__ai">{{ partialCached "icon.html" "ai" "ai" }}<span
-                    class="post-card__ai-label" aria-hidden="true">{{ i18n "ai_stamp" }}</span><span
-                    class="visually-hidden">{{ i18n "ai_stamp" }}: {{ .label }}</span></span>
+            <span class="post-card__ai">
+                <button type="button" class="post-card__ai-mark">
+                    {{- partialCached "icon.html" "ai" "ai" }}
+                    <span class="visually-hidden">{{ i18n "ai_stamp" }}: {{ .label }}</span>
+                </button>
+                <span class="post-card__ai-note" aria-hidden="true">{{ i18n "ai_stamp" }}: {{ .label }}</span>
+            </span>
             {{- end }}
             {{- end }}
             {{- if $p.Draft }}<span class="draft-badge">{{ i18n "draft" }}</span>{{ end }}
