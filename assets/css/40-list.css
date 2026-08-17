@@ -207,9 +207,14 @@
 }
 
 /* An unavailable direction stays in place rather than disappearing, so the row
-   does not reflow between pages. */
+   does not reflow between pages.
+
+   --meta-soft, not --rule-strong: that is a *line* token, and at 2.06:1 on 13px
+   lettering it sat below the standard this theme sets for itself even though
+   WCAG exempts an inactive control. Unavailability is carried by cursor and by
+   the missing hover, neither of which needs the text to be faint. */
 .pagination__link.is-disabled {
-    color: var(--rule-strong);
+    color: var(--meta-soft);
     cursor: default;
 }
 

@@ -227,8 +227,10 @@ mark. No unicode glyph ever stands in for an icon. `<details>` gets a drawn chev
 UA disclosure triangle.
 
 Browser surfaces are themed from the palette, not left at their defaults: selection, caret, scrollbar,
-focus ring, underline offset, and tabular figures wherever a number is compared against another
-number.
+focus ring, underline offset, the search field's clear control, and tabular figures wherever a number
+is compared against another number. The two UA replacements — the `<details>` chevron and that clear
+control — are drawn from geometry at hairline weight rather than from an image, so neither adds a
+request or an asset whose `RelPermalink` has to be evaluated somewhere to get published.
 
 ## Motion
 
@@ -252,9 +254,13 @@ colours because they come later.
 1. `00-tokens.css` is the only file that may carry a bare hex, rem or duration.
 2. The numeric filename prefix is the cascade order.
 3. Never dim text with `opacity`; drop to a softer token and a smaller step.
-4. Never add a `box-shadow`. Depth is line weight.
-5. Never encode state in colour alone.
-6. Touch-target minimums live behind `@media (pointer: coarse)` so pointer layouts keep their density.
-7. `--content-width` is the reading column; keep the frame arithmetic resolving to it.
-8. Any asset referenced only from CSS must have its `RelPermalink` evaluated somewhere in a template,
+4. **A line token is never a text colour.** `--rule`, `--rule-strong` and `--rule-frame` are exempt
+   from the 4.5:1 check because none of them is text — which holds exactly until one is used as text,
+   and then the invariant passes while a rendered text node sits at 2.06:1. The disabled pagination
+   link did for a while. `--meta-soft` is the dimmest text the palette has.
+5. Never add a `box-shadow`. Depth is line weight.
+6. Never encode state in colour alone.
+7. Touch-target minimums live behind `@media (pointer: coarse)` so pointer layouts keep their density.
+8. `--content-width` is the reading column; keep the frame arithmetic resolving to it.
+9. Any asset referenced only from CSS must have its `RelPermalink` evaluated somewhere in a template,
    or Hugo never publishes it and it 404s in production while working locally.
