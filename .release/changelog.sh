@@ -95,7 +95,12 @@ $0 == "" { next }   # the leading separator produces one empty record
 {
     hash = $1; subject = $2; body = $3
 
-    if (!match(subject, /^[a-z]+(\([a-zA-Z0-9._/-]+\))?!?: /)) {
+    # The slash inside the class is escaped: a bare / closes an awk regex
+    # literal even between brackets, so POSIX awk (macOS ships one) aborted the
+    # whole program with "nonterminated character class" and no release on this
+    # machine could render its section. gawk tolerates it, which is why it took
+    # until now to show up.
+    if (!match(subject, /^[a-z]+(\([a-zA-Z0-9._\/-]+\))?!?: /)) {
         printf "warn: unparseable subject, left out of the changelog: %s %s\n", hash, subject > "/dev/stderr"
         bad++
         next
