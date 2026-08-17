@@ -688,11 +688,31 @@ img.in-text {
     opacity: 1;
 }
 
-/* Touch has no hover, so the control must be permanently visible there. */
+/* Touch has no hover, so the control must be permanently visible there — which
+   means it can no longer float over the code. A permanent button in the corner
+   masked the first two lines of every block, and because it is positioned
+   against .highlight, which does not scroll, it masked the same column however
+   far the reader scrolled sideways. On a sheet whose whole claim is that
+   command blocks survive intact, that is the one place the control may not sit.
+   It docks instead into a ruled strip above the block, the way a note sits
+   above a drawn detail, and the code below keeps its full measure. */
 @media (pointer: coarse) {
+    .content .highlight {
+        display: flex;
+        flex-direction: column;
+    }
+
     .js .copy-code {
-        opacity: 1;
+        order: -1;
+        position: static;
+        width: 100%;
         min-height: var(--tap-target);
+        padding: var(--space-4xs) var(--space-sm);
+        border: 0;
+        border-bottom: var(--line-thin) solid var(--rule-strong);
+        background: none;
+        text-align: right;
+        opacity: 1;
     }
 
     /* On touch, the stamp is the only way to open the note, and the passage's
