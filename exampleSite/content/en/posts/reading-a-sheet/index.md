@@ -78,7 +78,8 @@ Five kinds, all plain Markdown:
 
 > [!IMPORTANT]
 > Notes and tips carry the signal amber; warnings and cautions carry the danger colour. Only one
-> accent is ever live on a screen at a time.
+> *interactive* mark is ever live at a time — one active nav item, one focus ring, one lit zone. An
+> alert classifies a passage rather than competing for the click, so it does not count against that.
 
 > [!WARNING]
 > A wide table scrolls inside its own container rather than pushing the page sideways. Try the one

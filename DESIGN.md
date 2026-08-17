@@ -46,8 +46,16 @@ cannot fail visibly is the quiet failure this theme is built against.
 ## Colour
 
 Cool paper or graphite ground, blueprint-grey rules, and exactly **one signal colour**. Amber is the
-drawing office's red pencil — the mark that says "this one is live". It is never doing more than one
-job on a screen at a time: the active nav item, the focus ring, the current zone, the 404 numerals.
+drawing office's red pencil — the mark that says "this one is live". It does exactly one *interactive*
+job on a screen at a time: whatever amber marks as live — the active nav item, the focus ring, the
+current zone, the 404 numerals — there is only ever one of it, and following it is unambiguous.
+
+Alert borders and labels are the deliberate exception, and they are not a second live mark: an alert
+does not compete for the click, it classifies a passage that is already in the reading flow. The rule
+was written as "never more than one amber mark on a screen", which the built page has never obeyed —
+a sheet carrying a TIP and an IMPORTANT next to an active nav item shows three, and reads correctly.
+Narrowed to the interactive sense the rule is both true and worth keeping; taken literally it would
+have cost the alerts their severity for a consistency nobody was reading.
 
 Every colour is written once through CSS `light-dark()`. `color-scheme: light dark` on a bare `:root`
 is what `data-theme="auto"` matches; the explicit `[data-theme]` rules override *only* `color-scheme`,
