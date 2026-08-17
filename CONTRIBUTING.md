@@ -70,7 +70,7 @@ an existing param is `docs`; the param itself is `feat`.
 ### Scopes
 
 Optional but expected. Use one of: `layouts`, `partials`, `shortcodes`, `markup`, `css`, `tokens`,
-`i18n`, `fonts`, `search`, `print`, `a11y`, `exampleSite`, `registry`, `parity`, `release`, `ci`,
+`i18n`, `fonts`, `search`, `print`, `a11y`, `ai`, `exampleSite`, `registry`, `parity`, `release`, `ci`,
 `deps`.
 Omit the scope when a change genuinely spans the theme. Never invent a one-off scope — an unknown
 scope silently lands in the wrong changelog group.
