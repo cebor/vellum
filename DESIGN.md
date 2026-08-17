@@ -171,8 +171,13 @@ State is a **mark, not a hue**, so it survives greyscale and colour blindness:
 ## Components
 
 Every post card is **one invariant field grid** — meta line, title, summary, optional cover — in the
-same positions on the home page, the section list, a tag page, and the 404. The index unit is
-learnable rather than reinvented per page.
+same positions on the home page, the section list, a tag page, the 404, and the search results. The
+index unit is learnable rather than reinvented per page. Search is the one place the grid is rebuilt in
+JavaScript rather than by `post-card.html`, so its fields are carried as display strings in
+`index.json` and its markup reuses `post-card__meta`; the invariant is the class, not the template.
+
+A search that finds nothing gets the 404's treatment rather than a grey line, because both are the same
+situation: the reader is at a dead end on a sheet that has other sheets.
 
 Cards are separated by ruled lines, never boxed: a drawing divides a schedule with rules, and boxing
 each row would make the index heavier than the drawing it indexes.
