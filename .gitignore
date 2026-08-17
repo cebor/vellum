@@ -30,7 +30,6 @@ node_modules/
 # Anything else it starts writing needs its own line below.
 .parity/base/
 .parity/cand/
-.parity/**/*.png
 
 ### Design harness ###
 # The impeccable skill is vendored third-party tooling with its own upstream, so
@@ -41,6 +40,12 @@ node_modules/
 # What this project *authored* — the critique rounds below — is tracked.
 .claude/skills/impeccable/
 .claude/settings.local.json
+
+# .parity/shots.mjs writes its screenshot rounds here, not into .parity/, and the
+# skill-managed block below covers .impeccable/*.png and live/*.png but not this
+# directory. It sits outside those markers because the skill rewrites what is
+# between them.
+.impeccable/review/
 
 # impeccable-ignore-start
 # Ephemeral output, runtime state, and per-dev overrides.
