@@ -32,6 +32,16 @@ node_modules/
 .parity/cand/
 .parity/**/*.png
 
+### Design harness ###
+# The impeccable skill is vendored third-party tooling with its own upstream, so
+# unlike .parity/ it is not lost by staying out: `npx impeccable install` puts it
+# back and `npx impeccable update` moves it forward. A Hugo module download takes
+# the whole repo, which would otherwise put 3.4 MB of it in every consuming
+# site's module cache. Its hook wiring is per-machine.
+# What this project *authored* — the critique rounds below — is tracked.
+.claude/skills/impeccable/
+.claude/settings.local.json
+
 # impeccable-ignore-start
 # Ephemeral output, runtime state, and per-dev overrides.
 # Unanchored: .impeccable may sit at the repo root or under a nested
