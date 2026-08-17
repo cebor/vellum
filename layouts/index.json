@@ -7,12 +7,20 @@
 {{- $pages := where site.RegularPages "Params.searchHidden" "!=" true -}}
 {{- $pages = where $pages "Layout" "!=" "search" -}}
 {{- $pages = where $pages "Layout" "!=" "archives" -}}
+{{- /* date and extent are rendered here rather than in the script, and rendered
+       as strings rather than as numbers: a date's format is a site param and a
+       reading time is a pluralised translation, so both belong on the Hugo side
+       — the same rule search.html states for every string the script displays.
+       Neither is a Fuse key; they are carried for display only, so a search for
+       "5 min" still matches nothing. */ -}}
 {{- $index := slice -}}
 {{- range $pages -}}
 {{- $index = $index | append (dict
     "title" .Title
     "permalink" .RelPermalink
     "summary" (.Summary | plainify | chomp)
+    "date" (cond .Date.IsZero "" (.Date | time.Format (site.Params.DateFormat | default ":date_long")))
+    "extent" (cond (and (.Param "ShowReadingTime") (gt .ReadingTime 0)) (i18n "read_time" .ReadingTime) "")
     "content" (.Plain | chomp)) -}}
 {{- end -}}
 {{- $index | jsonify -}}

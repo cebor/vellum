@@ -75,6 +75,29 @@ import * as params from "@params";
         return Array.prototype.slice.call(results.querySelectorAll("a"));
     }
 
+    // The meta line of a post card, rebuilt from the index's own strings so a
+    // result carries the same fields in the same order as every other place a
+    // post is indexed. post-card__meta is not scoped to .post-card, so the field
+    // grid and its separators apply here without a second rule.
+    function metaLine(page) {
+        if (!page.date && !page.extent) return null;
+        var p = document.createElement("p");
+        p.className = "post-card__meta";
+        if (page.date) {
+            var d = document.createElement("span");
+            d.className = "post-card__date";
+            d.textContent = page.date;
+            p.appendChild(d);
+        }
+        if (page.extent) {
+            var e = document.createElement("span");
+            e.className = "post-card__extent";
+            e.textContent = page.extent;
+            p.appendChild(e);
+        }
+        return p;
+    }
+
     // Built with DOM APIs rather than innerHTML: the query and the index both
     // reach this function, and neither should ever be parsed as markup.
     function render(matches) {
@@ -82,6 +105,8 @@ import * as params from "@params";
         matches.forEach(function (match) {
             var page = match.item;
             var li = document.createElement("li");
+            var meta = metaLine(page);
+            if (meta) li.appendChild(meta);
             var a = document.createElement("a");
             a.href = page.permalink;
             a.textContent = page.title;

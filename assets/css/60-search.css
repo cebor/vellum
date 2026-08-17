@@ -73,7 +73,6 @@
 
 .search-results a {
     display: block;
-    padding-block: var(--space-sm);
     text-decoration: none;
     font-size: var(--step-1);
     transition: color var(--transition);
@@ -84,12 +83,32 @@
     color: var(--accent);
 }
 
-.search-results p {
+/* The meta line opens the row, so the padding that used to sit on the link
+   moves up to it — a result is now the same three-field unit as a post card,
+   and only one of the two may carry the row's top spacing. */
+.search-results .post-card__meta {
+    margin-block: var(--space-sm) var(--space-4xs);
+}
+
+/* Every paragraph in a result except that meta line, which is the summary. It
+   would otherwise inherit the summary's tone and measure and stop reading as a
+   field row. */
+.search-results p:not(.post-card__meta) {
     padding-bottom: var(--space-sm);
-    margin-top: calc(var(--space-2xs) * -1);
+    margin-top: var(--space-4xs);
     color: var(--meta);
     font-size: var(--step--1);
     max-width: 68ch;
+}
+
+/* A result with no date and no extent keeps the spacing the meta line would
+   have supplied. */
+.search-results li > a:first-child {
+    padding-top: var(--space-sm);
+}
+
+.search-results li > a:last-child {
+    padding-bottom: var(--space-sm);
 }
 
 .search-status {
