@@ -85,9 +85,9 @@ the baseline of this sentence at `1.1em`, and moves with the type when the reade
 ## ai
 
 Marks a passage as written with AI assistance, using the notation a drawing already has for an
-altered region: a change bar down the edge, a numbered revision flag on the bar, and the number
-resolving to a row in the revision note at the foot of the sheet. The flag is a link — a reference
-that does not resolve is not a reference.
+altered region: a change bar down the edge, the sheet's AI mark flagged on the bar — the same nib the
+title block stamps in its corner — and a number beside it resolving to a row in the revision note at
+the foot of the sheet. The flag is a link — a reference that does not resolve is not a reference.
 
 {{< ai note="Drafted from an outline, then edited by hand" >}}
 A whole paragraph can be marked. The bar is dashed rather than solid, which is what separates it

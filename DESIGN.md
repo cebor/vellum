@@ -171,10 +171,15 @@ State is a **mark, not a hue**, so it survives greyscale and colour blindness:
 ## Components
 
 Every post card is **one invariant field grid** — meta line, title, summary, optional cover — in the
-same positions on the home page, the section list, a tag page, the 404, and the search results. The
-index unit is learnable rather than reinvented per page. Search is the one place the grid is rebuilt in
-JavaScript rather than by `post-card.html`, so its fields are carried as display strings in
-`index.json` and its markup reuses `post-card__meta`; the invariant is the class, not the template.
+same positions on the home page, the section list, a tag page and the 404. The index unit is learnable
+rather than reinvented per page.
+
+A search result is the same unit at a reduced field set. It is the one place the grid is rebuilt in
+JavaScript rather than by `post-card.html`, so it carries the meta line's **two time fields** — issued
+and extent — as display strings in `index.json`, and reuses `post-card__meta` to set them: the
+invariant there is the class, not the full field list. The AI mark and the draft flag are not carried,
+because both would mean rebuilding a partial's logic in the script; `hidemeta` is honoured, so a page
+that hides its title block everywhere else does not have its date reappear here.
 
 A search that finds nothing gets the 404's treatment rather than a grey line, because both are the same
 situation: the reader is at a dead end on a sheet that has other sheets.
@@ -214,6 +219,7 @@ mark says "magic" where this one has to say "tooling".
 | Where | Mark |
 |---|---|
 | Corner of the title block | The nib glyph as a stamp, opening the disclosure — the whole sheet's grain |
+| In the index | The same nib glyph with the field name lettered beside it. It is the only mark in the meta row that names nothing on its own — a date and an extent read as themselves — and it opens nothing, so the word is set rather than left to a tooltip a keyboard and a touch would never reach |
 | On the change bar | The same nib glyph, pinned so the bar runs up its middle, with the number set after it |
 | In running prose | The dashed line under the words and the number raised after them. There is no bar for a flag to sit on, and a glyph mid-sentence would stop the line dead |
 | In the revision note | A plain number in the key column, set like the title block's own keys. Drawing the mark again would make the key louder than the note it keys |

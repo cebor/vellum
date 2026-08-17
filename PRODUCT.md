@@ -90,7 +90,7 @@ dimensioned, or it does not ship.
   builds it regenerates each run are ignored. It was maintainer-local until 2026-08-17, when this
   checkout's only copy turned out to be gone with nothing to restore it from — a checker for a
   binding commitment is versioned with what it checks. Its absence still refuses the release rather
-  skipping the check, but that now means a broken checkout, not the wrong machine.
+  than skipping the check, but that now means a broken checkout, not the wrong machine.
 - **`DESIGN.md` records the built visual world**, and the stylesheet outranks it where they disagree.
 
 ## Capabilities and Constraints

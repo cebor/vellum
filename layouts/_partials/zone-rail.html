@@ -40,8 +40,11 @@
     {{- end }}
 </nav>
 <script>
-    // The rail is emitted before <main> in the frame, so this cannot run at
-    // parse time: the sheet it has to measure against does not exist yet.
+    // Deferred because the sheet's height is what every mark is placed against,
+    // and at parse time that height is not final: the marks would be laid out
+    // once against a partial document. The load and fonts.ready handlers below
+    // are the same argument carried further — web fonts and lazy images move the
+    // sheet again after DOMContentLoaded.
     document.addEventListener("DOMContentLoaded", function () {
         var rail = document.getElementById("zone-rail");
         var sheet = document.querySelector(".main");
