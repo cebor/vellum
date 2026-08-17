@@ -96,6 +96,7 @@
 .post-card__ai {
     display: inline-flex;
     align-items: center;
+    gap: var(--space-4xs);
     color: var(--meta);
 }
 
@@ -104,6 +105,23 @@
 .post-card__ai .icon {
     width: 1.5em;
     height: 1.5em;
+}
+
+/* The glyph is the only mark in this row that names nothing on its own — a date
+   and an extent read as themselves — and it opens nothing, so it is labelled
+   rather than left to a tooltip a keyboard and a touch would never reach.
+
+   Capitalised and tracked into a key, but at the row's own face, size and
+   weight: this is drawing furniture, not a badge. The draft flag beside it is
+   the one mark in this row allowed to be loud, and it earns that with a box and
+   the danger ink because it reports a state. Disclosure is a field. Nothing here
+   sets font-stretch — the row is mono and the width axis has nothing to act on.
+
+   Glyph and word are one field: the row's drawn separator rules to the left of
+   the pair, never between them. */
+.post-card__ai-label {
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
 }
 
 /* State is a mark, not a hue: the draft flag is a drawn box with its own

@@ -24,16 +24,19 @@
                    index discloses what the post does and nothing new has to be
                    learned between the two.
 
-                   The title carries the same string as the hidden label, because
-                   without it a screen reader was told what the mark means and a
-                   sighted reader was not — the one place in the theme where the
-                   glyph appears with nothing to open and no field name beside
-                   it. */}}
+                   It is the one place in the theme where the glyph appears with
+                   nothing to open and no field name beside it, so it gets the
+                   field name: every other field in this grid is legible without
+                   being hovered, and a title attribute would have disclosed the
+                   mark to a mouse and to neither a keyboard nor a touch. The
+                   glyph and its label are one field — the row's drawn separator
+                   rules to the left of the pair, not between them — and the full
+                   label: detail string stays in the hidden span for AT. */}}
             {{- with partialCached "ai.html" $p $p.RelPermalink }}
             {{- if .on }}
-            {{- $disclosure := printf "%s: %s" (i18n "ai_stamp") .label }}
-            <span class="post-card__ai" title="{{ $disclosure }}">{{ partialCached "icon.html" "ai" "ai" }}<span
-                    class="visually-hidden">{{ $disclosure }}</span></span>
+            <span class="post-card__ai">{{ partialCached "icon.html" "ai" "ai" }}<span
+                    class="post-card__ai-label" aria-hidden="true">{{ i18n "ai_stamp" }}</span><span
+                    class="visually-hidden">{{ i18n "ai_stamp" }}: {{ .label }}</span></span>
             {{- end }}
             {{- end }}
             {{- if $p.Draft }}<span class="draft-badge">{{ i18n "draft" }}</span>{{ end }}
