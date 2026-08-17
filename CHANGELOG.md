@@ -9,6 +9,14 @@ the format they follow is in [`CONTRIBUTING.md`](CONTRIBUTING.md). Only changes 
 can see are listed — refactors, documentation, CI and build chores are not. Releases up to 0.1.2
 predate the generated format and were written by hand.
 
+## [0.2.4](https://github.com/cebor/vellum/compare/v0.2.3...v0.2.4) - 2026-08-17
+
+### Reverted
+
+- **exampleSite:** the demo ships its contents panel collapsed again, reverting the change made in
+  0.2.3. This is demo configuration only — the theme's own default is unchanged and still renders the
+  panel open unless a site or a page sets `TocOpen = false` (024866d, reverts 9b4e4c8)
+
 ## [0.2.3](https://github.com/cebor/vellum/compare/v0.2.2...v0.2.3) - 2026-08-17
 
 ### Added
