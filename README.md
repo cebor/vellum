@@ -245,7 +245,12 @@ Passed straight to [Fuse.js](https://fusejs.io/api/options.html):
   favicon32x32 = "/favicon-32x32.png"
   apple_touch_icon = "/apple-touch-icon.png"
   safari_pinned_tab = "/safari-pinned-tab.svg"
+  manifest = "/site.webmanifest"
 ```
+
+Every one of these is optional and emits nothing when unset — including `manifest`, because the theme
+ships no web manifest of its own. Point it at a file your site actually serves; naming one that does
+not exist is a 404 on every page load.
 
 ## Content
 

@@ -69,5 +69,9 @@
 {{- with .favicon32x32 }}<link rel="icon" type="image/png" sizes="32x32" href="{{ . | absURL }}">{{ end }}
 {{- with .apple_touch_icon }}<link rel="apple-touch-icon" href="{{ . | absURL }}">{{ end }}
 {{- with .safari_pinned_tab }}<link rel="mask-icon" href="{{ . | absURL }}">{{ end }}
+{{- /* Guarded like every asset above it, and it has to be: the theme ships no
+       manifest, so an unconditional link was a 404 and two console errors on
+       every page load of every site running it — the only error the theme
+       produced anywhere. A site that has one names it here. */}}
+{{- with .manifest }}<link rel="manifest" href="{{ . | absURL }}">{{ end }}
 {{- end }}
-<link rel="manifest" href="{{ "site.webmanifest" | absURL }}">
