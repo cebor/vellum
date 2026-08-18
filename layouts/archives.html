@@ -15,11 +15,15 @@
 <div class="content sheet-note">{{ . }}</div>
 {{- end }}
 
-{{- $pages := where site.RegularPages "Type" "in" (site.Params.mainSections | default (slice "posts")) }}
-{{- $pages = where $pages "Params.searchHidden" "!=" true }}
+{{- /* ShowAllPagesInArchive means what it says: every regular page, not only
+       the ones in mainSections. It used to narrow to mainSections first and
+       then filter on a non-empty Section, which every page in a mainSection
+       already has — the toggle changed nothing. */}}
+{{- $pages := site.RegularPages }}
 {{- if not (.Param "ShowAllPagesInArchive") }}
-{{- $pages = where $pages "Section" "!=" "" }}
+{{- $pages = where $pages "Type" "in" (site.Params.mainSections | default (slice "posts")) }}
 {{- end }}
+{{- $pages = where $pages "Params.searchHidden" "!=" true }}
 
 {{- with $pages.GroupByPublishDate "2006" }}
 {{- range . }}
@@ -30,7 +34,10 @@
     <ul class="archive-list">
         {{- range .Pages }}
         <li class="archive-item">
-            <time class="archive-item__date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02" }}</time>
+            {{- /* PublishDate, not Date: the grouping above is by publish date,
+                   and a post whose two differ was filed under one year and
+                   dated with the other. */}}
+            <time class="archive-item__date" datetime="{{ .PublishDate.Format "2006-01-02" }}">{{ .PublishDate.Format "02" }}</time>
             <a class="archive-item__link" href="{{ .RelPermalink }}">{{ .Title }}</a>
             {{- if .Draft }}<span class="draft-badge">{{ i18n "draft" }}</span>{{ end }}
         </li>
