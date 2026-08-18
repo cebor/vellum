@@ -4,6 +4,10 @@ date = 2026-05-08T16:45:00+02:00
 draft = false
 tags = ["layout", "typography"]
 summary = "On a real drawing the border zones let two people talk about the same spot. Here they index the post."
+# Renders _partials/comments.html, the empty stub a site overrides. Set here so
+# the demo actually walks that branch — it is otherwise never built, and a
+# template nothing builds is a template nothing checks.
+comments = true
 +++
 
 A drawing frame is divided into zones — letters down one edge, numbers along the other — so that two

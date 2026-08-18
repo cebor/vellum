@@ -45,8 +45,15 @@ Written as:
 {{</* /collapse */>}}
 ````
 
-`details` is an alias of the same shortcode, under the name most people reach for first. Both take
-`openByDefault="true"` if the fold should start open.
+`details` is an alias of the same shortcode, under the name most people reach for first — both render
+through the same partial, so they cannot drift apart. Both take `openByDefault="true"` if the fold
+should start open:
+
+{{< details summary="Why this one starts open" openByDefault="true" >}}
+Because a fold that hides the answer to the question its own summary asks is furniture, not
+structure. Start it open when the content is the point and the fold is only there to let a returning
+reader get it out of the way.
+{{< /details >}}
 
 ## figure
 
@@ -120,3 +127,11 @@ wrote the post is, which is why it is the last one listed and should be the last
 > [!CAUTION]
 > If a render hook or another shortcode can do the job, use that instead. `rawhtml` gives up the
 > guarantee that a content file cannot inject markup.
+
+A fair use of it: an abbreviation with a title, which Markdown has no syntax for and which the base
+stylesheet already draws — {{< rawhtml >}}<abbr title="Cascading Style Sheets">CSS</abbr>{{< /rawhtml >}}
+is written as
+
+```go-html-template
+{{</* rawhtml */>}}<abbr title="Cascading Style Sheets">CSS</abbr>{{</* /rawhtml */>}}
+```
