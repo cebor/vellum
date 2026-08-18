@@ -14,10 +14,12 @@
        of the sizes expression.
 
        --accent is read for the same reason: Safari's mask-icon needs its tint as
-       an attribute value, where var() is equally unavailable.
+       an attribute value, where var() is equally unavailable. Only the light
+       value is returned — the attribute takes one colour and has no scheme-aware
+       form, so parsing the dark half would be a build failure with no consumer.
 
        Returns: measure (px, int), gutterRem (float), collapse (rem, float),
-       bgLight / bgDark and accentLight / accentDark (hex strings).
+       bgLight / bgDark and accentLight (hex strings).
 
        Call as: {{ $t := partialCached "tokens.html" . "tokens" }} */ -}}
 
@@ -49,5 +51,4 @@
     "collapse" $collapse
     "bgLight" (index (index $bg 0) 1)
     "bgDark" (index (index $bg 0) 2)
-    "accentLight" (index (index $ac 0) 1)
-    "accentDark" (index (index $ac 0) 2)) -}}
+    "accentLight" (index (index $ac 0) 1)) -}}
