@@ -75,11 +75,13 @@
        favicon can carry its own prefers-color-scheme rules — which is the
        whole point, since it is the only icon rung that can follow the theme. */}}
 {{- with .favicon_svg }}<link rel="icon" type="image/svg+xml" href="{{ . | absURL }}">{{ end }}
-{{- /* WebKit ranks icon candidates by their declared size, and a link with no
-       sizes attribute is filed as unknown rather than as large. 180x180 is the
-       size every generator emits and the one Safari draws Favorites and Dock
-       tiles from; a site shipping a different edge overrides it. */}}
-{{- with .apple_touch_icon }}<link rel="apple-touch-icon" sizes="{{ $a.apple_touch_icon_sizes | default "180x180" }}" href="{{ . | absURL }}">{{ end }}
+{{- /* sizes is emitted only when the site declares it. The theme is handed a
+       path, not a resource, so it cannot measure the file — and a declared size
+       that disagrees with the actual PNG is worse than none. It earns its keep
+       when a site lists several apple-touch-icon rungs, which is the case where
+       iOS picks between them by declared size; for the single rung below there
+       is nothing to pick. */}}
+{{- with .apple_touch_icon }}<link rel="apple-touch-icon"{{ with $a.apple_touch_icon_sizes }} sizes="{{ . }}"{{ end }} href="{{ . | absURL }}">{{ end }}
 {{- /* color is not decoration here: Safari tints the pinned tab's template icon
        with it, and the attribute is required for the icon to be used at all.
        Defaults to --accent's light value, read out of 00-tokens.css like the

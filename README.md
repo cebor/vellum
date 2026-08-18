@@ -245,7 +245,7 @@ Passed straight to [Fuse.js](https://fusejs.io/api/options.html):
   favicon32x32 = "/favicon-32x32.png"
   favicon_svg = "/favicon.svg"
   apple_touch_icon = "/apple-touch-icon.png"
-  apple_touch_icon_sizes = "180x180"   # optional, this is the default
+  apple_touch_icon_sizes = "180x180"   # optional, emitted only when set
   safari_pinned_tab = "/safari-pinned-tab.svg"
   safari_pinned_tab_color = "#8a5200"  # optional, defaults to --accent (light)
   manifest = "/site.webmanifest"
@@ -255,11 +255,13 @@ Every one of these is optional and emits nothing when unset — including `manif
 ships no web manifest of its own. Point it at a file your site actually serves; naming one that does
 not exist is a 404 on every page load.
 
-`apple_touch_icon` is what Safari draws the large Favorites and Dock tiles from, and WebKit ranks
-icon candidates by their declared size — a link with no `sizes` attribute is filed as unknown rather
-than as large. The theme therefore always emits one, defaulting to the `180x180` that every favicon
-generator produces. Set `apple_touch_icon_sizes` only if your file has a different edge; a value that
-disagrees with the actual PNG is worse than none.
+`apple_touch_icon` is what iOS uses for the home-screen icon and Safari for the large Favorites and
+Dock tiles. `apple_touch_icon_sizes` adds a `sizes` attribute and is emitted only when you set it:
+the theme is handed a path, not a file it can measure, so a default would be a claim about an image
+it has never seen, and a size that disagrees with the actual PNG is worse than none. One `180x180`
+icon is what every favicon generator produces and needs no `sizes` at all — there is nothing for iOS
+to choose between. Declare it when you are hand-writing several rungs and want the pick to be
+explicit.
 
 `safari_pinned_tab_color` is not decoration: Safari tints the pinned tab's template icon with it and
 wants the attribute present. It defaults to the light value of `--accent`, read out of
