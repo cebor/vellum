@@ -38,7 +38,7 @@ for arg in "$@"; do
         --allow-empty)          ALLOW_EMPTY=1 ;;
         major|minor|patch)      WANT="$arg" ;;
         [0-9]*.[0-9]*.[0-9]*|v[0-9]*.[0-9]*.[0-9]*) WANT="${arg#v}" ;;
-        -h|--help)              sed -n '2,25p' "$0"; exit 0 ;;
+        -h|--help)              sed -n '2,24p' "$0"; exit 0 ;;
         *) echo "unknown argument: $arg" >&2; exit 2 ;;
     esac
 done
