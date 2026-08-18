@@ -118,6 +118,10 @@
     --step--2: 0.8125rem;
     --step--1: 0.9375rem;
     --step-0: 1.25rem;
+    /* The narrow-viewport body size, applied by the media query in
+       20-layout.css. On a phone the column *is* the viewport, so 20px would cut
+       the line to about 40 characters and wrap everything twice as often. */
+    --step-0-narrow: 1.125rem;
     --step-1: 1.375rem;
     --step-2: 1.625rem;
     --step-3: 2.0625rem;
@@ -155,16 +159,31 @@
     --content-width: 800px;
     --sheet-gutter: 1.5rem;
     --zone-rail-width: 2.5rem;
+    /* Below --sheet-narrow the gutter tightens, because on a phone the gutter
+       is coming out of the reading column rather than out of empty margin.
+       Both values live here rather than inside the media query in 20-layout.css
+       that applies them: tokens.html reads them to build the image `sizes`
+       attribute, and while it was reading only the wide gutter every phone was
+       told the column was 16px narrower than it is. The breakpoint has to be
+       repeated as a literal in the media query — a media query cannot resolve
+       var() — but the numbers it switches between are declared once, here. */
+    --sheet-narrow: 40rem;
+    --sheet-gutter-narrow: 1rem;
     /* Border-box, so the two frame borders are inside this figure. Get the
        arithmetic wrong and the reading column silently stops matching
        --content-width, which also desynchronises the image `sizes` attribute
-       that tokens.html derives from it. */
-    --frame-width: calc(var(--content-width) + var(--zone-rail-width) + var(--sheet-gutter) * 2 + var(--line-frame) * 2);
+       that tokens.html derives from it. --line-thin is .main's own
+       border-inline-start, the rule the zone rail's ticks read against; leaving
+       it out of the sum cost the column its last pixel. */
+    --frame-width: calc(var(--content-width) + var(--zone-rail-width) + var(--sheet-gutter) * 2 + var(--line-thin) + var(--line-frame) * 2);
     --grid-pitch: 1.5rem;
 
     /* Below this the drawn frame and the zone rail are dropped and the column
-       runs full-bleed inside its gutters. tokens.html reads it too, because the
-       image `sizes` attribute has to switch at exactly the same width. */
+       runs full-bleed inside its gutters. Purely a layout switch — the image
+       `sizes` attribute deliberately does *not* turn here. Its crossover is
+       where the column stops growing, --content-width plus its two gutters,
+       which is 848px and not 960px; switching at this width told the browser
+       the column was up to 112px wider than it ever gets. */
     --frame-collapse: 60rem;
 
     /* Line weights. Two widths, not three: an ordinary drawn line and the

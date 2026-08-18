@@ -41,7 +41,7 @@
     {{- end }}
     <img class="cover__image" src="{{ $set.src }}"
         {{- with $set.srcset }} srcset="{{ . }}"
-        sizes="(max-width: {{ $t.collapse }}rem) calc(100vw - {{ mul $t.gutter 2 }}rem), {{ $t.measure }}px"{{ end }}
+        sizes="{{ $t.sizes }}"{{ end }}
         {{- with $set.width }} width="{{ . }}"{{ end }}{{ with $set.height }} height="{{ . }}"{{ end }} alt="{{ $alt }}"
         loading="{{ if $single }}eager{{ else }}lazy{{ end }}"
         {{ if $single }}fetchpriority="high"{{ else }}decoding="async"{{ end }}>

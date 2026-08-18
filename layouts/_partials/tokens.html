@@ -8,17 +8,21 @@
        stylesheet keeps the number in one place and fails the build loudly if a
        token is renamed, instead of shipping a wrong srcset nobody notices.
 
-       --content-width is the reading column itself, so it *is* the measure an
-       image is laid out into. Below --frame-collapse the drawn frame is dropped
-       and the column runs full-bleed inside its gutters, which is the other half
-       of the sizes expression.
+       The whole `sizes` expression is assembled here rather than at the three
+       call sites, which had been carrying three copies of it. It has three
+       stops, because the layout has three states:
+
+         - below --sheet-narrow the gutter tightens to --sheet-gutter-narrow;
+         - above that the column still grows until it caps, which happens at
+           --content-width plus its two gutters, not at --frame-collapse;
+         - past the cap the column is exactly --content-width and stays there.
 
        --accent is read for the same reason: Safari's mask-icon needs its tint as
        an attribute value, where var() is equally unavailable. Only the light
        value is returned — the attribute takes one colour and has no scheme-aware
        form, so parsing the dark half would be a build failure with no consumer.
 
-       Returns: measure (px, int), gutterRem (float), collapse (rem, float),
+       Returns: measure (px, int), gutter (rem, float), sizes (string),
        bgLight / bgDark and accentLight (hex strings).
 
        Call as: {{ $t := partialCached "tokens.html" . "tokens" }} */ -}}
@@ -35,9 +39,13 @@
 {{- if not $g }}{{ errorf "tokens.html: --sheet-gutter missing from 00-tokens.css, or not expressed in rem" }}{{ end }}
 {{- $gutter := float (index (index $g 0) 1) }}
 
-{{- $fc := findRESubmatch `--frame-collapse:\s*([0-9.]+)rem` $c 1 }}
-{{- if not $fc }}{{ errorf "tokens.html: --frame-collapse missing from 00-tokens.css, or not expressed in rem" }}{{ end }}
-{{- $collapse := float (index (index $fc 0) 1) }}
+{{- $gn := findRESubmatch `--sheet-gutter-narrow:\s*([0-9.]+)rem` $c 1 }}
+{{- if not $gn }}{{ errorf "tokens.html: --sheet-gutter-narrow missing from 00-tokens.css, or not expressed in rem" }}{{ end }}
+{{- $gutterNarrow := float (index (index $gn 0) 1) }}
+
+{{- $sn := findRESubmatch `--sheet-narrow:\s*([0-9.]+)rem` $c 1 }}
+{{- if not $sn }}{{ errorf "tokens.html: --sheet-narrow missing from 00-tokens.css, or not expressed in rem" }}{{ end }}
+{{- $narrow := float (index (index $sn 0) 1) }}
 
 {{- $bg := findRESubmatch `--bg:\s*light-dark\(\s*(#[0-9a-fA-F]{3,8})\s*,\s*(#[0-9a-fA-F]{3,8})\s*\)` $c 1 }}
 {{- if not $bg }}{{ errorf "tokens.html: --bg missing from 00-tokens.css, or not a light-dark() pair" }}{{ end }}
@@ -45,10 +53,17 @@
 {{- $ac := findRESubmatch `--accent:\s*light-dark\(\s*(#[0-9a-fA-F]{3,8})\s*,\s*(#[0-9a-fA-F]{3,8})\s*\)` $c 1 }}
 {{- if not $ac }}{{ errorf "tokens.html: --accent missing from 00-tokens.css, or not a light-dark() pair" }}{{ end }}
 
+{{- /* The cap: the viewport at which calc(100vw - gutters) first equals the
+       fixed measure, so the two stops meet without a step. rem is resolved at
+       the 16px root the theme never overrides. */ -}}
+{{- $cap := add $measure (int (mul $gutter 32)) }}
+{{- $sizes := printf "(max-width: %vrem) calc(100vw - %vrem), (max-width: %dpx) calc(100vw - %vrem), %dpx"
+    $narrow (mul $gutterNarrow 2) $cap (mul $gutter 2) $measure }}
+
 {{- return (dict
     "measure" $measure
     "gutter" $gutter
-    "collapse" $collapse
+    "sizes" $sizes
     "bgLight" (index (index $bg 0) 1)
     "bgDark" (index (index $bg 0) 2)
     "accentLight" (index (index $ac 0) 1)) -}}

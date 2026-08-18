@@ -526,14 +526,15 @@
     }
 }
 
+/* Keep this literal in step with --sheet-narrow in 00-tokens.css: a media
+   query cannot resolve var(), so the breakpoint is the one number that has to
+   be written twice. The values it switches to are not — they are tokens, so
+   tokens.html can read them and the image `sizes` attribute switches at exactly
+   the same width the layout does. */
 @media (max-width: 40rem) {
     :root {
-        --sheet-gutter: 1rem;
-        /* The 20px body exists to hold the 800px desktop column near 90
-           characters. On a phone the column is the viewport, so the same size
-           would cut the line to about 40 characters and wrap everything twice
-           as often. */
-        --step-0: 1.125rem;
+        --sheet-gutter: var(--sheet-gutter-narrow);
+        --step-0: var(--step-0-narrow);
     }
 
     .main {
