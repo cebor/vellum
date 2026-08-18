@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- The one icon rung that follows the page: same drawn sheet, both schemes. -->
+  <style>
+    :root { --bg: #eff0ec; --accent: #8a5200; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #12161a; --accent: #e9a93a; }
+    }
+  </style>
+  <rect width="32" height="32" fill="var(--bg)"/>
+  <g fill="none" stroke="var(--accent)" stroke-width="1">
+    <rect x="4.5" y="4.5" width="23" height="23"/>
+    <path d="M4 19.5H28"/>
+  </g>
+</svg>

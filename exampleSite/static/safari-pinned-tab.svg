@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Safari tints this itself; it must stay a solid-black silhouette. -->
+  <path fill-rule="evenodd" d="M4 4h24v24h-24zm1 1v22h22v-22z"/>
+  <path d="M4 19h24v1h-24z"/>
+</svg>

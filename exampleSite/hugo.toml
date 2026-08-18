@@ -173,6 +173,20 @@ pygmentsUseClasses = true
   TocOpen = false
   ShareButtons = ["mastodon", "bluesky", "reddit", "hackernews", "linkedin", "email"]
 
+  # Real files in static/, so the icon rungs in head-assets.html are actually
+  # rendered by the CI build instead of sitting behind an unset param. Both
+  # optional attributes are deliberately left out: one 180x180 apple-touch-icon
+  # needs no sizes, and the mask-icon colour is meant to fall through to
+  # --accent, which is the path worth exercising because it reads 00-tokens.css.
+  [params.assets]
+    favicon = "/favicon.ico"
+    favicon16x16 = "/favicon-16x16.png"
+    favicon32x32 = "/favicon-32x32.png"
+    favicon_svg = "/favicon.svg"
+    apple_touch_icon = "/apple-touch-icon.png"
+    safari_pinned_tab = "/safari-pinned-tab.svg"
+    manifest = "/site.webmanifest"
+
   # Named once here rather than in every post that discloses AI use. A post may
   # still override it, and a post without an `ai` key discloses nothing at all.
   [params.ai]
