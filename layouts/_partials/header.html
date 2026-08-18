@@ -3,12 +3,22 @@
     <div class="header__inner">
         <a class="header__brand" href="{{ "" | relLangURL }}">
             {{- with site.Params.label }}
-            {{- with .iconSVG }}{{ . | safeHTML }}{{ end }}
+            {{- /* Either/or, as the README says: a raw inline SVG wins and the
+                   raster path is not also walked. Without the else both rendered,
+                   and a site that set both got two logos. */}}
+            {{- with .iconSVG }}{{ . | safeHTML }}
+            {{- else }}
             {{- with .icon }}
             {{- with resources.Get . }}
             {{- $h := int (site.Params.label.iconHeight | default 24) }}
-            <img class="header__logo" src="{{ (.Resize (printf "x%d webp q90" $h)).RelPermalink }}"
-                width="{{ $h }}" height="{{ $h }}" alt="">
+            {{- /* The resize is height-constrained, so the width comes out of the
+                   proportion and only the resized resource knows it. Writing $h
+                   into both attributes declared every logo square, which squashes
+                   a wordmark and shifts the header as it loads. */}}
+            {{- $logo := .Resize (printf "x%d webp q90" $h) }}
+            <img class="header__logo" src="{{ $logo.RelPermalink }}"
+                width="{{ $logo.Width }}" height="{{ $logo.Height }}" alt="">
+            {{- end }}
             {{- end }}
             {{- end }}
             <span class="header__label">{{ .text | default site.Title }}</span>
