@@ -18,18 +18,27 @@
     <meta name="robots" content="noindex, nofollow">
     <title>404 · {{ site.Title }}</title>
     {{- partialCached "head-assets.html" . "assets" }}
+    {{- partial "extend-head.html" . }}
 </head>
 
 <body id="top" class="sheet">
     <a class="skip-link" href="#main">{{ i18n "skip_to_content" | default "Skip to content" }}</a>
     {{ partial "header.html" . }}
+    {{- /* No zone rail here, deliberately. Hugo renders this page from the home
+           page, so the rail would index the *home page's* headings while the
+           body is not-found.html — a lettered column of #fragment links to
+           anchors that are not on the sheet. The frame closes the column it
+           would have occupied on its own (see 20-layout.css's :not(:has(...))).
+
+           That also settles the ordering question baseof.html answers at
+           length: nothing to place after <main>, nothing to tab through. */}}
     <div class="sheet__frame">
-        {{- partial "zone-rail.html" . }}
         <main class="main" id="main">
             {{- block "main" . }}{{ end }}
         </main>
     </div>
-    {{ partial "footer.html" . }}
+    {{ partialCached "footer.html" . .Lang (.Param "ShowCodeCopyButtons") (.Param "hideFooter") -}}
+    {{ partial "extend-footer.html" . -}}
 </body>
 
 </html>
