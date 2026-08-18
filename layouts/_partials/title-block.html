@@ -64,14 +64,18 @@
 {{- $ai := partialCached "ai.html" . .RelPermalink }}
 
 {{- if or $rows $ai.on }}
-<dl class="title-block">
+{{- /* The wrapper is the stamp's positioning context, and it exists so the
+       stamp can sit *outside* the <dl>. A <dl> may contain only dt, dd and a
+       div grouping them — a div holding a button is not markup the list
+       semantics survive, and the stamp is a qualification of the whole block
+       rather than one of its fields. */}}
+<div class="title-block-wrap">
     {{- if $ai.on }}
     {{- /* The AI stamp sits in the block's corner because that is where a
-           drawing carries its stamps, and because a provenance note is a
-           qualification of the whole sheet rather than one more field in it.
-           The detail opens on hover and on focus; it is referenced by
-           aria-describedby, which reaches into hidden content, so a screen
-           reader hears it without the box ever being shown. */}}
+           drawing carries its stamps. The detail opens on hover and on focus;
+           it is referenced by aria-describedby, which reaches into hidden
+           content, so a screen reader hears it without the box ever being
+           shown. */}}
     <div class="ai-stamp">
         <button type="button" class="ai-stamp__mark" aria-describedby="ai-stamp-note">
             {{- partialCached "icon.html" "ai" "ai" }}
@@ -85,6 +89,7 @@
         </div>
     </div>
     {{- end }}
+<dl class="title-block">
     {{- range $rows }}
     <div class="title-block__row">
         <dt class="title-block__label">{{ .label }}</dt>
@@ -98,4 +103,5 @@
     </div>
     {{- end }}
 </dl>
+</div>
 {{- end }}

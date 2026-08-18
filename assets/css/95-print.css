@@ -133,7 +133,7 @@
     }
 
     /* The value column only stood clear of a stamp that is no longer there. */
-    .ai-stamp + .title-block__row .title-block__value {
+    .title-block-wrap:has(.ai-stamp) .title-block__row:first-child .title-block__value {
         padding-inline-end: 0;
     }
 

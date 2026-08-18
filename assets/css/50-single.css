@@ -23,14 +23,22 @@
    label, value — with a hairline between every row, framed top and bottom by
    the sheet's heavier rule. */
 
-.title-block {
+/* The wrapper carries the offset and the positioning context; the <dl> itself
+   carries only the drawn block. The AI stamp is absolutely positioned against
+   this, from outside the list — see _partials/title-block.html. */
+.title-block-wrap {
     position: relative;
     margin-top: var(--space-lg);
+}
+
+.title-block {
     border-block: var(--line-frame) solid var(--rule-frame);
     display: grid;
     font-size: var(--step--1);
 }
 
+/* The label column, wide enough for the longest lettered label in either
+   language. Component geometry, not a spacing step. */
 .title-block__row {
     display: grid;
     grid-template-columns: 7.5rem minmax(0, 1fr);
@@ -142,8 +150,9 @@
 
 /* The stamp overlaps the first row's value column, which is the only row it can
    reach. Hold that value clear of it rather than letting a long one run under
-   the mark. */
-.ai-stamp + .title-block__row .title-block__value {
+   the mark. :has, because the stamp is now the <dl>'s sibling rather than the
+   row's — it is outside the list, where a button belongs. */
+.title-block-wrap:has(.ai-stamp) .title-block__row:first-child .title-block__value {
     padding-inline-end: var(--space-2xl);
 }
 
