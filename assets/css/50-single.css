@@ -226,14 +226,6 @@
     margin-inline-start: calc((var(--space-md) + var(--line-thin)) * -1);
 }
 
-.ai-passage__body > :first-child {
-    margin-top: 0;
-}
-
-.ai-passage__body > :last-child {
-    margin-bottom: 0;
-}
-
 /* A run inside a sentence: the same dashed line, laid under the words. */
 .ai-mark__text {
     text-decoration: underline dashed var(--rule-strong);
@@ -385,6 +377,19 @@
 /* --- prose --------------------------------------------------------------- */
 
 .content > * + * {
+    margin-top: var(--space-md);
+}
+
+/* The same rule for the wrappers that hold rendered Markdown but are not
+   .content: an alert body, a collapse body, an AI passage. They exist because
+   Goldmark's output has to be boxed, and being one level down they were missed
+   by the direct-child selector above — 10-base.css zeroes every margin, so a
+   two-paragraph [!NOTE] or {{< collapse >}} ran its paragraphs together with no
+   gap at all. Direct children again, so a nested list keeps its own spacing.
+   .toc__body is deliberately absent: its single <nav> carries its own rules. */
+.alert__body > * + *,
+.collapse__body > * + *,
+.ai-passage__body > * + * {
     margin-top: var(--space-md);
 }
 
