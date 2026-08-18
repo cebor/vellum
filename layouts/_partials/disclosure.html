@@ -1,0 +1,15 @@
+{{- /* The <details> that both the `collapse` and `details` shortcodes render.
+
+       It lives here because the two shortcodes had been two verbatim copies of
+       the same nine lines, which is not an alias — a fix to one reached neither
+       the other nor the reader who used the other name. Now there is one body.
+
+       Usage: {{ partial "disclosure.html" (dict
+                  "summary" $summary "open" $open "body" $rendered) }}
+
+       `body` is already-rendered markup, not Markdown source: the caller owns
+       the RenderString, because only it has the page context to render against. */ -}}
+<details class="collapse"{{ if .open }} open{{ end }}>
+    <summary class="collapse__summary">{{ .summary | markdownify }}</summary>
+    <div class="collapse__body">{{ .body }}</div>
+</details>

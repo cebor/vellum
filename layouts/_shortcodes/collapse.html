@@ -2,10 +2,12 @@
        `unsafe` is off, so a raw <details> written in Markdown would be stripped
        — this shortcode is the only way to get one.
 
-       {{< collapse summary="Full output" >}}…{{< /collapse >}} */ -}}
+       {{< collapse summary="Full output" >}}…{{< /collapse >}}
+
+       Rendered by _partials/disclosure.html, which `details` shares. */ -}}
 {{- $summary := .Get "summary" | default (.Get 0) }}
-{{- if not $summary }}{{ errorf "collapse shortcode in %s needs a summary" .Page.File.Path }}{{ end }}
-<details class="collapse"{{ if .Get "openByDefault" }} open{{ end }}>
-    <summary class="collapse__summary">{{ $summary | markdownify }}</summary>
-    <div class="collapse__body">{{ .Inner | .Page.RenderString (dict "display" "block") }}</div>
-</details>
+{{- if not $summary }}{{ errorf "collapse shortcode in %s needs a summary" .Page.Path }}{{ end }}
+{{- partial "disclosure.html" (dict
+    "summary" $summary
+    "open" (.Get "openByDefault")
+    "body" (.Inner | .Page.RenderString (dict "display" "block"))) -}}

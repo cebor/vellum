@@ -1,7 +1,9 @@
-{{- /* Alias of the collapse shortcode, under the name people reach for first. */ -}}
+{{- /* Alias of the collapse shortcode, under the name people reach for first.
+       An alias in fact and not only in the comment: both render through
+       _partials/disclosure.html, so the two names cannot drift. */ -}}
 {{- $summary := .Get "summary" | default (.Get 0) }}
-{{- if not $summary }}{{ errorf "details shortcode in %s needs a summary" .Page.File.Path }}{{ end }}
-<details class="collapse"{{ if .Get "openByDefault" }} open{{ end }}>
-    <summary class="collapse__summary">{{ $summary | markdownify }}</summary>
-    <div class="collapse__body">{{ .Inner | .Page.RenderString (dict "display" "block") }}</div>
-</details>
+{{- if not $summary }}{{ errorf "details shortcode in %s needs a summary" .Page.Path }}{{ end }}
+{{- partial "disclosure.html" (dict
+    "summary" $summary
+    "open" (.Get "openByDefault")
+    "body" (.Inner | .Page.RenderString (dict "display" "block"))) -}}
