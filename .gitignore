@@ -62,7 +62,13 @@ node_modules/
 .impeccable/hook.pending.json
 .impeccable/*.png
 .impeccable/live/server.json
+.impeccable/live/roots.json
+.impeccable/live/app-root.json
+.impeccable/live/inject-journal.json
 .impeccable/live/sessions/
+.impeccable/live/artifacts/
+.impeccable/live/accept-receipts/
+.impeccable/live/locks/
 .impeccable/live/previews/
 .impeccable/live/annotations/
 .impeccable/live/cache/

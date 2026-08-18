@@ -13,6 +13,13 @@ default:
   image:
     # The official image builds with HUGO_BUILD_TAGS=extended. Its entrypoint is
     # hugo itself, so it has to be cleared for GitLab to run a shell in it.
+    #
+    # Deliberately unpinned. For a theme, "still builds on the Hugo people
+    # actually have" is the thing under test, and a pinned tag would hide a
+    # breaking Hugo release until someone thought to bump it — the failure would
+    # then land on a user rather than on this pipeline. The floor is declared in
+    # hugo.toml's [module.hugoVersion] and enforced by Hugo itself; the extended
+    # half is checked below, because nothing else would catch it.
     name: ghcr.io/gohugoio/hugo
     entrypoint: [""]
 
