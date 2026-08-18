@@ -64,6 +64,7 @@
     crossorigin="anonymous">
 
 {{- with site.Params.assets }}
+{{- $a := . }}
 {{- with .favicon }}<link rel="icon" href="{{ . | absURL }}">{{ end }}
 {{- with .favicon16x16 }}<link rel="icon" type="image/png" sizes="16x16" href="{{ . | absURL }}">{{ end }}
 {{- with .favicon32x32 }}<link rel="icon" type="image/png" sizes="32x32" href="{{ . | absURL }}">{{ end }}
@@ -74,8 +75,16 @@
        favicon can carry its own prefers-color-scheme rules — which is the
        whole point, since it is the only icon rung that can follow the theme. */}}
 {{- with .favicon_svg }}<link rel="icon" type="image/svg+xml" href="{{ . | absURL }}">{{ end }}
-{{- with .apple_touch_icon }}<link rel="apple-touch-icon" href="{{ . | absURL }}">{{ end }}
-{{- with .safari_pinned_tab }}<link rel="mask-icon" href="{{ . | absURL }}">{{ end }}
+{{- /* WebKit ranks icon candidates by their declared size, and a link with no
+       sizes attribute is filed as unknown rather than as large. 180x180 is the
+       size every generator emits and the one Safari draws Favorites and Dock
+       tiles from; a site shipping a different edge overrides it. */}}
+{{- with .apple_touch_icon }}<link rel="apple-touch-icon" sizes="{{ $a.apple_touch_icon_sizes | default "180x180" }}" href="{{ . | absURL }}">{{ end }}
+{{- /* color is not decoration here: Safari tints the pinned tab's template icon
+       with it, and the attribute is required for the icon to be used at all.
+       Defaults to --accent's light value, read out of 00-tokens.css like the
+       theme-color pair above, so the pinned tab matches the sheet it opens. */}}
+{{- with .safari_pinned_tab }}<link rel="mask-icon" href="{{ . | absURL }}" color="{{ $a.safari_pinned_tab_color | default $t.accentLight }}">{{ end }}
 {{- /* Guarded like every asset above it, and it has to be: the theme ships no
        manifest, so an unconditional link was a 404 and two console errors on
        every page load of every site running it — the only error the theme

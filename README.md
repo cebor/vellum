@@ -245,13 +245,26 @@ Passed straight to [Fuse.js](https://fusejs.io/api/options.html):
   favicon32x32 = "/favicon-32x32.png"
   favicon_svg = "/favicon.svg"
   apple_touch_icon = "/apple-touch-icon.png"
+  apple_touch_icon_sizes = "180x180"   # optional, this is the default
   safari_pinned_tab = "/safari-pinned-tab.svg"
+  safari_pinned_tab_color = "#8a5200"  # optional, defaults to --accent (light)
   manifest = "/site.webmanifest"
 ```
 
 Every one of these is optional and emits nothing when unset — including `manifest`, because the theme
 ships no web manifest of its own. Point it at a file your site actually serves; naming one that does
 not exist is a 404 on every page load.
+
+`apple_touch_icon` is what Safari draws the large Favorites and Dock tiles from, and WebKit ranks
+icon candidates by their declared size — a link with no `sizes` attribute is filed as unknown rather
+than as large. The theme therefore always emits one, defaulting to the `180x180` that every favicon
+generator produces. Set `apple_touch_icon_sizes` only if your file has a different edge; a value that
+disagrees with the actual PNG is worse than none.
+
+`safari_pinned_tab_color` is not decoration: Safari tints the pinned tab's template icon with it and
+wants the attribute present. It defaults to the light value of `--accent`, read out of
+`00-tokens.css` the same way the `theme-color` pair is, so a recoloured theme carries the pinned tab
+with it.
 
 `favicon_svg` is emitted after the raster rungs so a browser that supports `image/svg+xml` prefers it
 and `favicon` stays the fallback. It is the only rung that can follow the active colour scheme: put a

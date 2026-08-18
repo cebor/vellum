@@ -13,8 +13,11 @@
        and the column runs full-bleed inside its gutters, which is the other half
        of the sizes expression.
 
+       --accent is read for the same reason: Safari's mask-icon needs its tint as
+       an attribute value, where var() is equally unavailable.
+
        Returns: measure (px, int), gutterRem (float), collapse (rem, float),
-       bgLight / bgDark (hex strings).
+       bgLight / bgDark and accentLight / accentDark (hex strings).
 
        Call as: {{ $t := partialCached "tokens.html" . "tokens" }} */ -}}
 
@@ -37,9 +40,14 @@
 {{- $bg := findRESubmatch `--bg:\s*light-dark\(\s*(#[0-9a-fA-F]{3,8})\s*,\s*(#[0-9a-fA-F]{3,8})\s*\)` $c 1 }}
 {{- if not $bg }}{{ errorf "tokens.html: --bg missing from 00-tokens.css, or not a light-dark() pair" }}{{ end }}
 
+{{- $ac := findRESubmatch `--accent:\s*light-dark\(\s*(#[0-9a-fA-F]{3,8})\s*,\s*(#[0-9a-fA-F]{3,8})\s*\)` $c 1 }}
+{{- if not $ac }}{{ errorf "tokens.html: --accent missing from 00-tokens.css, or not a light-dark() pair" }}{{ end }}
+
 {{- return (dict
     "measure" $measure
     "gutter" $gutter
     "collapse" $collapse
     "bgLight" (index (index $bg 0) 1)
-    "bgDark" (index (index $bg 0) 2)) -}}
+    "bgDark" (index (index $bg 0) 2)
+    "accentLight" (index (index $ac 0) 1)
+    "accentDark" (index (index $ac 0) 2)) -}}
