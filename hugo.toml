@@ -16,5 +16,5 @@
     # silently falls back to source-resolution images instead of failing.
     extended = true
     # 0.158 is where site.Language.Locale and .Language.Label arrived, both of
-    # which six templates use unguarded. See layouts/baseof.html.
+    # which seven templates use unguarded. See layouts/baseof.html.
     min = "0.158.0"

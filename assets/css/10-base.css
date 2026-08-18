@@ -320,6 +320,10 @@ abbr[title] {
     display: none;
 }
 
+/* The standard reduced-motion reset. 0.01ms rather than 0 because a zero
+   duration skips the transitionend/animationend events some scripts wait on;
+   it is an idiom, not a duration anyone tunes, which is why it is a literal
+   here and not a token (see 00-tokens.css's header). */
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,

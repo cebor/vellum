@@ -146,7 +146,9 @@ Everything below is optional unless marked. **A key that is not listed here does
 
 ### Display toggles
 
-All booleans, all `false` unless set, and **all overridable per page** in front matter.
+All booleans and **all overridable per page** in front matter. Default `false`, except `ShowToc` and
+`TocOpen`, which default to **`true`** — a page gets its contents panel, expanded, unless it or the
+site sets the param to `false`.
 
 | Param | Shows |
 |---|---|
@@ -214,13 +216,19 @@ ShareButtons = ["mastodon", "bluesky", "reddit", "hackernews", "linkedin", "emai
 
 ### Search
 
-Passed straight to [Fuse.js](https://fusejs.io/api/options.html):
+Merged over the theme's defaults and handed to [Fuse.js](https://fusejs.io/api/options.html):
 
 ```toml
 [params.fuseOpts]
   threshold = 0.4
   keys = ["title", "permalink", "summary", "content"]
 ```
+
+TOML lowercases the keys, so the camelCase options Fuse expects have to be mapped back. Six are:
+`minMatchCharLength`, `isCaseSensitive`, `shouldSort`, `ignoreLocation`, `includeMatches` and
+`findAllMatches`. Single-word options (`threshold`, `distance`, `keys`, `location`) need no mapping.
+Any other multi-word Fuse option arrives lowercased and is ignored — add it to the map in
+`assets/js/search.js` if you need it.
 
 ### SEO and analytics
 
@@ -309,6 +317,11 @@ summary = "One sentence, shown in list views and OpenGraph."
 | `layout = "search"` | Render the search page. |
 | `layout = "archives"` | Render the year/month archive. |
 | `menus = "main"` | Put a standalone page in the nav. |
+| `author` | Override the site author on this page. String, list or map, as in `[params]`. |
+| `keywords` | Override the site keywords for this page's meta tag. |
+| `images` | Social-card image for this page. A bundle resource name or a URL; the first entry wins. Overridden by `cover`. |
+| `bodyClass` | Extra class appended to `<body>`, for a page that needs its own CSS hook. |
+| `placeholder` | On a `layout = "search"` page, the search input's placeholder text. |
 | `ai` | Disclose AI use on this post. See [AI disclosure](#ai-disclosure). |
 | `cover` | See [Covers](#covers-1). |
 
@@ -566,7 +579,9 @@ there and the whole sheet follows. Sizes come from `--step--2` … `--step-5` fo
 
 Colours resolve through CSS `light-dark()`, so each is written once and the page themes correctly
 with JavaScript disabled. Note that `light-dark()` only produces *colours* — a display swap like the
-theme-toggle icon still needs a real `prefers-color-scheme` query.
+theme-toggle icon still needs a real `prefers-color-scheme` query. Browsers under the baseline are
+caught by an `@supports not (color: light-dark(…))` block at the foot of `00-tokens.css` that repeats
+the light palette; override a colour and you may want to override it there too.
 
 ### Template overrides
 
@@ -622,4 +637,5 @@ MIT — see [`LICENSE`](https://github.com/cebor/vellum/blob/main/LICENSE).
 
 Bundled third-party assets and their licence texts live in
 [`licenses/`](https://github.com/cebor/vellum/tree/main/licenses): Archivo and JetBrains Mono
-(SIL OFL-1.1), Fuse.js (Apache-2.0), and Simple Icons paths (CC0).
+(SIL OFL-1.1) and Fuse.js (Apache-2.0). The brand marks in `icon.html` are Simple Icons paths, which
+are CC0 and carry no licence text to bundle.

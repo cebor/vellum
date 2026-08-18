@@ -72,8 +72,10 @@ an existing param is `docs`; the param itself is `feat`.
 Optional but expected. Use one of: `layouts`, `partials`, `shortcodes`, `markup`, `css`, `tokens`,
 `i18n`, `fonts`, `search`, `print`, `a11y`, `ai`, `exampleSite`, `registry`, `parity`, `release`, `ci`,
 `deps`.
-Omit the scope when a change genuinely spans the theme. Never invent a one-off scope — an unknown
-scope silently lands in the wrong changelog group.
+Omit the scope when a change genuinely spans the theme. Never invent a one-off scope: `changelog.sh`
+groups strictly by *type* and prints the scope as the entry's bold prefix, so an unfamiliar one does
+not land in the wrong group — it lands in the right group under a label no reader recognises, which
+is worse for being invisible in review.
 
 ### Breaking changes
 
@@ -150,7 +152,7 @@ wrong before:
 | registry fixtures present, 1500×1000 / 900×600 | the theme gallery shows a placeholder, visible only on the theme site |
 | Hugo extended on `PATH`             | the standard edition builds green and silently drops the WebP ladder         |
 | every commit in range parseable     | a change that never appears in the changelog                                 |
-| at least one `feat`/`fix`/`perf`    | a version bump nobody can be told the reason for                             |
+| at least one `feat`/`fix`/`perf`/`revert`, or anything breaking | a version bump nobody can be told the reason for         |
 | `.parity/check.sh` against the last tag | a path the build stopped emitting, deleted from every site on upgrade    |
 
 Then it derives the version, writes `CHANGELOG.md`, commits it as `chore(release): vX.Y.Z`, tags

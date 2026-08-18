@@ -108,7 +108,7 @@ revision note at the foot of the sheet, each usable without the other; the `coll
 
 **Hard technical constraints:**
 
-- **Hugo extended ≥ 0.158.** `site.Language.Locale` and `.Language.Label` are used unguarded in six
+- **Hugo extended ≥ 0.158.** `site.Language.Locale` and `.Language.Label` are used unguarded in seven
   templates and exist only from that version; a lower one fails at render time, not with the version
   guard's message.
 - **Browser baseline Chrome 123+ / Safari 17.5+ / Firefox 120+**, set by CSS `light-dark()`. Older
@@ -141,7 +141,7 @@ third-party requests, with fonts self-hosted and Fuse.js bundled.
 
 **Release and compatibility:**
 
-- **Versioned and released from tags** — `v0.1.0` through `v0.2.2` so far — with the version derived
+- **Versioned and released from tags** — `v0.1.0` through `v0.2.4` so far — with the version derived
   from the commits in the range rather than chosen. A breaking change currently bumps the *minor*,
   anything else the patch, because below 1.0 the major carries no signal.
 - **`CHANGELOG.md` is generated from the commit history** and prints only what a *user of the theme*

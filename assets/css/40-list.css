@@ -31,6 +31,8 @@
     background: var(--accent-soft);
 }
 
+/* 12rem is this component's own geometry, not a spacing step, so it is a
+   literal here rather than a token — see the exception noted in 00-tokens.css. */
 .post-card:has(.cover) {
     grid-template-columns: minmax(0, 1fr) minmax(0, 12rem);
     align-items: start;
@@ -331,6 +333,9 @@
     margin-top: var(--space-2xs);
 }
 
+/* The date column. 2.5rem is what four digits set to, measured — it is not
+   --zone-rail-width, which happens to carry the same number for an unrelated
+   reason. Do not swap one for the other. */
 .archive-item {
     display: grid;
     grid-template-columns: 2.5rem minmax(0, 1fr) auto;

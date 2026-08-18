@@ -1,10 +1,29 @@
-/* The single source of truth for colour, type, space and motion. Nothing else
-   in this stylesheet may carry a bare hex, rem or duration.
+/* The single source of truth for colour, type, space and motion. No other file
+   may carry a bare hex, a type step, a spacing step or a transition duration.
+
+   Four exceptions, each of which has to say so at the declaration:
+
+     - 95-print.css sets paper ink — white, black and two greys — rather than the
+       screen palette. Paper is not one of the surfaces the palette was contrast-
+       checked against, and #eff0ec is a sheet, not a page.
+     - 10-base.css's prefers-reduced-motion block uses the standard 0.01ms, which
+       is an idiom rather than a duration anyone would tune.
+     - A one-off component geometry — the title-block label column, the card's
+       cover column, the archive date column — is a literal at its point of use,
+       because it belongs to that component and to nothing else.
+     - A media-query breakpoint is a literal, because a media query cannot
+       resolve var(). Only two exist, and both are named here as well:
+       40rem is --sheet-narrow, which tokens.html reads to build the image
+       `sizes` attribute, and 60rem is --frame-collapse. Change either and
+       change every media query that spells the number out.
+
+   Anything that is a *scale* value comes from a token here.
 
    Some of these values are also read by Hugo at build time — see
-   layouts/_partials/tokens.html, which parses --content-width, --sheet-gutter
-   and --bg out of this file so the image `sizes` attribute and the theme-color
-   metas cannot go stale. Renaming one of those three fails the build loudly. */
+   layouts/_partials/tokens.html, which parses --content-width, --sheet-gutter,
+   --sheet-gutter-narrow, --sheet-narrow, --bg and --accent out of this file so
+   the image `sizes` attribute, the theme-color metas and the mask-icon tint
+   cannot go stale. Renaming any of those six fails the build loudly. */
 
 /* Colours resolve through light-dark(), so each token is written once and the
    browser picks the side from the used color-scheme. data-theme="auto" matches

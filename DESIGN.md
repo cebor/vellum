@@ -60,7 +60,11 @@ have cost the alerts their severity for a consistency nobody was reading.
 Every colour is written once through CSS `light-dark()`. `color-scheme: light dark` on a bare `:root`
 is what `data-theme="auto"` matches; the explicit `[data-theme]` rules override *only* `color-scheme`,
 never the palette. The page therefore themes correctly with JavaScript disabled, and there is no
-second block to keep in sync.
+*per-scheme* block to keep in sync — no `prefers-color-scheme` half restating the palette in reverse.
+
+There is exactly one restatement, and it is not a scheme: the `@supports not (color: light-dark(…))`
+fallback described below, which repeats the **light** palette for browsers under the baseline. It has
+to be kept in step by hand, so a colour changed above is changed in two places or in neither.
 
 | Token | Light | Dark | Role |
 |---|---|---|---|

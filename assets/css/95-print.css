@@ -5,7 +5,14 @@
 
    A drawing sheet is a printed artefact to begin with, so printing is not an
    afterthought here — the frame, the title block and the rules are exactly what
-   should survive onto paper. */
+   should survive onto paper.
+
+   This file is the one place allowed bare hex values, and it is deliberate: on
+   paper the ground is white, not --bg's #eff0ec, and the ink is black rather
+   than a token contrast-checked against a screen surface. Putting these four
+   values into 00-tokens.css would file paper colours under the screen palette
+   and invite someone to reuse them there. The exception is recorded in that
+   file's header. */
 
 @media print {
     /* Force the light palette on paper regardless of the reader's choice. The
