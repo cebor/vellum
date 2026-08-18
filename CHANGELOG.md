@@ -9,6 +9,29 @@ the format they follow is in [`CONTRIBUTING.md`](CONTRIBUTING.md). Only changes 
 can see are listed — refactors, documentation, CI and build chores are not. Releases up to 0.1.2
 predate the generated format and were written by hand.
 
+## [0.2.5](https://github.com/cebor/vellum/compare/v0.2.4...v0.2.5) - 2026-08-18
+
+### Added
+
+- **partials:** add an optional favicon_svg slot (ea3a554)
+
+### Fixed
+
+- **ai:** open the index mark's name rather than setting it in the row (8c1d94c)
+- **head:** declare apple-touch-icon sizes and mask-icon color (c7de86b)
+- **partials:** emit apple-touch-icon sizes only when the site declares it (8ee628f)
+- **partials:** resolve icon paths against a baseURL that has a subpath (54c6dbb)
+- **partials:** give Hacker News its own icon branch (8c66e3b)
+- **partials:** honour latestPosts = 0 (e740ea8)
+- **partials:** size the header logo from the image it resized (120239d)
+- **css:** keep the image sizes attribute in step with the layout (9c9a2db)
+- **css:** space the children of nested prose wrappers (ed7264a)
+- **a11y:** take the AI stamp out of the title block's <dl> (baaeb3d)
+- **layouts:** bring the root 404 shell back in line with baseof (2ee675c)
+- **layouts:** make ShowAllPagesInArchive mean what it says (d40467c)
+- **parity:** take the shots against the documented dev server (34b3972)
+- **release:** stop --help printing a line of the script (cb1aa84)
+
 ## [0.2.4](https://github.com/cebor/vellum/compare/v0.2.3...v0.2.4) - 2026-08-17
 
 ### Reverted
