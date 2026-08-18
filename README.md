@@ -255,8 +255,9 @@ Every one of these is optional and emits nothing when unset — including `manif
 ships no web manifest of its own. Point it at a file your site actually serves; naming one that does
 not exist is a 404 on every page load.
 
-Paths are resolved against `baseURL` including its path, so `/favicon.ico` and `favicon.ico` both
-land inside a site published under a subpath. A fully qualified URL is passed through untouched.
+Paths are emitted root-relative and resolved against `baseURL` including its path, so `/favicon.ico`
+and `favicon.ico` both land inside a site published under a subpath. A fully qualified URL — an icon
+on a CDN, say — is passed through untouched.
 
 `apple_touch_icon` is what iOS uses for the home-screen icon and Safari for the large Favorites and
 Dock tiles. `apple_touch_icon_sizes` adds a `sizes` attribute and is emitted only when you set it:

@@ -63,38 +63,44 @@
 <link rel="preload stylesheet" as="style" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}"
     crossorigin="anonymous">
 
-{{- /* absURL reads a leading slash as host-root and drops baseURL's own path,
-       so the "/favicon.ico" spelling this theme documents 404s on every site
-       published under a subpath — this repo's own GitLab Pages demo included.
-       Trimming it first makes both spellings resolve inside the site, and
+{{- /* relURL, like the fonts and the stylesheet above — these links have no
+       reason to be absolute, and root-relative ones keep working when the site
+       is reached under a hostname baseURL does not name. Absolute belongs to
+       canonical, hreflang and og:image in head.html, which are specified that
+       way; an icon href resolves against the document like any other.
+
+       The TrimPrefix is not decoration. Both relURL and absURL read a leading
+       slash as host-root and drop baseURL's own path, so the "/favicon.ico"
+       spelling this theme documents lands outside a site published under a
+       subpath. Trimming it makes both spellings resolve inside the site, and
        leaves a fully qualified URL to an external host untouched. */}}
 {{- with site.Params.assets }}
 {{- $a := . }}
-{{- with .favicon }}<link rel="icon" href="{{ . | strings.TrimPrefix "/" | absURL }}">{{ end }}
-{{- with .favicon16x16 }}<link rel="icon" type="image/png" sizes="16x16" href="{{ . | strings.TrimPrefix "/" | absURL }}">{{ end }}
-{{- with .favicon32x32 }}<link rel="icon" type="image/png" sizes="32x32" href="{{ . | strings.TrimPrefix "/" | absURL }}">{{ end }}
+{{- with .favicon }}<link rel="icon" href="{{ . | strings.TrimPrefix "/" | relURL }}">{{ end }}
+{{- with .favicon16x16 }}<link rel="icon" type="image/png" sizes="16x16" href="{{ . | strings.TrimPrefix "/" | relURL }}">{{ end }}
+{{- with .favicon32x32 }}<link rel="icon" type="image/png" sizes="32x32" href="{{ . | strings.TrimPrefix "/" | relURL }}">{{ end }}
 {{- /* Deliberately emitted after the raster rungs: a browser that understands
        image/svg+xml takes this one and the .ico above stays the fallback for
        the ones that don't. Reversing the order hands Safari and Chrome the
        32px bitmap on a display that could have drawn the vector, and an SVG
        favicon can carry its own prefers-color-scheme rules — which is the
        whole point, since it is the only icon rung that can follow the theme. */}}
-{{- with .favicon_svg }}<link rel="icon" type="image/svg+xml" href="{{ . | strings.TrimPrefix "/" | absURL }}">{{ end }}
+{{- with .favicon_svg }}<link rel="icon" type="image/svg+xml" href="{{ . | strings.TrimPrefix "/" | relURL }}">{{ end }}
 {{- /* sizes is emitted only when the site declares it. The theme is handed a
        path, not a resource, so it cannot measure the file — and a declared size
        that disagrees with the actual PNG is worse than none. It earns its keep
        when a site lists several apple-touch-icon rungs, which is the case where
        iOS picks between them by declared size; for the single rung below there
        is nothing to pick. */}}
-{{- with .apple_touch_icon }}<link rel="apple-touch-icon"{{ with $a.apple_touch_icon_sizes }} sizes="{{ . }}"{{ end }} href="{{ . | strings.TrimPrefix "/" | absURL }}">{{ end }}
+{{- with .apple_touch_icon }}<link rel="apple-touch-icon"{{ with $a.apple_touch_icon_sizes }} sizes="{{ . }}"{{ end }} href="{{ . | strings.TrimPrefix "/" | relURL }}">{{ end }}
 {{- /* color is not decoration here: Safari tints the pinned tab's template icon
        with it, and the attribute is required for the icon to be used at all.
        Defaults to --accent's light value, read out of 00-tokens.css like the
        theme-color pair above, so the pinned tab matches the sheet it opens. */}}
-{{- with .safari_pinned_tab }}<link rel="mask-icon" href="{{ . | strings.TrimPrefix "/" | absURL }}" color="{{ $a.safari_pinned_tab_color | default $t.accentLight }}">{{ end }}
+{{- with .safari_pinned_tab }}<link rel="mask-icon" href="{{ . | strings.TrimPrefix "/" | relURL }}" color="{{ $a.safari_pinned_tab_color | default $t.accentLight }}">{{ end }}
 {{- /* Guarded like every asset above it, and it has to be: the theme ships no
        manifest, so an unconditional link was a 404 and two console errors on
        every page load of every site running it — the only error the theme
        produced anywhere. A site that has one names it here. */}}
-{{- with .manifest }}<link rel="manifest" href="{{ . | strings.TrimPrefix "/" | absURL }}">{{ end }}
+{{- with .manifest }}<link rel="manifest" href="{{ . | strings.TrimPrefix "/" | relURL }}">{{ end }}
 {{- end }}
