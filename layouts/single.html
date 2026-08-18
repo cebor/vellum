@@ -34,7 +34,12 @@
            content, not footer furniture. */}}
     {{- partial "ai-notes.html" . }}
 
-    {{- $tags := .GetTerms (site.Language.Params.Taxonomies.tag | default "tags") }}
+    {{- /* [taxonomies] is site config, not params, so the old
+           site.Language.Params.Taxonomies.tag lookup here was always nil and the
+           default always won. It read as a rename hook and was none — a site that
+           renamed the taxonomy lost this row silently either way. Named plainly
+           now; the theme's `tag` taxonomy is what the README documents. */}}
+    {{- $tags := .GetTerms "tags" }}
     {{- $share := and ($.Param "ShowShareButtons") (not (.Param "disableShare")) $isPost }}
     {{- $edit := and site.Params.editPost.URL (not site.Params.editPost.disabled) $isPost }}
     {{- $nav := and (.Param "ShowPostNavLinks") $isPost }}
