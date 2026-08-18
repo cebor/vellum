@@ -4,5 +4,10 @@
 {{ with .Content }}
 <div class="content sheet-note">{{ . }}</div>
 {{ end }}
-{{ partial "latest-posts.html" (dict "page" . "count" (site.Params.latestPosts | default 5)) }}
+{{- /* `default` treats 0 as empty, so `latestPosts = 0` — the off switch the
+       README documents — would come back as 5. isset distinguishes "unset" from
+       "set to zero"; Hugo lowercases site param keys, hence "latestposts". */}}
+{{- $latest := 5 }}
+{{- if isset site.Params "latestposts" }}{{ $latest = int site.Params.latestPosts }}{{ end }}
+{{ partial "latest-posts.html" (dict "page" . "count" $latest) }}
 {{ end }}
