@@ -274,9 +274,10 @@ details[open] > summary::before {
 }
 
 /* Tabular figures everywhere a number is compared against another number: the
-   title block, the sheet stamp, the archive, code line numbers. */
-time,
-.tabular {
+   title block, the sheet stamp, the archive, code line numbers. Every one of
+   those is a <time>, which is why that is the whole selector — a .tabular
+   utility class sat here too and no template ever emitted it. */
+time {
     font-variant-numeric: tabular-nums;
 }
 

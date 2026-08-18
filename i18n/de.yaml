@@ -1,12 +1,6 @@
 - id: home
   translation: "Start"
 
-- id: posts
-  translation: "Beiträge"
-
-- id: tags
-  translation: "Tags"
-
 - id: search
   translation: "Suche"
 

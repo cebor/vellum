@@ -5,8 +5,6 @@
        Restrict the set with site.Params.ShareButtons = ["mastodon", "reddit"]. */ -}}
 {{- $url := .Permalink }}
 {{- $title := .Title }}
-{{- $tags := slice }}
-{{- range .Params.tags }}{{ $tags = $tags | append (replaceRE `\s+` "" (printf "%v" .)) }}{{ end }}
 {{- $wanted := site.Params.ShareButtons | default (slice "mastodon" "bluesky" "linkedin" "reddit" "hackernews" "telegram" "whatsapp" "email") }}
 
 {{- $targets := dict
