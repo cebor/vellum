@@ -12,14 +12,21 @@
  * scrollbar eats into it — which quietly falsifies exactly the mobile captures a
  * responsive review depends on. Local Chrome gives a true 390px.
  *
- * Usage, with `hugo server -D --port 1319` already running:
+ * Usage, with the theme's dev server already running — the one command README
+ * and CONTRIBUTING document, on Hugo's default port:
+ *
+ *   hugo server -D --source exampleSite --themesDir ../..
  *   node .parity/shots.mjs              # all pages, both viewports, both schemes
  *   node .parity/shots.mjs home search  # only the named pages
+ *
+ * Set VELLUM_SHOTS_PORT to point at a server on another port. It used to insist
+ * on 1319, which no documented command ever starts, so running the documented
+ * command and then this script failed on every route.
  */
 import { chromium } from 'playwright-core';
 import { mkdirSync } from 'node:fs';
 
-const BASE = 'http://localhost:1319';
+const BASE = `http://localhost:${process.env.VELLUM_SHOTS_PORT || 1313}`;
 const OUT = '.impeccable/review';
 const BUNDLED = `${process.env.HOME}/.cache/ms-playwright/chromium-1228/chrome-linux64/chrome`;
 
@@ -46,6 +53,12 @@ const pages = [
     ['tag', '/en/tags/reference/'],
     ['search', '/en/search/'],
     ['post-ai', '/en/posts/multilingual-by-design/'],
+    /* The zone rail is the theme's signature surface and had no shot of its
+     * own; the paginated list is the only place the pager renders at all. */
+    ['post-zones', '/en/posts/the-zone-rail/'],
+    ['list-paged', '/en/posts/page/2/'],
+    ['de-home', '/de/'],
+    ['de-list', '/de/posts/'],
     ['de-post', '/de/posts/ein-blatt-lesen/'],
     ['de-ai', '/de/posts/code-und-terminalausgabe/'],
     ['de-only', '/de/posts/nur-auf-deutsch/'],
