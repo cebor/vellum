@@ -9,6 +9,12 @@ the format they follow is in [`CONTRIBUTING.md`](CONTRIBUTING.md). Only changes 
 can see are listed — refactors, documentation, CI and build chores are not. Releases up to 0.1.2
 predate the generated format and were written by hand.
 
+## [0.2.6](https://github.com/cebor/vellum/compare/v0.2.5...v0.2.6) - 2026-08-19
+
+### Fixed
+
+- **seo:** stop JSON-LD from being escaped into a JSON string (15f496b)
+
 ## [0.2.5](https://github.com/cebor/vellum/compare/v0.2.4...v0.2.5) - 2026-08-18
 
 ### Added
