@@ -79,9 +79,10 @@ echo "    $LAST_TAG → HEAD: $COUNT commit(s)"
 
 step "Registry fixtures"
 
-# themes.gohugo.io reads these out of the tagged release; without them the theme
-# gallery shows a placeholder, which is only visible on the theme site itself
+# themes.gohugo.io reads screenshot/tn out of the tagged release; without them the
+# theme gallery shows a placeholder, which is only visible on the theme site itself
 # and so is exactly the kind of thing that goes unnoticed for a release or two.
+# All four are cut by `node .parity/shots.mjs --fixtures` against a running server.
 # Dimensions come out of the PNG's IHDR chunk, at a fixed offset in every PNG.
 #
 # --endian is GNU od's, and macOS ships BSD od, which does not have it — so this
@@ -92,14 +93,19 @@ step "Registry fixtures"
 OD=od; command -v god >/dev/null && OD=god
 png_size() { "$OD" -An -v -tu4 -j16 -N8 --endian=big "$1" 2>/dev/null | awk 'NF{print $1"x"$2; exit}'; }
 check_png() { # check_png <path> <expected>
-    [ -f "$1" ] || fail "$1 is missing; the theme gallery needs it in the tag"
+    [ -f "$1" ] || fail "$1 is missing; it has to be in the tag — see .parity/shots.mjs --fixtures"
     got="$(png_size "$1")"
     if [ -z "$got" ]; then echo "    warn: cannot read $1's dimensions here; expected $2"
-    elif [ "$got" != "$2" ]; then fail "$1 is $got, must be $2 (the registry accepts 3:2 PNG/JPG only)"
+    elif [ "$got" != "$2" ]; then fail "$1 is $got, must be $2 (regenerate with .parity/shots.mjs --fixtures)"
     else echo "    $1 $got"; fi
 }
 check_png images/screenshot.png 1500x1000
 check_png images/tn.png 900x600
+# The README's hero pair. Not a gallery fixture, but the same failure shape: the
+# README is served from the tag's raw URLs, so a missing or stale one is a broken
+# image on the page every prospective user reads first.
+check_png images/hero-light.png 1500x1000
+check_png images/hero-dark.png 1500x1000
 
 step "Changelog"
 
