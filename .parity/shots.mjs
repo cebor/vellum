@@ -1,4 +1,4 @@
-/* Batched screenshot round for a theme review.
+/* Batched screenshot round for a theme review, and the registry/README fixtures.
  *
  * Self-contained: launches a local headless Chrome itself, so nothing has to be
  * started by hand first. Prefers the system google-chrome and falls back to the
@@ -18,19 +18,18 @@
  *   hugo server -D --source exampleSite --themesDir ../..
  *   node .parity/shots.mjs              # all pages, both viewports, both schemes
  *   node .parity/shots.mjs home search  # only the named pages
+ *   node .parity/shots.mjs --fixtures   # regenerate images/ — see FIXTURES below
  *
  * Set VELLUM_SHOTS_PORT to point at a server on another port. It used to insist
  * on 1319, which no documented command ever starts, so running the documented
  * command and then this script failed on every route.
  */
 import { chromium } from 'playwright-core';
-import { mkdirSync } from 'node:fs';
+import { mkdirSync, writeFileSync } from 'node:fs';
 
 const BASE = `http://localhost:${process.env.VELLUM_SHOTS_PORT || 1313}`;
 const OUT = '.impeccable/review';
 const BUNDLED = `${process.env.HOME}/.cache/ms-playwright/chromium-1228/chrome-linux64/chrome`;
-
-mkdirSync(OUT, { recursive: true });
 
 /* Routes into exampleSite, which is the only site in this repo and therefore
  * the only thing a review can be taken against. Each entry is asserted to
@@ -70,8 +69,43 @@ const viewports = [
     ['mobile', 390, 844],
 ];
 
-const wanted = process.argv.slice(2);
+/* The four tracked PNGs under images/, which until now were cut by hand from a
+ * review round — CLAUDE.md said to regenerate them "the way shots.mjs takes its
+ * shots", which this script could not actually do: it only ever wrote 1280x900
+ * fullPage frames into a gitignored directory.
+ *
+ * Every one of them is a viewport clip, never fullPage: themes.gohugo.io accepts
+ * 3:2 only, and a fullPage frame is whatever height the page happens to be. The
+ * viewport *is* the composition here.
+ *
+ * screenshot/tn are the registry's two preview sizes and stay on the home page.
+ * The hero pair is what the README shows, and it is a post: the home page has no
+ * zone rail to letter and only the short list-page title block, so the one image
+ * an evaluator sees left out both of the things the theme exists for. On this
+ * post the top 1000px carry the full title block, rail letter A and a highlighted
+ * code block. */
+const FIXTURE_HERO = '/en/posts/code-and-terminal-output/';
+const fixtures = [
+    /* file, path, scheme, deviceScaleFactor */
+    ['images/screenshot.png', '/en/', 'light', 1],
+    /* 900x600 out of the same 1500x1000 layout: a sub-1 DPR scales the raster
+     * without moving a single breakpoint, so the thumbnail is the screenshot
+     * rather than a second, differently-composed shot of the same page. */
+    ['images/tn.png', '/en/', 'light', 0.6],
+    ['images/hero-light.png', FIXTURE_HERO, 'light', 1],
+    ['images/hero-dark.png', FIXTURE_HERO, 'dark', 1],
+];
+const FIXTURE_VIEWPORT = { width: 1500, height: 1000 };
+
+const argv = process.argv.slice(2);
+const FIXTURES = argv.includes('--fixtures');
+const wanted = argv.filter(a => a !== '--fixtures');
 const args = ['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu'];
+
+if (FIXTURES && wanted.length) {
+    console.error('--fixtures shoots its own fixed set; it takes no page names');
+    process.exit(2);
+}
 
 /* A misspelt page name would otherwise capture nothing and still report
  * success, which is the same quiet failure as a stale route. */
@@ -90,62 +124,102 @@ async function launch() {
     }
 }
 
-const browser = await launch();
-let shots = 0;
 const failures = [];
 
-for (const [vpName, width, height] of viewports) {
-    for (const scheme of ['light', 'dark']) {
+/* Shooting a 404 under the name of a real page is worse than not shooting it:
+ * the round reports a count, the file exists, and the surface looks reviewed.
+ * For the fixtures the same frame would reach a tag, because release.sh's
+ * check_png reads the IHDR and cannot tell a themed 404 from a home page. */
+async function visit(page, label, path, expect = 200) {
+    const res = await page.goto(BASE + path, { waitUntil: 'load' })
+        .catch(err => { failures.push(`${label} ${path} — ${err.message}`); return null; });
+    if (!res) return false;
+    if (res.status() !== expect) {
+        failures.push(`${label} ${path} — HTTP ${res.status()}, expected ${expect}`);
+        return false;
+    }
+    return true;
+}
+
+/* fullPage uses captureBeyondViewport, which re-renders the page without the
+ * scroll state, so `loading="lazy"` images below the fold shoot as empty boxes
+ * however far you scrolled first. Force them eager and wait for decode instead. */
+async function settle(page) {
+    await page.evaluate(() => document.fonts.ready).catch(() => { });
+    await page.evaluate(async () => {
+        await Promise.all([...document.images].map(i => {
+            i.loading = 'eager';
+            if (i.complete && i.naturalWidth) return null;
+            return new Promise(r => { i.onload = i.onerror = r; });
+        }));
+        await Promise.all([...document.images].map(i => i.decode().catch(() => { })));
+    }).catch(() => { });
+    await page.waitForTimeout(300);
+}
+
+const browser = await launch();
+let shots = 0;
+
+if (FIXTURES) {
+    /* Every frame is captured to a buffer first and written only once all four
+     * have succeeded. A half-regenerated images/ is the worst outcome here:
+     * three fresh frames and one stale one look exactly like four fresh ones. */
+    const captured = [];
+
+    for (const [file, path, scheme, dsf] of fixtures) {
         const ctx = await browser.newContext({
-            viewport: { width, height },
+            viewport: FIXTURE_VIEWPORT,
             colorScheme: scheme,
-            deviceScaleFactor: 1,
+            deviceScaleFactor: dsf,
         });
         const page = await ctx.newPage();
-
-        for (const [name, path, expect = 200] of pages) {
-            if (wanted.length && !wanted.includes(name)) continue;
-
-            const res = await page.goto(BASE + path, { waitUntil: 'load' })
-                .catch(err => { failures.push(`${name} ${path} — ${err.message}`); return null; });
-            if (!res) continue;
-
-            /* Shooting a 404 under the name of a real page is worse than not
-             * shooting it: the round reports a count, the file exists, and the
-             * surface looks reviewed. Skip the shot and fail the run. */
-            if (res.status() !== expect) {
-                failures.push(`${name} ${path} — HTTP ${res.status()}, expected ${expect}`);
-                continue;
-            }
-
-            await page.evaluate(() => document.fonts.ready).catch(() => { });
-
-            /* fullPage uses captureBeyondViewport, which re-renders the page
-             * without the scroll state, so `loading="lazy"` images below the
-             * fold shoot as empty boxes however far you scrolled first. Force
-             * them eager and wait for decode instead. */
-            await page.evaluate(async () => {
-                await Promise.all([...document.images].map(i => {
-                    i.loading = 'eager';
-                    if (i.complete && i.naturalWidth) return null;
-                    return new Promise(r => { i.onload = i.onerror = r; });
-                }));
-                await Promise.all([...document.images].map(i => i.decode().catch(() => { })));
-            }).catch(() => { });
-
-            await page.waitForTimeout(300);
-            await page.screenshot({
-                path: `${OUT}/${vpName}-${scheme}-${name}.png`,
-                fullPage: true,
-            });
-            shots++;
+        if (await visit(page, file, path)) {
+            await settle(page);
+            captured.push([file, await page.screenshot({ fullPage: false })]);
         }
         await ctx.close();
     }
-}
 
-await browser.close();
-console.log(`captured ${shots} screenshot(s) into ${OUT}/`);
+    await browser.close();
+
+    if (captured.length === fixtures.length) {
+        for (const [file, buf] of captured) {
+            writeFileSync(file, buf);
+            console.log(`    ${file}`);
+            shots++;
+        }
+    }
+    console.log(`wrote ${shots} fixture(s) into images/`);
+} else {
+    mkdirSync(OUT, { recursive: true });
+
+    for (const [vpName, width, height] of viewports) {
+        for (const scheme of ['light', 'dark']) {
+            const ctx = await browser.newContext({
+                viewport: { width, height },
+                colorScheme: scheme,
+                deviceScaleFactor: 1,
+            });
+            const page = await ctx.newPage();
+
+            for (const [name, path, expect = 200] of pages) {
+                if (wanted.length && !wanted.includes(name)) continue;
+                if (!await visit(page, name, path, expect)) continue;
+
+                await settle(page);
+                await page.screenshot({
+                    path: `${OUT}/${vpName}-${scheme}-${name}.png`,
+                    fullPage: true,
+                });
+                shots++;
+            }
+            await ctx.close();
+        }
+    }
+
+    await browser.close();
+    console.log(`captured ${shots} screenshot(s) into ${OUT}/`);
+}
 
 if (failures.length) {
     console.error(`\n${failures.length} route(s) did not resolve as expected:`);
