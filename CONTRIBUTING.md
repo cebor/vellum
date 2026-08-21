@@ -149,7 +149,7 @@ wrong before:
 | Check                              | Why it stops the release                                                    |
 | ---------------------------------- | --------------------------------------------------------------------------- |
 | clean tree, on `main`, not behind   | a tag on a checkout that is not what `origin` has                           |
-| registry fixtures present, 1500×1000 / 900×600 | the theme gallery shows a placeholder, visible only on the theme site |
+| the four `images/` PNGs present and correctly sized | the theme gallery shows a placeholder, and the README's hero goes blank |
 | Hugo extended on `PATH`             | the standard edition builds green and silently drops the WebP ladder         |
 | every commit in range parseable     | a change that never appears in the changelog                                 |
 | at least one `feat`/`fix`/`perf`/`revert`, or anything breaking | a version bump nobody can be told the reason for         |
@@ -195,6 +195,10 @@ forward with the next patch.
 ### Notes
 
 - The changelog can be previewed on its own at any time: `.release/changelog.sh 0.2.0`.
+- The `images/` PNGs are cut, not drawn: start the dev server and run
+  `node .parity/shots.mjs --fixtures`. It writes all four or none, so a run interrupted halfway
+  cannot leave three fresh frames next to one stale one — which is indistinguishable from four
+  fresh ones once the timestamps settle. Re-cut them whenever a change moves what they show.
 - `CHANGELOG.md` is generated. Editing prose in an old section is fine; new sections are the
   script's.
 - `.parity/` is tracked, so any checkout can cut a release; the builds it regenerates each run are

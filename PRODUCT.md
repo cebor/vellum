@@ -182,7 +182,8 @@ third-party requests, with fonts self-hosted and Fuse.js bundled.
   `gohugoio/hugoThemesSiteBuilder` PR #763 adds the module path `github.com/cebor/vellum` to
   `themes.txt`. Upstream paused merging new themes in May 2026 (their issue #718), so the queue is
   the constraint, not the submission. `images/screenshot.png` and `images/tn.png` are its preview
-  images and are required to exist.
+  images and are required to exist; `images/hero-light.png` and `images/hero-dark.png` are the
+  README's, and are required for the same reason one step earlier.
 - **`README.md`** — complete user documentation: params, front matter, shortcodes, icon set,
   customising, licence.
 - **`CONTRIBUTING.md`** — commit format, scopes, the breaking-change rule and the release procedure.
@@ -195,7 +196,7 @@ third-party requests, with fonts self-hosted and Fuse.js bundled.
   file.
 - **`.parity/`** — `shots.mjs` for batched desktop/mobile, light/dark screenshots against a running
   server, status-asserted so a stale route fails the run rather than saving a 404 under a real
-  page's name; `check.sh [ref]` for URL-surface diffs between a git ref and the working tree, both
+  page's name, and `--fixtures` for the four tracked PNGs under `images/`; `check.sh [ref]` for URL-surface diffs between a git ref and the working tree, both
   built on demand. **Tracked, so it is in every checkout** — a session that cannot find `check.sh`
   has found a real defect, not a machine that was never given the harness.
 - **Measured figures that must not be re-estimated:** the 92-character measure and the predecessor
