@@ -7,9 +7,14 @@ line usually mumbles.
 [![Hugo](https://img.shields.io/badge/Hugo-%E2%89%A5%200.158%20extended-ff4088?style=flat-square&logo=hugo&logoColor=white)](https://gohugo.io)
 [![Licence](https://img.shields.io/badge/licence-MIT-blue?style=flat-square)](https://github.com/cebor/vellum/blob/main/LICENSE)
 
-**[Live demo](https://pages.stkn.org/felix/vellum)** · **[Source](https://github.com/cebor/vellum)**
+<picture>
+  <source media="(prefers-color-scheme: dark)"
+          srcset="https://raw.githubusercontent.com/cebor/vellum/main/images/hero-dark.png">
+  <img alt="A Vellum post: a drawn frame, a lettered zone rail down its left edge, a ruled title block of metadata, and a syntax-highlighted code block"
+       src="https://raw.githubusercontent.com/cebor/vellum/main/images/hero-light.png">
+</picture>
 
-![Vellum](https://raw.githubusercontent.com/cebor/vellum/main/images/screenshot.png)
+**[Live demo](https://pages.stkn.org/felix/vellum)** · **[Source](https://github.com/cebor/vellum)**
 
 Built for technical writing that is mostly code. The reading column is wide — 800px, measuring
 **92 characters** at the 20px body size — because terminal output and command blocks are the
@@ -19,47 +24,91 @@ trackable.
 | | |
 |---|---|
 | **Multilingual** | Per-language content, menus, profiles, feeds and search indexes |
-| **Search** | Client-side, Fuse.js, built from the site's own JSON output |
-| **Light / dark** | Follows the OS, or a toggle; works with JavaScript disabled |
+| **[Search](#search)** | Client-side, Fuse.js, built from the site's own [JSON output](#quick-start) |
+| **[Light / dark](#behaviour)** | Follows the OS, or a toggle; works with JavaScript disabled |
 | **Responsive images** | Bundle images auto-resized to a 480/800/1600 WebP ladder |
-| **Self-hosted fonts** | Two variable faces, ~121 KB, no third-party requests |
-| **Landing page** | Profile block, buttons, latest posts |
-| **Post furniture** | Table of contents, reading time, breadcrumbs, share row, post nav, edit link |
-| **Archives & taxonomies** | Year/month archive, tag pages |
-| **SEO** | OpenGraph, Twitter cards, schema.org, RSS, canonical + hreflang |
+| **[Self-hosted fonts](#fonts)** | Two variable faces, ~121 KB, no third-party requests |
+| **[Landing page](#landing-page)** | Profile block, buttons, latest posts |
+| **[Post furniture](#display-toggles)** | Table of contents, reading time, breadcrumbs, share row, post nav, edit link |
+| **[Archives & taxonomies](#index-pages)** | Year/month archive, tag pages |
+| **[SEO](#seo-and-analytics)** | OpenGraph, Twitter cards, schema.org, RSS, canonical + hreflang |
 | **Print** | A dedicated print stylesheet, not an afterthought |
+
+Linked rows have a section of their own below.
 
 ## Contents
 
-[Requirements](#requirements) · [Quick start](#quick-start) · [Configuration](#configuration) ·
+[Quick start](#quick-start) · [Requirements](#requirements) · [Configuration](#configuration) ·
 [Content](#content) · [Icons](#icons) · [Customising](#customising) · [Development](#development) ·
 [Licence](#licence)
 
-## Requirements
-
-- **Hugo extended ≥ 0.158.** Lower versions fail at render time, not with a friendly message.
-- **Browsers:** Chrome 123+, Safari 17.5+, Firefox 120+ (CSS `light-dark()`). Older browsers get a
-  plain light palette through an `@supports` fallback rather than a broken page.
-
-The theme uses Hugo's flat layout structure — templates directly in `layouts/`, partials in
-`layouts/_partials/`, render hooks in `layouts/_markup/`, shortcodes in `layouts/_shortcodes/`. There
-is no `layouts/_default/` and no `layouts/partials/`; files placed there silently do nothing.
-
 ## Quick start
 
-### 1. Add the theme
+### From nothing to a running site
 
-As a Hugo Module — the least fuss to keep updated:
+```bash
+hugo new site myblog && cd myblog
+hugo mod init github.com/you/myblog
+```
+
+Replace the generated `hugo.toml` with this. It is the whole minimum — the theme import plus the
+three settings the theme cannot supply for itself:
 
 ```toml
+baseURL = "https://example.org/"
+title = "My Site"
+locale = "en-us"
+
+# Chroma has to emit class names instead of inline styles, or code blocks ship a
+# light palette baked into the HTML and stay light on a dark page. It is a
+# root-level key, so it has to sit above the first [table] header — put it under
+# [outputs] and TOML reads it as outputs.pygmentsUseClasses, which does nothing.
+pygmentsUseClasses = true
+
 [module]
   [[module.imports]]
     path = "github.com/cebor/vellum"
+
+# The JSON output *is* the search index. Without it, /search/ finds nothing.
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
+[markup.highlight]
+  noClasses = false
 ```
 
-Then `hugo mod get -u` whenever you want the latest. Your own site has to be a module for
-this; `hugo mod init github.com/you/your-site` if it is not one yet.
+Then:
 
+```bash
+hugo mod get github.com/cebor/vellum
+hugo new posts/hello.md
+
+# The JSON output above is the search *index*. The search *page* is a content
+# file, so it is the one piece you add by hand — `layout = "search"` renders it.
+cat > content/search.md <<'EOF'
++++
+title = "Search"
+layout = "search"
+hidemeta = true
+searchHidden = true
++++
+EOF
+
+hugo server -D
+```
+
+That is a working site on <http://localhost:1313>, with search and syntax highlighting. Everything
+below is refinement.
+
+> [!TIP]
+> A full worked example lives in
+> [`exampleSite/hugo.toml`](https://github.com/cebor/vellum/blob/main/exampleSite/hugo.toml) — two
+> languages, menus, profile, search and the root 404, all in one file. It is the fastest way to see
+> how the pieces fit together.
+
+### Other ways to add the theme
+
+The module import above keeps itself updatable — `hugo mod get -u` whenever you want the latest.
 As a submodule instead:
 
 ```bash
@@ -73,25 +122,7 @@ import above, which names the theme itself — set it in your site config:
 theme = "vellum"
 ```
 
-### 2. Wire up what the theme cannot supply for itself
-
-These three settings are **required**. Without them, search and syntax highlighting fail quietly.
-
-```toml
-[outputs]
-  # The JSON output *is* the search index. Remove it and /search/ silently
-  # stops finding anything.
-  home = ["HTML", "RSS", "JSON"]
-
-# Chroma emits class names instead of inline styles so the theme can map them
-# onto its own light/dark syntax variables.
-pygmentsUseClasses = true
-
-[markup.highlight]
-  noClasses = false
-```
-
-### 3. If you use `defaultContentLanguageInSubdir`
+### If you use `defaultContentLanguageInSubdir`
 
 Nothing then lands at the publish root for a web server to use as its error document. Add:
 
@@ -107,10 +138,15 @@ Nothing then lands at the publish root for a web server to use as its error docu
   home = ["HTML", "RSS", "JSON", "ROOT404"]
 ```
 
-> [!TIP]
-> A full worked example lives in [`exampleSite/hugo.toml`](exampleSite/hugo.toml) — two languages,
-> menus, profile, search and the root 404, all in one file. It is the fastest way to see how the
-> pieces fit together.
+## Requirements
+
+- **Hugo extended ≥ 0.158.** Lower versions fail at render time, not with a friendly message.
+- **Browsers:** Chrome 123+, Safari 17.5+, Firefox 120+ (CSS `light-dark()`). Older browsers get a
+  plain light palette through an `@supports` fallback rather than a broken page.
+
+The theme uses Hugo's flat layout structure — templates directly in `layouts/`, partials in
+`layouts/_partials/`, render hooks in `layouts/_markup/`, shortcodes in `layouts/_shortcodes/`. There
+is no `layouts/_default/` and no `layouts/partials/`; files placed there silently do nothing.
 
 ## Configuration
 
@@ -246,6 +282,13 @@ Any other multi-word Fuse option arrives lowercased and is ignored — add it to
 
 ### Favicons
 
+Every one of these is optional and emits nothing when unset — including `manifest`, because the theme
+ships no web manifest of its own. Point it at a file your site actually serves; naming one that does
+not exist is a 404 on every page load.
+
+<details>
+<summary><b><code>[params.assets]</code></b> — <code>favicon</code>, <code>favicon16x16</code>, <code>favicon32x32</code>, <code>favicon_svg</code>, <code>apple_touch_icon</code>, <code>apple_touch_icon_sizes</code>, <code>safari_pinned_tab</code>, <code>safari_pinned_tab_color</code>, <code>manifest</code></summary>
+
 ```toml
 [params.assets]
   favicon = "/favicon.ico"
@@ -258,10 +301,6 @@ Any other multi-word Fuse option arrives lowercased and is ignored — add it to
   safari_pinned_tab_color = "#8a5200"  # optional, defaults to --accent (light)
   manifest = "/site.webmanifest"
 ```
-
-Every one of these is optional and emits nothing when unset — including `manifest`, because the theme
-ships no web manifest of its own. Point it at a file your site actually serves; naming one that does
-not exist is a 404 on every page load.
 
 Paths are emitted root-relative and resolved against `baseURL` including its path, so `/favicon.ico`
 and `favicon.ico` both land inside a site published under a subpath. A fully qualified URL — an icon
@@ -285,6 +324,8 @@ and `favicon` stays the fallback. It is the only rung that can follow the active
 `@media (prefers-color-scheme: dark)` block inside the SVG itself and the tab icon flips with the
 page. Custom properties on `:root` work there — `:root` is the `<svg>` element — so the file can be
 written against the same token names as the stylesheet.
+
+</details>
 
 ## Content
 
@@ -362,6 +403,9 @@ block — where a drawing carries its stamps — and the same drawn mark in the 
 it before opening the post. Hovering or focusing the stamp opens the detail; the detail is also read
 out by a screen reader with the box closed, so nothing is hidden behind a pointer.
 
+<details>
+<summary>Writing it: <code>ai = true</code>, a level, or the full <code>[ai]</code> block — <code>level</code>, <code>note</code>, <code>model</code></summary>
+
 Three ways to write the same thing. The shortest is the point:
 
 ```toml
@@ -391,6 +435,8 @@ Name the model once for the whole site rather than in every post:
 To mark individual passages instead of the whole post, use the [`ai` shortcode](#ai). A post may do
 either, both, or neither.
 
+</details>
+
 ### Covers
 
 ```toml
@@ -408,6 +454,18 @@ feed `og:image` and the Twitter card — which is why this theme overrides Hugo'
 template rather than using it.
 
 ### Shortcodes
+
+Goldmark's `unsafe` is off, so a post never needs raw HTML. These cover what it would have been for.
+
+| Shortcode | For |
+|---|---|
+| [`collapse`](#collapse-alias-details) | A folded block — long logs, appendices |
+| [`figure`](#figure) | An image with a caption, through the responsive-image ladder |
+| [`video`](#video) | A self-hosted video with a poster |
+| [`audio`](#audio) | A self-hosted audio track |
+| [`intextimg`](#intextimg) | A small image set inline in a sentence |
+| [`ai`](#ai) | Marking an individual passage as AI-written |
+| [`rawhtml`](#rawhtml) | The deliberate escape hatch, where nothing else fits |
 
 #### `collapse` (alias `details`)
 
