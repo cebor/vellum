@@ -131,17 +131,12 @@
     }
 
     /* A printed sheet hides nothing behind a hover. The stamp gives up its
-       corner and its box; the disclosure prints as a plain run under the title
+       corner and its box; the disclosure prints as a plain run above the title
        block, where it can actually be read. */
     .ai-stamp {
         position: static;
         padding-block: var(--space-2xs);
         border-bottom: 0.5pt solid #999;
-    }
-
-    /* The value column only stood clear of a stamp that is no longer there. */
-    .title-block-wrap:has(.ai-stamp) .title-block__row:first-child .title-block__value {
-        padding-inline-end: 0;
     }
 
     .ai-stamp__mark {
