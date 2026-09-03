@@ -9,6 +9,12 @@ the format they follow is in [`CONTRIBUTING.md`](CONTRIBUTING.md). Only changes 
 can see are listed — refactors, documentation, CI and build chores are not. Releases up to 0.1.2
 predate the generated format and were written by hand.
 
+## [0.2.8](https://github.com/cebor/vellum/compare/v0.2.7...v0.2.8) - 2026-09-03
+
+### Added
+
+- **ai:** draw the stamp in the corner of the sheet's head (fc61347)
+
 ## [0.2.7](https://github.com/cebor/vellum/compare/v0.2.6...v0.2.7) - 2026-09-03
 
 ### Added
