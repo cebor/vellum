@@ -203,6 +203,11 @@ forward with the next patch.
   `node .parity/shots.mjs --fixtures`. It writes all four or none, so a run interrupted halfway
   cannot leave three fresh frames next to one stale one — which is indistinguishable from four
   fresh ones once the timestamps settle. Re-cut them whenever a change moves what they show.
+  `screenshot.png` and `tn.png` are one frame carrying both schemes, cut down the centre line:
+  the gallery shows a single image per theme, so a light-only preview never said the dark scheme
+  existed. The README hero stays a real light/dark pair — its `<picture>` already serves the right
+  one at full width. The composite is assembled in the browser the script already drives, so the
+  harness still needs nothing but `playwright-core`.
 - `CHANGELOG.md` is generated. Editing prose in an old section is fine; new sections are the
   script's.
 - `.parity/` is tracked, so any checkout can cut a release; the builds it regenerates each run are

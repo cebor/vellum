@@ -77,20 +77,38 @@ const viewports = [
  * 3:2 only, and a fullPage frame is whatever height the page happens to be. The
  * viewport *is* the composition here.
  *
- * screenshot/tn are the registry's two preview sizes and stay on the home page.
- * The hero pair is what the README shows, and it is a post: the home page has no
- * zone rail to letter and only the short list-page title block, so the one image
- * an evaluator sees left out both of the things the theme exists for. On this
- * post the top 1000px carry the full title block, rail letter A and a highlighted
- * code block. */
+ * All four are this one post. It is what the README hero has always shown: the
+ * home page has no zone rail to letter and only the short list-page title block,
+ * so the one image an evaluator sees left out both of the things the theme exists
+ * for. On this post the top 1000px carry the full title block, rail letter A and
+ * a highlighted code block.
+ *
+ * The registry pair is a 'split': one frame carrying both schemes, light left of
+ * the centre line and dark right of it. The gallery shows exactly one image per
+ * theme, so a light-only preview was the only picture of Vellum an evaluator saw
+ * and it did not say the dark scheme existed. The cut is vertical because both
+ * halves are the same page at the same viewport — the header rule, the frame's
+ * top edge and every title-block row rule run unbroken through the seam, and only
+ * the paper and the ink change. A diagonal would slice each of those at an angle,
+ * which is the one thing a drawing must not do.
+ *
+ * The split is also why the registry pair moved off the home page, which it had
+ * used until then. What a split needs is content either side of the centre line,
+ * and the home page has none to give: its profile, its buttons and its post
+ * titles all sit in the left half, so the dark half came out an all but empty
+ * field that reads as a broken image at thumbnail size. This post's title block,
+ * body text and code block all run past the centre.
+ *
+ * The README hero stays a genuine pair rather than a split: its <picture> already
+ * hands each reader the right variant at full width. */
 const FIXTURE_HERO = '/en/posts/code-and-terminal-output/';
 const fixtures = [
     /* file, path, scheme, deviceScaleFactor */
-    ['images/screenshot.png', '/en/', 'light', 1],
+    ['images/screenshot.png', FIXTURE_HERO, 'split', 1],
     /* 900x600 out of the same 1500x1000 layout: a sub-1 DPR scales the raster
      * without moving a single breakpoint, so the thumbnail is the screenshot
      * rather than a second, differently-composed shot of the same page. */
-    ['images/tn.png', '/en/', 'light', 0.6],
+    ['images/tn.png', FIXTURE_HERO, 'split', 0.6],
     ['images/hero-light.png', FIXTURE_HERO, 'light', 1],
     ['images/hero-dark.png', FIXTURE_HERO, 'dark', 1],
 ];
@@ -165,18 +183,83 @@ if (FIXTURES) {
      * three fresh frames and one stale one look exactly like four fresh ones. */
     const captured = [];
 
-    for (const [file, path, scheme, dsf] of fixtures) {
+    /* One route in one scheme, at the fixture viewport. Returns the PNG buffer,
+     * or null once visit() has already recorded why not. */
+    const shoot = async (label, path, scheme, dsf) => {
         const ctx = await browser.newContext({
             viewport: FIXTURE_VIEWPORT,
             colorScheme: scheme,
             deviceScaleFactor: dsf,
         });
         const page = await ctx.newPage();
-        if (await visit(page, file, path)) {
+        let buf = null;
+        if (await visit(page, label, path)) {
             await settle(page);
-            captured.push([file, await page.screenshot({ fullPage: false })]);
+            buf = await page.screenshot({ fullPage: false });
         }
         await ctx.close();
+        return buf;
+    };
+
+    /* Every frame is shot at most once. screenshot.png and tn.png are the same
+     * composition at two rasters and must share one pair of source frames — shot
+     * separately, the two files could disagree over anything the page decides per
+     * load. The hero pair is that same pair, so it comes out of the same cache:
+     * the whole round is two page loads, and the composite's halves are provably
+     * the heroes rather than merely another shot of them. */
+    const cache = new Map();
+    const capture = (label, path, scheme, dsf) => {
+        const key = `${path}|${scheme}|${dsf}`;
+        if (!cache.has(key)) cache.set(key, shoot(label, path, scheme, dsf));
+        return cache.get(key);
+    };
+
+    /* Both sources always at DPR 1: the composite carries the fixture's own
+     * scale, and a source shot at 0.6 would have nothing left to scale down. */
+    const frames = (label, path) => Promise.all([
+        capture(label, path, 'light', 1),
+        capture(label, path, 'dark', 1),
+    ]);
+
+    /* Composited by the browser that is already open, rather than by an image
+     * library: the harness vendors playwright-core and nothing else, and anything
+     * vendored here rides into every consuming site's module cache with the
+     * theme. The two frames go in as data URIs and the dark one is clipped to the
+     * right half; settle() forces the decode before the shot. */
+    const composite = async (light, dark, dsf) => {
+        const ctx = await browser.newContext({
+            viewport: FIXTURE_VIEWPORT,
+            deviceScaleFactor: dsf,
+        });
+        const page = await ctx.newPage();
+        const { width, height } = FIXTURE_VIEWPORT;
+        await page.setContent(`<!doctype html>
+<style>
+  html, body { margin: 0; padding: 0; }
+  .sheet { position: relative; overflow: hidden;
+           width: ${width}px; height: ${height}px; }
+  .sheet img { position: absolute; inset: 0; display: block;
+               width: ${width}px; height: ${height}px; }
+  .sheet .dark { clip-path: inset(0 0 0 50%); }
+</style>
+<div class="sheet">
+  <img src="data:image/png;base64,${light.toString('base64')}">
+  <img class="dark" src="data:image/png;base64,${dark.toString('base64')}">
+</div>`, { waitUntil: 'load' });
+        await settle(page);
+        const buf = await page.screenshot({ fullPage: false });
+        await ctx.close();
+        return buf;
+    };
+
+    for (const [file, path, scheme, dsf] of fixtures) {
+        if (scheme === 'split') {
+            const [light, dark] = await frames(file, path);
+            if (light && dark) captured.push([file, await composite(light, dark, dsf)]);
+            continue;
+        }
+        const buf = await capture(file, path, scheme, dsf);
+        if (buf) captured.push([file, buf]);
     }
 
     await browser.close();
