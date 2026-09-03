@@ -32,43 +32,35 @@ node_modules/
 .parity/cand/
 
 ### Design harness ###
-# The impeccable skill is vendored third-party tooling with its own upstream, so
-# unlike .parity/ it is not lost by staying out: `npx impeccable install` puts it
-# back and `npx impeccable update` moves it forward. A Hugo module download takes
-# the whole repo, which would otherwise put 3.4 MB of it in every consuming
-# site's module cache. Its hook wiring is per-machine.
-# What this project *authored* — the critique rounds below — is tracked.
+# The impeccable skill and its subagent definitions are vendored third-party
+# tooling with their own upstream, so unlike .parity/ they are not lost by
+# staying out: `npx impeccable install` puts them back and `npx impeccable
+# update` moves them forward. A Hugo module download takes the whole repo, which
+# would otherwise put 4.8 MB of skill in every consuming site's module cache.
+# Its hook wiring is per-machine.
+#
+# Named individually rather than as .claude/skills/ and .claude/agents/, on the
+# same reasoning as the deny list above: a skill or agent this project actually
+# authored then shows up loudly in git status instead of being ignored in
+# silence. What this project authored — the critique rounds — is tracked.
 .claude/skills/impeccable/
+.claude/agents/impeccable-*.md
 .claude/settings.local.json
-
-# .parity/shots.mjs writes its screenshot rounds here, not into .parity/, and the
-# skill-managed block below covers .impeccable/*.png and live/*.png but not this
-# directory. It sits outside those markers because the skill rewrites what is
-# between them.
-.impeccable/review/
-
-# The question hook drops one hash-named log per prompt here — runtime state, and
-# empty in the ordinary case. Outside the markers for the same reason as above.
-.impeccable/questions/
 
 # impeccable-ignore-start
 # Ephemeral output, runtime state, and per-dev overrides.
 # Unanchored: .impeccable may sit at the repo root or under a nested
 # workspace (apps/web/.impeccable/...); anchored patterns would miss it.
 # Shared artifacts stay tracked: config.json, live/config.json,
-# design.json, critique/*.md.
+# design.json, surfaces/*.md, critique/*.md.
 .impeccable/config.local.json
 .impeccable/hook.cache.json
 .impeccable/hook.pending.json
 .impeccable/*.png
+.impeccable/review/
+.impeccable/questions/
 .impeccable/live/server.json
-.impeccable/live/roots.json
-.impeccable/live/app-root.json
-.impeccable/live/inject-journal.json
 .impeccable/live/sessions/
-.impeccable/live/artifacts/
-.impeccable/live/accept-receipts/
-.impeccable/live/locks/
 .impeccable/live/previews/
 .impeccable/live/annotations/
 .impeccable/live/cache/
