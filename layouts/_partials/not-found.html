@@ -32,16 +32,12 @@
     })();
 </script>
 
-{{- $sections := site.Params.mainSections | default (slice "posts") }}
-{{- with first 3 (where site.RegularPages "Type" "in" $sections) }}
-<section class="latest">
-    <div class="latest__head">
-        <h2 class="latest__title">{{ i18n "latest_posts" }}</h2>
-    </div>
-    <ul class="post-list post-list--latest">
-        {{- range . }}
-        <li>{{ partial "post-card.html" (dict "page" . "level" 3) }}</li>
-        {{- end }}
-    </ul>
-</section>
-{{- end }}
+{{- /* The same block the home page ends on, from the same partial. It used to
+       be a second copy of the query here, and the two had already drifted: this
+       one never applied the hiddenInHomeList filter, so a post a site hides from
+       the home page's list still surfaced on its 404. Calling the partial also
+       brings the "all posts" link with it, which this page wants for the reason
+       it already carries two buttons -- a dead end is not a state to leave a
+       reader in. Root-relative like everything else here: RelPermalink is, and
+       this body is also rendered into /404.html and served from any path. */}}
+{{- partial "latest-posts.html" (dict "page" . "count" 3) }}

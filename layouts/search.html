@@ -20,7 +20,7 @@
     <label class="visually-hidden" for="search-input">{{ .Title }}</label>
     <input class="search-input" id="search-input" type="search" autocomplete="off" autocapitalize="off"
         spellcheck="false" placeholder="{{ i18n "search_loading" }}"
-        data-index="{{ "index.json" | relLangURL }}" data-placeholder="{{ .Params.placeholder | default (i18n "search_placeholder") }}"
+        data-index="{{ with site.Home.OutputFormats.Get "json" }}{{ .RelPermalink }}{{ else }}{{ "index.json" | relLangURL }}{{ end }}" data-placeholder="{{ .Params.placeholder | default (i18n "search_placeholder") }}"
         data-empty="{{ i18n "search_no_results" }}" data-error="{{ i18n "search_error" }}"
         data-count-one="{{ i18n "search_results_one" }}" data-count-other="{{ i18n "search_results_other" }}" disabled>
 </form>
@@ -35,9 +35,17 @@
 
        The 404 answers the identical situation with two buttons rather than one
        grey line, and this is that treatment: a dead end is not a state to leave
-       a reader in. */}}
+       a reader in.
+
+       The section comes from mainSections like everywhere else in the theme --
+       latest-posts.html, not-found.html, sheet-stamp.html and archives.html all
+       read it. This file used to hardcode "/posts", so on a site that names its
+       section anything else both exits silently rendered nothing: `with` treats
+       the missing page as empty, and the dead end stayed a dead end. `tags` is
+       hardcoded on purpose -- the theme documents that one taxonomy by name. */}}
+{{- $section := site.GetPage (index (site.Params.mainSections | default (slice "posts")) 0) }}
 <div class="search-exits" id="search-exits" hidden>
-    {{- with site.GetPage "/posts" }}
+    {{- with $section }}
     <a class="button" href="{{ .RelPermalink }}"><span>{{ .Title }}</span>{{ partialCached "icon.html" "arrow-right" "arrow-right" }}</a>
     {{- end }}
     {{- with site.GetPage "/tags" }}
@@ -50,7 +58,7 @@
 <noscript>
     <p class="empty-note">{{ i18n "search_nojs" }}</p>
     <ul class="search-fallback">
-        {{- with site.GetPage "/posts" }}<li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>{{ end }}
+        {{- with $section }}<li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>{{ end }}
         {{- with site.GetPage "/tags" }}<li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>{{ end }}
     </ul>
 </noscript>
