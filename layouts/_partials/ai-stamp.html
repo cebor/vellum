@@ -1,0 +1,33 @@
+{{- /* The AI stamp: the disclosure a sheet carries about how it was drawn.
+
+       It is set beside the title rather than inside the title block, because
+       the note qualifies the whole sheet and a mark inside the block reads as
+       one more of the block's fields. It is therefore emitted here, from the
+       head, and not from title-block.html — a stamp is not a row.
+
+       It still follows `hidemeta`: that param means "do not state this sheet's
+       metadata", and how the sheet was drawn is metadata.
+
+       The detail opens on hover and on focus, so a pointer, a keyboard and a
+       tap all reach it. It is closed with `display`, never `opacity`: the
+       button points at it with aria-describedby, and a description is read out
+       of hidden content, so a screen reader hears the whole disclosure with
+       the box shut.
+
+       Usage: {{ partial "ai-stamp.html" . }} — renders nothing when the page
+       discloses nothing, so the caller needs no guard of its own. */ -}}
+{{- $ai := partialCached "ai.html" . .RelPermalink }}
+{{- if and $ai.on (not (.Param "hidemeta")) }}
+<div class="ai-stamp">
+    <button type="button" class="ai-stamp__mark" aria-describedby="ai-stamp-note">
+        {{- partialCached "icon.html" "ai" "ai" }}
+        <span class="visually-hidden">{{ i18n "ai_stamp" }}: {{ $ai.label }}</span>
+    </button>
+    <div class="ai-stamp__note" id="ai-stamp-note" role="tooltip">
+        <p class="ai-stamp__label label">{{ i18n "ai_stamp" }}</p>
+        <p class="ai-stamp__level">{{ $ai.label }}</p>
+        {{- with $ai.note }}<p class="ai-stamp__detail">{{ . }}</p>{{ end }}
+        {{- with $ai.model }}<p class="ai-stamp__model">{{ i18n "ai_model" }}: {{ . }}</p>{{ end }}
+    </div>
+</div>
+{{- end }}

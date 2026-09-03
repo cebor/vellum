@@ -107,7 +107,7 @@ a landing page with profile block and buttons; post furniture (table of contents
 breadcrumbs, share row, post nav, edit link); year/month archives and tag pages; OpenGraph, Twitter
 cards, schema.org, RSS, canonical and hreflang; a dedicated print stylesheet; five Markdown alert
 types via a render hook; AI-use disclosure at two grains — an `ai` front matter key that stamps the
-whole post's title block, and an `ai` shortcode that marks an individual passage and resolves it to a
+whole sheet beside its title, and an `ai` shortcode that marks an individual passage and resolves it to a
 revision note at the foot of the sheet, each usable without the other; the `collapse` (alias
 `details`), `figure`, `video`, `audio`, `intextimg`, `ai` and `rawhtml` shortcodes.
 

@@ -6,7 +6,15 @@
         {{- partial "breadcrumbs.html" . }}
         {{- end }}
 
-        <h1 class="post-title">{{ .Title }}</h1>
+        {{- /* The title and the sheet's AI stamp share one row: the stamp
+               qualifies the whole sheet, so it is set against the sheet's
+               name rather than filed inside the title block. The partial
+               renders nothing when there is nothing to disclose, and the row
+               then holds the title alone. */}}
+        <div class="post-titlerow">
+            <h1 class="post-title">{{ .Title }}</h1>
+            {{- partial "ai-stamp.html" . }}
+        </div>
 
         {{- with .Description }}
         <p class="post-standfirst">{{ . | markdownify }}</p>

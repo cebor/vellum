@@ -201,13 +201,14 @@ opposite spacing — the whole gap above it and none below — and proximity rea
 first card. Only its paragraphs are toned down, so a table or a code block in an `_index.md` keeps
 its ordinary treatment.
 
-**AI provenance is drawing furniture, not a badge.** A post that discloses AI use carries a stamp in
-the **corner of the sheet's head** — hung on the path line, beside the title. It is emitted with the
-title block, because that is the block it qualifies, but it is not drawn *inside* it: a mark in the
-block's own corner reads as one more field of the block, and this note qualifies the whole sheet. In
-the corner of the head it reads as the sheet's stamp, which is what a drawing puts there. It stays
-the `<dl>`'s sibling in the markup and is positioned against `.post-header`; the head with no path
-line above its title holds the title's measure clear of the corner instead. The detail opens on hover *and* on
+**AI provenance is drawing furniture, not a badge.** A post that discloses AI use carries a stamp
+**beside the title**, at the end of the title row and dropped onto the title's cap band, so it reads
+as struck on the sheet's name rather than floated above it. It is not drawn inside the title block:
+a mark in the block's own corner reads as one more of the block's fields, and this note qualifies the
+whole sheet. Set against the sheet's name it says so. It is therefore emitted from the head by its
+own `_partials/ai-stamp.html` rather than by the title block — a stamp is not a row — which also
+retired the wrapper div the block only ever carried in order to hold a button outside its `<dl>`. It
+still follows `hidemeta`, because how a sheet was drawn is metadata. The detail opens on hover *and* on
 focus, so a pointer, a keyboard and a tap all reach it; it is closed with `display`, never `opacity`,
 because `aria-describedby` reaches into hidden content and a screen reader therefore hears the whole
 disclosure with the box shut.
@@ -220,14 +221,14 @@ The numbering is derived from each shortcode's ordinal rather than kept as a run
 second render of the same content for another output format cannot number a passage twice.
 
 **The AI mark is one glyph at two grains, and the number is a reference in all three registers.** The
-nib above a plotted line stamps the title block for a whole sheet and flags the change bar for a
+nib above a plotted line stamps the sheet beside its title and flags the change bar for a
 single passage, so what says "AI" on this sheet is one mark seen twice rather than two marks meaning
 the same thing. It is a drawing instrument and a machine-laid line, deliberately not a sparkle: that
 mark says "magic" where this one has to say "tooling".
 
 | Where | Mark |
 |---|---|
-| Corner of the sheet's head | The nib glyph as a stamp, opening the disclosure — the whole sheet's grain |
+| Beside the title | The nib glyph as a stamp, set at the end of the title row and opening the disclosure — the whole sheet's grain |
 | In the index | The same nib glyph with the field name lettered beside it. It is the only mark in the meta row that names nothing on its own — a date and an extent read as themselves — and it opens nothing, so the word is set rather than left to a tooltip a keyboard and a touch would never reach |
 | Beside the change bar | The same nib glyph, set clear of the line with the number after it, and pulled down onto the passage it flags. Astride the bar it read as a mark applied to the rule, and the rule cut the nib in half going past; standing beside it, the bar stays one unbroken dashed line and the flag is what annotates it |
 | In running prose | The dashed line under the words and the number raised after them. There is no bar for a flag to sit on, and a glyph mid-sentence would stop the line dead |

@@ -1,30 +1,24 @@
 /* The post sheet: title block, prose rhythm, code, and the sheet's closing
    furniture. */
 
-/* The head is the AI stamp's positioning context: the stamp is drawn in the
-   corner of the sheet's head, not of the title block, so it hangs against this
-   box — see the stamp's own note below. */
 .post-header {
-    position: relative;
     margin-bottom: var(--space-2xl);
+}
+
+/* The sheet's name and the mark that qualifies it, on one row. The title takes
+   what it needs and wraps; the stamp holds its size at the end of the row. The
+   row is nothing but this pairing, so with no stamp to place it leaves the
+   title exactly where a bare <h1> would have been. */
+.post-titlerow {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-lg);
 }
 
 .post-title {
     font-size: var(--step-4);
-}
-
-/* The stamp shares the path line, which is the head's first row, so the path
-   ends short of the corner rather than running under the mark — the crumbs
-   wrap, and on a narrow sheet a long one reaches it. A sheet with no path line
-   has nothing up there for the stamp to share, and the title holds its own
-   measure clear instead. Both are conditional on the stamp: with no mark in
-   the corner there is nothing to stand clear of. */
-.post-header:has(.ai-stamp) .breadcrumbs {
-    padding-inline-end: var(--space-2xl);
-}
-
-.post-header:has(.ai-stamp):not(:has(.breadcrumbs)) .post-title {
-    padding-inline-end: var(--space-2xl);
+    min-width: 0;
 }
 
 .post-standfirst {
@@ -41,15 +35,8 @@
    label, value — with a hairline between every row, framed top and bottom by
    the sheet's heavier rule. */
 
-/* The wrapper carries the offset; the <dl> itself carries only the drawn
-   block. It also holds the AI stamp, which belongs outside the list but is
-   drawn in the head's corner rather than this one — see
-   _partials/title-block.html. */
-.title-block-wrap {
-    margin-top: var(--space-lg);
-}
-
 .title-block {
+    margin-top: var(--space-lg);
     border-block: var(--line-frame) solid var(--rule-frame);
     display: grid;
     font-size: var(--step--1);
@@ -91,24 +78,24 @@
 
 /* --- the AI stamp ---------------------------------------------------------
 
-   A drawing carries its stamps in a corner, and a note on how the sheet was
-   drawn qualifies the whole sheet rather than adding one more field to the
-   title block. It is therefore hung in the corner of the head, on the path
-   line, where it sits beside the title rather than inside the block it would
-   otherwise have read as a field of. It stays the <dl>'s sibling in the markup
-   — a button is not markup a definition list survives — and is positioned
-   against .post-header. Closed, it is a bordered square holding the mark;
-   opened — on hover and on focus, so a pointer, a keyboard and a tap all reach
-   it — it draws the note beneath itself.
+   A note on how the sheet was drawn qualifies the whole sheet rather than
+   adding one more field to the title block, so it is set against the sheet's
+   name: at the end of the title row, dropped onto the title's cap band so it
+   reads as struck on the same line rather than floated above it. Closed, it is
+   a bordered square holding the mark; opened — on hover and on focus, so a
+   pointer, a keyboard and a tap all reach it — it draws the note beneath
+   itself, opening inward from the end of the row.
 
    The note is closed with `display`, never with `opacity`. The button points at
    it with aria-describedby, and a description is read out of hidden content, so
    a screen reader hears the whole disclosure with the box shut. */
 
 .ai-stamp {
-    position: absolute;
-    inset-block-start: 0;
-    inset-inline-end: 0;
+    position: relative;
+    flex: none;
+    /* The drop onto the title's cap band at --step-4 over --line-height-tight.
+       Component geometry: it belongs to this pairing and to nothing else. */
+    margin-block-start: 0.75rem;
 }
 
 .ai-stamp__mark {

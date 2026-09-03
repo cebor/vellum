@@ -66,36 +66,17 @@
 {{- $rows = $rows | append (dict "label" (i18n "tb_also_in") "value" (delimit $links ", ")) }}
 {{- end }}
 
-{{- $ai := partialCached "ai.html" . .RelPermalink }}
+{{- /* Only rows decide whether there is a block, and the draft flag is one of
+       them — it is drawn inline because it carries a class the others do not.
 
-{{- if or $rows $ai.on }}
-{{- /* The wrapper exists so the stamp can sit *outside* the <dl>. A <dl> may
-       contain only dt, dd and a div grouping them — a div holding a button is
-       not markup the list semantics survive, and the stamp is a qualification
-       of the whole sheet rather than one of the block's fields. Its
-       positioning context is .post-header, not this wrapper. */}}
-<div class="title-block-wrap">
-    {{- if $ai.on }}
-    {{- /* The AI stamp sits in the corner of the sheet's head, beside the
-           title, because that is where a drawing carries its stamps and
-           because the note qualifies the sheet rather than the block it is
-           emitted with. The detail opens on hover and on focus;
-           it is referenced by aria-describedby, which reaches into hidden
-           content, so a screen reader hears it without the box ever being
-           shown. */}}
-    <div class="ai-stamp">
-        <button type="button" class="ai-stamp__mark" aria-describedby="ai-stamp-note">
-            {{- partialCached "icon.html" "ai" "ai" }}
-            <span class="visually-hidden">{{ i18n "ai_stamp" }}: {{ $ai.label }}</span>
-        </button>
-        <div class="ai-stamp__note" id="ai-stamp-note" role="tooltip">
-            <p class="ai-stamp__label label">{{ i18n "ai_stamp" }}</p>
-            <p class="ai-stamp__level">{{ $ai.label }}</p>
-            {{- with $ai.note }}<p class="ai-stamp__detail">{{ . }}</p>{{ end }}
-            {{- with $ai.model }}<p class="ai-stamp__model">{{ i18n "ai_model" }}: {{ . }}</p>{{ end }}
-        </div>
-    </div>
-    {{- end }}
+       The AI stamp used to be emitted here, inside a wrapper that existed
+       solely to hold it outside the <dl>: a <dl> may contain only dt, dd and a
+       div grouping them, and a div holding a button is not markup the list
+       semantics survive. It is now set beside the title by
+       _partials/ai-stamp.html, so the wrapper and its condition are both gone.
+       A stamp is not a row, and a sheet that discloses AI use while recording
+       nothing else has no block to draw. */}}
+{{- if or $rows .Draft }}
 <dl class="title-block">
     {{- range $rows }}
     <div class="title-block__row">
@@ -110,5 +91,4 @@
     </div>
     {{- end }}
 </dl>
-</div>
 {{- end }}

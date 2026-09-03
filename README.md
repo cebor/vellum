@@ -405,9 +405,11 @@ Nine posts across two languages, written to exercise the theme rather than to fi
 
 ### AI disclosure
 
-States that a post was written with AI assistance. It puts a small stamp in the corner of the title
-block — where a drawing carries its stamps — and the same drawn mark in the index, so a reader sees
-it before opening the post. Hovering or focusing the stamp opens the detail; the detail is also read
+States that a post was written with AI assistance. It puts a small stamp beside the post's title —
+the note qualifies the whole sheet, so it is struck on the sheet's name rather than filed as one more
+row of the title block — and the same drawn mark in the index, so a reader sees
+it before opening the post. It follows `hidemeta`: a post that states no metadata states no
+disclosure either. Hovering or focusing the stamp opens the detail; the detail is also read
 out by a screen reader with the box closed, so nothing is hidden behind a pointer.
 
 <details>
@@ -556,7 +558,7 @@ than the column.
 
 Marks a passage as written with AI assistance, using the notation a drawing already has for an
 altered region: a dashed change bar down the passage's edge, the sheet's AI mark flagged on the bar —
-the same nib the title block stamps in its corner — and a number beside it resolving to a row in the
+the same nib the sheet stamps beside its title — and a number beside it resolving to a row in the
 **revision note** at the foot of the sheet. Every number links to its own row.
 
 Inside a sentence there is no bar for a flag to sit on, so `display="inline"` sets the dashed line

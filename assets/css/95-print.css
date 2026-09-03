@@ -130,11 +130,17 @@
         font-weight: 700;
     }
 
-    /* A printed sheet hides nothing behind a hover. The stamp gives up its
-       corner and its box; the disclosure prints as a plain run above the title
-       block, where it can actually be read. */
+    /* A printed sheet hides nothing behind a hover, so the disclosure prints
+       open. As a run of text it is no longer a thing to set beside the title,
+       so the row breaks and it lands under it — above the title block, where
+       it can actually be read. */
+    .post-titlerow {
+        display: block;
+    }
+
     .ai-stamp {
         position: static;
+        margin-block-start: var(--space-sm);
         padding-block: var(--space-2xs);
         border-bottom: 0.5pt solid #999;
     }
