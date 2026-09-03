@@ -127,9 +127,9 @@
        about 8.7px per character in running English, so the 800px column sets
        roughly 92 characters. That is deliberately past the classic 65–75 ideal
        — the trade the wider sheet was chosen for, so command blocks and
-       terminal output stop wrapping — and about ten characters longer than the
-       predecessor theme's line. The generous --line-height below is what keeps
-       a line that long trackable.
+       terminal output stop wrapping — and about ten characters longer than a
+       conventional column at the same body size. The generous --line-height
+       below is what keeps a line that long trackable.
 
        Recount with a real rendered line before changing either number; an
        estimate of characters-per-pixel is reliably wrong. */

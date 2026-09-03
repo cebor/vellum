@@ -8,10 +8,10 @@
 # theme. That is binding commitment #1 in PRODUCT.md, and this is its check.
 #
 # Both sides are built on demand from git, so there is nothing frozen to go
-# stale. This replaces the old base-papermod / base-enigma fixtures: those were
-# builds of the pre-cutover site, could not be rebuilt once their themes were
-# removed, and had drifted into a permanently-red list of accepted deltas that
-# no new regression could have been spotted in.
+# stale. This replaces an earlier pair of frozen fixture builds, which could not
+# be regenerated once the themes that produced them were gone and had drifted
+# into a permanently-red list of accepted deltas — a state in which no new
+# regression could have been spotted. Do not reintroduce a checked-in baseline.
 #
 # Usage, from anywhere:
 #   .parity/check.sh              # working tree vs HEAD

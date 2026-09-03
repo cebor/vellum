@@ -121,8 +121,9 @@ code block never pulls a second mono file. Mono is never used as a costume for "
 tagline and the search field are set in Archivo.
 
 **The measure is 92 characters** — `--step-0` at 20px across an 800px column. That is past the classic
-65–75 advice on purpose: this blog's substance is command blocks and terminal output that should not
-wrap, and the predecessor theme's line was 83. Both figures were measured from a rendered line.
+65–75 advice on purpose: the reading scene here is command blocks and terminal output that should not
+wrap, where a conventional column of the same body size measures 83. Both figures were counted from a
+rendered line, not estimated.
 `--line-height: 1.75` is what keeps a line that long trackable. Below 40rem `--step-0` steps back to
 18px, because on a phone the column is the viewport and 20px would cut the line to about 40
 characters.

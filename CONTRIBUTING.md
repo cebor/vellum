@@ -19,9 +19,13 @@ Before you commit:
 
 - **A param that isn't in `README.md` does nothing.** Add it there in the same commit that adds it to
   a template.
-- **Changing output paths deletes live pages.** Sites deploy with `rsync --delete`, so a renamed
-  output format, a dropped template or a moved taxonomy path is a 404 for every site running the
-  theme. Run `.parity/check.sh [ref]` and quote the result in the commit body.
+- **Dropping a path deletes a live page.** Static hosts are commonly deployed with `rsync --delete`,
+  so a path this build stops emitting is removed from every site that upgrades. The one you are most
+  likely to drop by accident is not a page: Hugo publishes a resource only where a template evaluates
+  its `RelPermalink`, so tidying up a loop like the font walk in `_partials/head-assets.html` stops
+  publishing files that only CSS references — and `hugo server`, reading from the source directory,
+  keeps serving them, so nothing looks wrong until production. Run `.parity/check.sh [ref]` and quote
+  the result in the commit body.
 - `assets/css/` is concatenated in filename order, so the numeric prefix *is* the cascade position.
   Colors, sizes, spacings and durations belong in `00-tokens.css` and nowhere else.
 

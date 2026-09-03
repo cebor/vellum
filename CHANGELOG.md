@@ -1,8 +1,8 @@
 # Changelog
 
 What changed in each release, and what an upgrade asks of you. Anything under **Breaking** changes
-the built URL surface, a param or a front matter key — read those before upgrading, since sites
-deploying with `rsync --delete` lose the paths a build stops emitting.
+the built URL surface, a param or a front matter key — read those before upgrading, since a static
+host deployed with `rsync --delete` loses the paths a build stops emitting.
 
 Entries are generated from the commit history by [`.release/changelog.sh`](.release/changelog.sh);
 the format they follow is in [`CONTRIBUTING.md`](CONTRIBUTING.md). Only changes a user of the theme

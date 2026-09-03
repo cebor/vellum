@@ -35,9 +35,8 @@ const BUNDLED = `${process.env.HOME}/.cache/ms-playwright/chromium-1228/chrome-l
  * the only thing a review can be taken against. Each entry is asserted to
  * return its expected status before it is shot.
  *
- * That assertion is not decoration. This list was inherited from the site the
- * theme was extracted from and kept pointing at four of that site's posts, so
- * `post-code`, `post-table`, `post-images` and `de-post` had been quietly
+ * That assertion is not decoration. An earlier version of this list had gone
+ * stale, so `post-code`, `post-table`, `post-images` and `de-post` were quietly
  * shooting the 404 page under those names — the three surfaces the theme
  * exists to get right went unreviewed for as long as nobody opened the PNGs.
  * A route that stops resolving now fails the run instead. */

@@ -3,9 +3,9 @@
        flourish — but it stays out of the tab order and out of the accessible
        name of the heading itself.
 
-       A render hook is the right layer for this: PaperMod post-processes the
-       rendered .Content with a regex instead, which is both slower and blind to
-       whether the heading came from Markdown or raw HTML. */ -}}
+       A render hook is the right layer for this. The common alternative — post-
+       processing the rendered .Content with a regex — is both slower and blind
+       to whether the heading came from Markdown or raw HTML. */ -}}
 <h{{ .Level }} id="{{ .Anchor }}" class="heading">
     {{- .Text | safeHTML -}}
     {{- if ge .Level 2 }}

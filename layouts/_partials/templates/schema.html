@@ -1,10 +1,10 @@
-{{- /* JSON-LD. Deliberately omits articleBody: PaperMod emits the entire post
-       text a second time inside the JSON, which doubles the weight of exactly
-       the pages a search arrival lands on, and Google does not need it.
+{{- /* JSON-LD. Deliberately omits articleBody: emitting the entire post text a
+       second time inside the JSON doubles the weight of exactly the pages a
+       search arrival lands on, and Google does not need it.
 
-       Tags are coerced through printf "%v" because a numeric-looking tag can
-       reach templates as a number — see the quoted "403" tag in the German
-       Vodafone post — and jsonify would then emit it unquoted.
+       Tags are coerced through printf "%v" because a numeric-looking tag — an
+       HTTP status used as a tag, say — reaches templates as a number, and
+       jsonify would then emit it unquoted.
 
        safeJS on every block is load-bearing, not decoration. Go's html/template
        counts application/ld+json as a script type, and jsonify hands back

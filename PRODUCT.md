@@ -8,15 +8,15 @@ web
 
 ## Users
 
-**Primary: the author of a technical blog that is mostly code.** They write posts whose substance is
+**Primary: a Hugo author whose posts are mostly code.** They write posts whose substance is
 command blocks, terminal output, config excerpts and diffs — material that breaks when it wraps and
 that no amount of prose styling helps. They are running Hugo, comfortable editing a TOML config and a
 CSS token file, and they publish to a static host.
 
-Vellum is developed for **its author's own blog first**. Other Hugo authors are genuinely welcome —
-the theme is MIT-licensed, documented in full, and published with a working demo — but where the
-author's site and a hypothetical adopter's needs conflict, the author's site decides. Adoption is a
-bonus, not a mandate.
+They are installing a theme, not maintaining one: they meet it through `README.md` and their own
+`hugo.toml`, and the first thing they will do is something this repository has never done. A setting
+the theme needs but cannot supply for itself is therefore its problem to announce, not theirs to
+discover — a configuration that fails silently on their site is a defect here.
 
 **Secondary: someone evaluating the theme.** They arrive at the demo site or the README, and decide
 within a screen or two whether this is the one. They are reading to answer "does my kind of content
@@ -63,8 +63,13 @@ dimensioned, or it does not ship.
 ## Operating Context
 
 - **Consuming sites deploy to static hosts, commonly with `rsync --delete`.** Any path the build
-  stops generating is deleted from the live host. A theme change that renames an output format,
-  drops a template, or moves a taxonomy path is a live 404 for every site running the theme.
+  stops generating is deleted from the live host, so a path is a promise. What the theme actually
+  controls there is narrower than it looks, and the narrow part is the dangerous one. Permalinks,
+  `[taxonomies]` and `[outputFormats]` belong to the consuming site's own config, and a dropped
+  template falls back rather than moving a URL. What the theme does control is **which assets the
+  resource pipeline publishes at all**: Hugo emits one only where a template evaluates its
+  `RelPermalink`, so a font or an icon referenced from CSS alone disappears from `public/` while the
+  dev server, reading from the source directory, still serves it perfectly.
 - **The theme is developed standalone**, at `gitlab.stkn.org:felix/vellum`, committed directly to
   `main`. `.gitlab-ci.yml` builds `exampleSite/` on every branch and publishes it to GitLab Pages
   from `main`. There is no test suite, linter, or package manifest for the theme itself — that CI
@@ -199,10 +204,10 @@ third-party requests, with fonts self-hosted and Fuse.js bundled.
   page's name, and `--fixtures` for the four tracked PNGs under `images/`; `check.sh [ref]` for URL-surface diffs between a git ref and the working tree, both
   built on demand. **Tracked, so it is in every checkout** — a session that cannot find `check.sh`
   has found a real defect, not a machine that was never given the harness.
-- **Measured figures that must not be re-estimated:** the 92-character measure and the predecessor
-  theme's 83 were both counted from a rendered line. The minimum measured contrast across the
-  palette is 4.87:1. Re-measure before changing either; a characters-per-pixel estimate is reliably
-  wrong.
+- **Measured figures that must not be re-estimated:** the 92-character measure was counted from a
+  rendered line, against a conventional 83-character column counted the same way. The minimum
+  measured contrast across the palette is 4.87:1. Re-measure before changing either; a
+  characters-per-pixel estimate is reliably wrong.
 - **No** adoption numbers, download counts, user testimonials, performance benchmarks or press exist.
   Do not fabricate them.
 
