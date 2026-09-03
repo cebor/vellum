@@ -9,6 +9,12 @@ the format they follow is in [`CONTRIBUTING.md`](CONTRIBUTING.md). Only changes 
 can see are listed — refactors, documentation, CI and build chores are not. Releases up to 0.1.2
 predate the generated format and were written by hand.
 
+## [0.2.10](https://github.com/cebor/vellum/compare/v0.2.9...v0.2.10) - 2026-09-03
+
+### Added
+
+- **layouts:** highlight code without asking the site for Chroma classes (961be30)
+
 ## [0.2.9](https://github.com/cebor/vellum/compare/v0.2.8...v0.2.9) - 2026-09-03
 
 ### Added
