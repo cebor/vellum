@@ -124,6 +124,13 @@ pygmentsUseClasses = true
         Text = "Korrektur vorschlagen"
         appendFilePath = true
 
+      # Set for German and deliberately left unset for English. footer.html has
+      # a `with`/`else` pair here, and this repository has only one site to
+      # exercise both with: German builds the custom line (markdownify included),
+      # English keeps falling through to the copyright default.
+      [languages.de.params.footer]
+        text = "Gesetzt als technische Zeichnung. Inhalte unter [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de)."
+
     [languages.de.outputs]
       home = ["HTML", "RSS", "JSON"]
 
@@ -156,6 +163,16 @@ pygmentsUseClasses = true
   latestPosts = 5
   mainSections = ["posts"]
   displayFullLangName = true
+
+  # Only reached on pages that carry no tags of their own — the home page, the
+  # archive, search — because head.html falls back page keywords, then tags,
+  # then this. Set so that last rung is built rather than assumed.
+  keywords = ["hugo", "theme", "engineering drawing", "technical writing"]
+
+  # Puts the whole post in the feed instead of the summary. Worth exercising
+  # rather than assuming: it is the branch in rss.xml that has to survive the
+  # render hooks, and a demo with code-heavy posts is where that shows.
+  ShowFullTextinRSS = true
 
   ShowReadingTime = true
   ShowWordCount = true
@@ -191,6 +208,17 @@ pygmentsUseClasses = true
   # still override it, and a post without an `ai` key discloses nothing at all.
   [params.ai]
     model = "Claude Opus 5"
+
+  # Placeholder tokens, not real ones. They exist so head.html's three
+  # verification rungs are rendered by the build rather than sitting behind an
+  # unset param — a site swaps in its own or drops the block entirely.
+  [params.analytics]
+    [params.analytics.google]
+      SiteVerificationTag = "replace-with-your-google-token"
+    [params.analytics.bing]
+      SiteVerificationTag = "replace-with-your-bing-token"
+    [params.analytics.yandex]
+      SiteVerificationTag = "replace-with-your-yandex-token"
 
   [params.cover]
     linkFullImages = true
