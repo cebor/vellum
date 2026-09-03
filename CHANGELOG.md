@@ -9,6 +9,16 @@ the format they follow is in [`CONTRIBUTING.md`](CONTRIBUTING.md). Only changes 
 can see are listed — refactors, documentation, CI and build chores are not. Releases up to 0.1.2
 predate the generated format and were written by hand.
 
+## [0.2.7](https://github.com/cebor/vellum/compare/v0.2.6...v0.2.7) - 2026-09-03
+
+### Added
+
+- **layouts:** announce the settings the theme cannot set for itself (6e7df7e)
+
+### Fixed
+
+- **layouts:** stop the search and 404 sheets assuming one site's shape (2a41b2e)
+
 ## [0.2.6](https://github.com/cebor/vellum/compare/v0.2.5...v0.2.6) - 2026-08-19
 
 ### Fixed
