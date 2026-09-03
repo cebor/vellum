@@ -123,13 +123,14 @@ revision note at the foot of the sheet, each usable without the other; the `coll
   `layouts/_default/` and no `layouts/partials/`; files placed there silently do nothing.
 - **Goldmark `unsafe` is off** in consuming sites. Anything a post needs that would otherwise take
   raw HTML has to be a render hook or a shortcode — that is why alerts and `collapse` exist.
-- **Three settings the theme cannot supply for itself**, all of them the consuming site's to set:
-  `home = ["HTML", "RSS", "JSON"]` (the JSON output *is* the search index), the `ROOT404` output
+- **Two settings the theme cannot supply for itself**, both of them the consuming site's to set:
+  `home = ["HTML", "RSS", "JSON"]` (the JSON output *is* the search index) and the `ROOT404` output
   format (the only thing that writes a `/404.html` when `defaultContentLanguageInSubdir` leaves the
-  publish root empty), and `pygmentsUseClasses` + `noClasses = false` (so Chroma emits classes the
-  theme can map onto its own variables). Each used to fail silently; each is now announced at build
-  time by `_partials/config-guards.html`, with the TOML to paste. They warn rather than error,
-  because they are the site's settings and an upgrade must not break a half-configured build.
+  publish root empty). Each used to fail silently; each is now announced at build time by
+  `_partials/config-guards.html`, with the TOML to paste. They warn rather than error, because they
+  are the site's settings and an upgrade must not break a half-configured build. Chroma's class mode
+  was a third until `_markup/render-codeblock.html` passed `noClasses` per call instead — the test
+  of this list is whether the theme *can* settle it alone, not whether the site usually would.
 
 **Binding commitments — do not break without an explicit decision:**
 

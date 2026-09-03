@@ -13,17 +13,18 @@ should land in it without wrapping. Everything else about how code is set follow
 ## Highlighting
 
 Chroma emits class names rather than inline styles, which is what lets the syntax colours resolve
-through the same `light-dark()` tokens as the rest of the page. The consuming site has to opt in:
+through the same `light-dark()` tokens as the rest of the page. Left to itself Hugo would bake a
+palette into the markup instead — monokai by default, a dark box on a light sheet — so the theme
+asks for class names on every block rather than asking the site to configure it:
 
-```toml
-pygmentsUseClasses = true
-
-[markup.highlight]
-  noClasses = false
+```go-html-template
+{{ $opts := merge .Options (dict "noClasses" false) }}
+{{ transform.Highlight (printf "%s\n" .Inner) .Type $opts }}
 ```
 
-Without both, the code blocks ship a light-mode palette baked into the HTML and stay light on a dark
-page.
+Nothing to set, then. The one path this does not cover is Hugo's built-in
+`{{</* highlight */>}}` shortcode, which bypasses render hooks and follows whatever the site's own
+`[markup.highlight]` says.
 
 ## A worked example
 

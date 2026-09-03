@@ -52,18 +52,12 @@ hugo mod init github.com/you/myblog
 ```
 
 Replace the generated `hugo.toml` with this. It is the whole minimum — the theme import plus the
-three settings the theme cannot supply for itself:
+one setting the theme cannot supply for itself:
 
 ```toml
 baseURL = "https://example.org/"
 title = "My Site"
 locale = "en-us"
-
-# Chroma has to emit class names instead of inline styles, or code blocks ship a
-# light palette baked into the HTML and stay light on a dark page. It is a
-# root-level key, so it has to sit above the first [table] header — put it under
-# [outputs] and TOML reads it as outputs.pygmentsUseClasses, which does nothing.
-pygmentsUseClasses = true
 
 [module]
   [[module.imports]]
@@ -72,9 +66,6 @@ pygmentsUseClasses = true
 # The JSON output *is* the search index. Without it, /search/ finds nothing.
 [outputs]
   home = ["HTML", "RSS", "JSON"]
-
-[markup.highlight]
-  noClasses = false
 ```
 
 Then:
@@ -101,11 +92,11 @@ That is a working site on <http://localhost:1313>, with search and syntax highli
 below is refinement.
 
 > [!NOTE]
-> Three of those settings are ones a theme cannot supply for itself, and each one is invisible when
-> missing: without the `JSON` home output the search page finds nothing, without `ROOT404` a site
-> using `defaultContentLanguageInSubdir` publishes no `/404.html`, and without the two Chroma keys
-> code blocks keep a light palette on a dark page. Vellum checks all three at build time and prints
-> the TOML to paste, so you find out from `hugo` rather than from a reader.
+> Two settings in this guide are ones a theme cannot supply for itself — the `JSON` home output
+> above, and `ROOT404` [below](#if-you-use-defaultcontentlanguageinsubdir) — and both are invisible
+> when missing: without the first the search page finds nothing, without the second a site using
+> `defaultContentLanguageInSubdir` publishes no `/404.html`. Vellum checks both at build time and
+> prints the TOML to paste, so you find out from `hugo` rather than from a reader.
 
 > [!TIP]
 > A full worked example lives in
@@ -602,6 +593,11 @@ None of these need a shortcode.
   `[!CAUTION]` becomes a labelled callout.
 - **Headings** get an anchor link on hover.
 - **External links** get `rel="noopener noreferrer"`, a new tab, and a marker.
+- **Fenced code blocks** are highlighted with Chroma *class names*, so their colours come from
+  `00-tokens.css` and follow the theme in both schemes. This needs no `markup.highlight`
+  configuration — the theme asks for classes per block, overriding Hugo's default of a palette baked
+  into the markup. The exception is Hugo's built-in `{{< highlight >}}` shortcode, which bypasses
+  render hooks and follows the site's own settings.
 - **Tables** are wrapped in a focusable scroll container — Goldmark emits a bare `<table>` and a wide
   one would push the whole page sideways.
 - **Images in a page bundle** are resized to a 480/800/1600 WebP ladder with `sizes` and intrinsic

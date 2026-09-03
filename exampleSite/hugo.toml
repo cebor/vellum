@@ -9,7 +9,6 @@ defaultContentLanguageInSubdir = true
 
 enableRobotsTXT = true
 capitalizeListTitles = false
-pygmentsUseClasses = true
 
 [pagination]
   # Deliberately small. The demo has nine posts and this is what makes the
@@ -26,9 +25,6 @@ pygmentsUseClasses = true
   baseName = "404"
   notAlternative = true
   root = true
-
-[markup.highlight]
-  noClasses = false
 
 # --- languages -------------------------------------------------------------
 

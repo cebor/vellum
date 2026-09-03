@@ -1,0 +1,22 @@
+{{- /* Chroma bakes its palette into the markup unless the consuming site asks
+       for class names, and its default is monokai — so an unconfigured site
+       ships dark code blocks on a light sheet and ignores 90-syntax.css
+       entirely. A theme cannot set markup config for its consumer (a theme's
+       own [markup] is not merged into the site's), but it does not have to:
+       noClasses is a highlight option, and this hook passes it per call.
+
+       Merged over .Options rather than replacing them, so linenos, hl_lines and
+       anything else authored on the fence survive; noClasses wins because it is
+       the later map.
+
+       .Inner arrives without the fence's closing newline, and Chroma renders
+       that newline as the last line of the block. Putting it back is what makes
+       this hook byte-identical to the markup Hugo produced before it existed —
+       without it every code block loses its final line break, the closing tags
+       move, and the word counts in the title blocks shift with them.
+
+       A fence with no language keeps Hugo's own markup — transform.Highlight
+       leaves it as <pre tabindex="0"><code>, with no .highlight wrapper and so,
+       as before, no copy button. */ -}}
+{{- $opts := merge .Options (dict "noClasses" false) -}}
+{{- transform.Highlight (printf "%s\n" .Inner) .Type $opts -}}

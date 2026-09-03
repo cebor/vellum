@@ -14,18 +14,19 @@ von Code folgt aus dieser Entscheidung.
 ## Syntaxhervorhebung
 
 Chroma gibt Klassennamen statt Inline-Styles aus. Nur deshalb lassen sich die Syntaxfarben über
-dieselben `light-dark()`-Tokens auflösen wie der Rest der Seite. Die einbindende Site muss das
-allerdings aktiv einschalten:
+dieselben `light-dark()`-Tokens auflösen wie der Rest der Seite. Sich selbst überlassen würde Hugo
+stattdessen eine Palette fest ins Markup backen — standardmäßig Monokai, also ein dunkler Kasten auf
+hellem Blatt. Das Theme fordert die Klassennamen deshalb bei jedem Block selbst an, statt sie von
+der Konfiguration der Site zu verlangen:
 
-```toml
-pygmentsUseClasses = true
-
-[markup.highlight]
-  noClasses = false
+```go-html-template
+{{ $opts := merge .Options (dict "noClasses" false) }}
+{{ transform.Highlight (printf "%s\n" .Inner) .Type $opts }}
 ```
 
-Fehlt eines von beidem, backt Hugo eine Hell-Palette fest ins HTML — und die Codeblöcke bleiben auf
-einer dunklen Seite hell.
+Einzustellen ist also nichts. Nicht abgedeckt ist einzig Hugos eingebauter
+`{{</* highlight */>}}`-Shortcode: Er umgeht Render-Hooks und folgt weiterhin dem, was
+`[markup.highlight]` der Site sagt.
 
 ## Ein Beispiel
 
