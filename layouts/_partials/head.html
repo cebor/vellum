@@ -34,7 +34,13 @@
 {{- $fuse := resources.Get "js/fuse.basic.min.js" }}
 {{- $search := resources.Get "js/search.js" | js.Build (dict "params" (dict "fuseOpts" site.Params.fuseOpts)) }}
 {{- $bundle := slice $fuse $search | resources.Concat "js/search.bundle.js" | resources.Minify | fingerprint }}
-<link rel="preload" as="fetch" href="{{ "index.json" | relLangURL }}" crossorigin="anonymous">
+{{- /* From the output format rather than a literal path, so it follows a site
+       that renames the format's baseName and disappears instead of preloading a
+       404 when the JSON output is not declared at all -- which config-guards.html
+       warns about at the same moment. */}}
+{{- with site.Home.OutputFormats.Get "json" }}
+<link rel="preload" as="fetch" href="{{ .RelPermalink }}" crossorigin="anonymous">
+{{- end }}
 <script defer src="{{ $bundle.RelPermalink }}" integrity="{{ $bundle.Data.Integrity }}" crossorigin="anonymous"></script>
 {{- end }}
 

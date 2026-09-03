@@ -20,6 +20,8 @@ Three render hooks carry behaviour the site depends on, not just styling:
 - `_markup/render-table.html` supplies the `.table-wrap` scroll container that `50-single.css` styles. Goldmark's default `<table>` has no wrapper, and a wide one pushes the whole page sideways.
 - `_markup/render-blockquote.html` turns `> [!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]` into labelled alerts, which is why posts never need raw HTML (Goldmark's `unsafe` is off).
 
+`_partials/config-guards.html` announces the three settings the theme needs but cannot set for itself — the JSON home output that *is* the search index, the `ROOT404` output format, and Chroma's class mode. It is called once from `baseof.html` via `partialCached` on a constant key, so **nothing in it may read the current page**; every check is a property of the site. The Chroma check works by highlighting a token and looking for `style=`, because Hugo exposes no markup config to templates. All three use `warnidf`, not `errorf`: they are the consuming site's settings, and an upgrade must not break a build that has been running half-configured.
+
 `layouts/home.root404.html` and `layouts/baseof.root404.html` render the site's root `/404.html`. The identifier `root404` is the consuming site's `[outputFormats.ROOT404]` name lowercased — rename the format there and both files stop matching silently. That baseof deliberately omits canonical, hreflang, OpenGraph and analytics: Hugo reports the *home page's* permalink while rendering it, so the shared `head.html` cannot recognise it.
 
 ## CSS

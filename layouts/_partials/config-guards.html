@@ -1,0 +1,56 @@
+{{- /* The settings this theme needs but cannot supply for itself.
+
+       A theme cannot write its consumer's config, so each of these has to be
+       set by the site — and each one, unset, produces a page that renders
+       without complaint and is wrong: a search box with no index behind it, a
+       publish root with no error document, code blocks with a light palette
+       baked into the HTML that stay light on a dark sheet. PRODUCT.md's fourth
+       principle is that the quiet failure is the enemy, so they are announced.
+
+       warnidf rather than errorf throughout. These are the consumer's settings,
+       and a site that has been running half-configured should be told, not have
+       its build broken by an upgrade. The id makes each one print once per
+       build however many pages are rendered.
+
+       Cached on a constant key by the caller, so nothing here may read the
+       current page. Every check is a property of the site. */ -}}
+
+{{- /* 1. The JSON output *is* the search index; layouts/index.json renders it.
+       Without it the search page ships an input, a preload and a fetch that all
+       point at a URL the build never wrote. Only worth saying to a site that
+       actually asked for a search page. */ -}}
+{{- if where site.Pages "Layout" "eq" "search" }}
+{{- if not (site.Home.OutputFormats.Get "json") }}
+{{- warnidf "vellum-search-index" (printf "vellum: %s has layout = \"search\" but the %s site declares no JSON home output, so the search index is never built and the page finds nothing. Add it under [languages.%s.outputs] (or [outputs] on a single-language site):\n\n    home = [\"HTML\", \"RSS\", \"JSON\"]\n" (index (where site.Pages "Layout" "eq" "search") 0).Path site.Language.Lang site.Language.Lang) }}
+{{- end }}
+{{- end }}
+
+{{- /* 2. With defaultContentLanguageInSubdir the publish root holds no page at
+       all, so a static host has no error document to serve. ROOT404 is what
+       writes one; layouts/home.root404.html and baseof.root404.html match it by
+       the format's own name, lowercased. Declared in exactly one language --
+       two would collide on the same output path -- so this asks every language
+       site before it complains, via hugo.Sites (site.Sites is deprecated).
+
+       The message deliberately names no language: warnidf keys on the id and
+       the rendered text together, so a per-language detail here would print the
+       same advice once for every language on the site. */ -}}
+{{- if ne site.Home.RelPermalink "/" }}
+{{- $root404 := false }}
+{{- range hugo.Sites }}
+{{- if .Home.OutputFormats.Get "root404" }}{{ $root404 = true }}{{ end }}
+{{- end }}
+{{- if not $root404 }}
+{{- warnidf "vellum-root404" "vellum: no language publishes a page at the site root, so your host has no /404.html to serve. The theme ships the templates; the output format has to be declared once, in the default language only:\n\n    [outputFormats.ROOT404]\n      mediaType = \"text/html\"\n      baseName = \"404\"\n      notAlternative = true\n      root = true\n\n    [languages.<default>.outputs]\n      home = [\"HTML\", \"RSS\", \"JSON\", \"ROOT404\"]\n" }}
+{{- end }}
+{{- end }}
+
+{{- /* 3. Chroma has two modes and only one of them can be themed. Asking it to
+       highlight a token is the only way to find out which is in force: Hugo
+       does not expose markup config to templates, and this reads the site's own
+       highlight settings. With inline styles every code block carries a light
+       palette in its markup and stays light on a dark sheet, which is invisible
+       until someone switches theme. */ -}}
+{{- if strings.Contains (transform.Highlight "x" "go" "") "style=" }}
+{{- warnidf "vellum-chroma-classes" "vellum: Chroma is emitting inline styles, so code blocks ship a light palette baked into the HTML and will not follow the theme. Two root-level keys switch it to class names the theme's 90-syntax.css can map:\n\n    pygmentsUseClasses = true\n\n    [markup.highlight]\n      noClasses = false\n\nBoth are root-level: pygmentsUseClasses under [outputs] reads as outputs.pygmentsUseClasses and does nothing.\n" }}
+{{- end }}

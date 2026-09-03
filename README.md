@@ -100,6 +100,13 @@ hugo server -D
 That is a working site on <http://localhost:1313>, with search and syntax highlighting. Everything
 below is refinement.
 
+> [!NOTE]
+> Three of those settings are ones a theme cannot supply for itself, and each one is invisible when
+> missing: without the `JSON` home output the search page finds nothing, without `ROOT404` a site
+> using `defaultContentLanguageInSubdir` publishes no `/404.html`, and without the two Chroma keys
+> code blocks keep a light palette on a dark page. Vellum checks all three at build time and prints
+> the TOML to paste, so you find out from `hugo` rather than from a reader.
+
 > [!TIP]
 > A full worked example lives in
 > [`exampleSite/hugo.toml`](https://github.com/cebor/vellum/blob/main/exampleSite/hugo.toml) — two

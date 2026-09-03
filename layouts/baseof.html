@@ -4,6 +4,10 @@
 {{- if lt hugo.Version "0.158.0" }}
 {{- errorf "the vellum theme requires hugo v0.158.0 or greater" }}
 {{- end -}}
+{{- /* Site settings the theme depends on and cannot set itself. Cached on a
+       constant key: every check is a property of the site, not of this page,
+       and one of them highlights a token to read the Chroma config. */ -}}
+{{- partialCached "config-guards.html" . "guards" -}}
 <!DOCTYPE html>
 <html lang="{{ site.Language.Locale | default site.Language.Lang }}"
     dir="{{ site.Language.Direction | default `auto` }}"
