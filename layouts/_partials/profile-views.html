@@ -84,12 +84,25 @@
     {{- end }}
 
     {{- range $view := . }}
-    <div class="profile-view" id="profile-view-{{ $view.id }}" data-profile-view>
-        {{- /* Only the views with something to count carry a band. One over the
-               prose would repeat the index entry directly above it. */}}
+    {{- /* A named region, so the view the script swapped in is something a
+           screen reader can be put inside and hear named, and so the no-JS
+           stack of five is navigable as five things rather than one.
+
+           Deliberately not focusable in the markup. A fragment that names a
+           focusable element makes the browser focus it on arrival, so landing on
+           /#profile-view-skills drew the focus ring around the whole panel for
+           a reader who had asked for a view, not for focus — and the ring is
+           amber, which on this sheet means one live thing at a time. The script
+           adds the tabindex at the moment it actually moves focus.
+
+           Named by its band where it has one and by its own label where it does
+           not, so the region is announced either way. */}}
+    <div class="profile-view" id="profile-view-{{ $view.id }}" data-profile-view role="region"
+        {{- if $view.band }} aria-labelledby="profile-view-{{ $view.id }}-band"
+        {{- else }} aria-label="{{ $view.label }}"{{ end }}>
         {{- with $view.band }}
         <div class="sheet-band">
-            <h2 class="sheet-band__label">{{ . }}</h2>
+            <h2 class="sheet-band__label" id="profile-view-{{ $view.id }}-band">{{ . }}</h2>
             {{- with $view.count }}
             <span class="sheet-band__label">{{ . }}</span>
             {{- end }}
@@ -139,24 +152,35 @@
         // view open rather than hiding one nothing can reopen.
         if (!tabs.length || tabs.length !== panels.length) return;
 
-        function show(i) {
+        function show(i, moveFocus) {
             panels.forEach(function (panel, n) { panel.hidden = n !== i; });
             tabs.forEach(function (tab, n) {
                 tab.classList.toggle("is-active", n === i);
                 if (n === i) tab.setAttribute("aria-current", "true");
                 else tab.removeAttribute("aria-current");
             });
+            // The panel is swapped in place by a link that was stopped from
+            // navigating, so nothing announces the change on its own: a screen
+            // reader is left on the tab it just read, in front of a section it
+            // was never told about. Moving into the region names it and puts the
+            // reader at its head. Not on the first paint, where nobody asked to
+            // be moved, and never scrolling: changing a view must not pull the
+            // sheet out from under a sighted reader.
+            if (moveFocus && panels[i].focus) {
+                panels[i].setAttribute("tabindex", "-1");
+                panels[i].focus({ preventScroll: true });
+            }
         }
 
         // A view is linkable: /#profile-view-skills opens it.
         var start = 0;
         tabs.forEach(function (tab, i) { if (tab.hash === location.hash) start = i; });
-        show(start);
+        show(start, false);
 
         tabs.forEach(function (tab, i) {
             tab.addEventListener("click", function (event) {
                 event.preventDefault();
-                show(i);
+                show(i, true);
                 // replaceState, not the default jump: the sheet must not scroll
                 // out from under the reader to change a view in place.
                 if (history.replaceState) history.replaceState(null, "", tab.hash);
