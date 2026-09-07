@@ -13,7 +13,38 @@
    the boundary between the person and the index of sheets was stated no more
    loudly than a step inside one block. */
 .office {
+    /* The landing sheet's own label column. Three ruled instruments stack in this
+       one column — the profile's status fields, the record, the schedule — and
+       the reader turns between two of them with a tab, so a value that moves
+       sideways from one to the next reads as a broken column rather than as two
+       components. They were set at 7.5rem, 8.5rem and 10rem, which put their
+       values at three different offsets on the same sheet.
+
+       8.5rem is the narrowest that clears the widest label any of them sets:
+       "Infrastructure" measures 109px and a group name is the author's to write.
+       Component geometry, not a spacing step. A post's own title block keeps
+       7.5rem — its labels are the theme's own, the widest of them measures 67px,
+       and it never appears beside these. */
+    --office-label: 8.5rem;
+
     margin-bottom: var(--space-3xl);
+}
+
+/* The title block is the one instrument here the theme also uses elsewhere, so
+   it is pulled onto the office's column here rather than having its own changed.
+   The gap goes with the width: two instruments only line up if both halves of
+   the offset match, and this one was set a step tighter than the other two. */
+.office .title-block__row {
+    grid-template-columns: var(--office-label) minmax(0, 1fr);
+    column-gap: var(--space-lg);
+}
+
+/* .title-block carries a top margin for the post sheet, where it follows the
+   title. Opening a view it has nothing to clear, and the margin collapsed
+   through the panel and out past the index — so the contact view alone started
+   24px under the index where the other four start at 16px. */
+.profile-view > .title-block {
+    margin-top: 0;
 }
 
 .profile {
@@ -288,15 +319,15 @@ a.sheet-band__label:hover {
 
 /* --- the schedule -------------------------------------------------------- */
 
-/* A drawing's parts list. The label column is component geometry — wide enough
-   for the longest group name in either language — not a spacing step. */
+/* A drawing's parts list, set in the office's shared label column so its items
+   start where the profile's status values and the record's roles start. */
 .schedule {
     display: grid;
 }
 
 .schedule__group {
     display: grid;
-    grid-template-columns: 10rem minmax(0, 1fr);
+    grid-template-columns: var(--office-label) minmax(0, 1fr);
     gap: var(--space-2xs) var(--space-lg);
     padding-block: var(--space-sm);
     align-items: baseline;
@@ -375,7 +406,7 @@ a.sheet-band__label:hover {
 
 .record__row {
     display: grid;
-    grid-template-columns: 8.5rem minmax(0, 1fr) auto;
+    grid-template-columns: var(--office-label) minmax(0, 1fr) auto;
     gap: var(--space-2xs) var(--space-lg);
     padding-block: var(--space-sm);
     align-items: baseline;
@@ -516,9 +547,15 @@ a.sheet-band__label:hover {
     }
 
     /* The label column is the viewport's to give up first: below this width the
-       group name reads as a heading over its items rather than beside them. */
+       group name reads as a heading over its items rather than beside them.
+
+       .office .title-block__row is named here as well as in 50-single.css's own
+       collapse: this file gives it a two-column grid at a higher specificity
+       than that rule carries, so without this line the office's title blocks
+       would be the only instrument that kept its column on a phone. */
     .schedule__group,
-    .record__row {
+    .record__row,
+    .office .title-block__row {
         grid-template-columns: minmax(0, 1fr);
     }
 
