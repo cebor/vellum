@@ -68,8 +68,23 @@
 .nav {
     display: flex;
     align-items: center;
-    gap: var(--space-md);
     flex-wrap: wrap;
+
+    /* The drop from a nav item's bottom edge to the header rule: the inner's own
+       padding plus the rule itself. The active mark below is drawn at exactly
+       this distance so it lands on the rule and replaces a segment of it, so the
+       two are one value rather than two that have to be kept in step. */
+    --nav-mark-drop: calc(var(--space-sm) + var(--line-frame));
+
+    column-gap: var(--space-md);
+
+    /* The drop travels with the item when the row wraps, and there is no rule
+       down there to land on — so the row gap has to clear it, or the mark comes
+       down on the row below and marks a word it does not belong to. It did: the
+       gap was --space-md here and tightened to --space-sm below 40rem, which is
+       2px shallower than the drop, and a menu of six entries wraps at 390px.
+       Derived rather than chosen, so changing --space-sm cannot reopen it. */
+    row-gap: calc(var(--nav-mark-drop) + var(--line-thin));
 }
 
 .nav__item {
@@ -102,7 +117,7 @@
     content: "";
     position: absolute;
     inset-inline: 0;
-    bottom: calc(var(--space-sm) * -1 - var(--line-frame));
+    bottom: calc(var(--nav-mark-drop) * -1);
     height: var(--line-frame);
     background: var(--accent);
 }
@@ -545,8 +560,10 @@
         gap: var(--space-xs);
     }
 
+    /* Only the column gap tightens. The row gap is the mark's clearance and is
+       derived from it — see .nav — so it is not the viewport's to give up. */
     .nav {
-        gap: var(--space-sm);
+        column-gap: var(--space-sm);
         width: 100%;
         justify-content: flex-start;
     }
