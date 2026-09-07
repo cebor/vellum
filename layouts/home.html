@@ -1,14 +1,24 @@
 {{ define "main" }}
-{{ partial "profile.html" . }}
-{{- /* The views belong to the person, so they sit with the profile block rather
-       than after the stamp: what follows the stamp — the sheet note and the
-       index of latest sheets — is about the posts. */}}
-{{ partial "profile-views.html" . }}
-{{- /* The cross-references come after the views, not inside the title block:
-       the block states what this sheet is, the buttons leave it. They are the
-       last thing the person's half of the page says before the stamp opens the
-       index of sheets. */}}
-{{ partial "profile-buttons.html" . }}
+{{- /* The drawing office: everything this sheet says about the person, closed
+       by one break before the stamp opens the index of sheets.
+
+       The break is drawn here rather than by the last block inside, because it
+       belongs to the boundary and not to whichever row happens to be last. Hung
+       on the button row — which a site need not set — it disappeared with the
+       buttons, and the stamp then arrived at the same interval that separates
+       the view index from its own view. */}}
+<div class="office">
+    {{ partial "profile.html" . }}
+    {{- /* The views belong to the person, so they sit with the profile block rather
+           than after the stamp: what follows the stamp — the sheet note and the
+           index of latest sheets — is about the posts. */}}
+    {{ partial "profile-views.html" . }}
+    {{- /* The cross-references come after the views, not inside the title block:
+           the block states what this sheet is, the buttons leave it. They are the
+           last thing the person's half of the page says before the stamp opens the
+           index of sheets. */}}
+    {{ partial "profile-buttons.html" . }}
+</div>
 {{ partial "sheet-stamp.html" . }}
 {{ with .Content }}
 <div class="content sheet-note">{{ . }}</div>

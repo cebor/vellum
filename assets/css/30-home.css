@@ -1,6 +1,21 @@
 /* The landing sheet: the drawing office rather than a drawing. The profile is
    set as the sheet's own title block, ruled top and bottom. */
 
+/* --- the office ---------------------------------------------------------- */
+
+/* Everything this sheet says about the person: the profile block, the views and
+   the row of cross-references. The one generous break on the page is drawn here,
+   at the boundary, and not by whichever block happens to be last inside.
+
+   It used to hang on .button-row's own margin, which a site need not set at all.
+   Without buttons the break went with them and the stamp arrived 32px under the
+   views — the same interval that separates the view index from its own view, so
+   the boundary between the person and the index of sheets was stated no more
+   loudly than a step inside one block. */
+.office {
+    margin-bottom: var(--space-3xl);
+}
+
 .profile {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
@@ -15,9 +30,11 @@
        for a solid black box, and under a hairline it only reads as a gap. */
     padding-block: var(--space-lg);
     border-block: var(--line-frame) solid var(--rule-frame);
-    /* The person's half of the page is three blocks — this one, the views and
-       the row of cross-references — set one step apart, so the 3xl break under
-       the buttons is what separates the person from the index of sheets. */
+    /* The widest interval inside the office, because this is the one boundary
+       within it that separates two different kinds of statement: what the sheet
+       is, and what you can turn to. The steps below it get tighter as they get
+       more local — 2xl here, xl to the buttons, md from the index to its own
+       view — so the depth of a break is legible from its size alone. */
     margin-bottom: var(--space-2xl);
 }
 
@@ -90,12 +107,12 @@
 }
 
 /* No longer a row of the title block above it — see profile-buttons.html for
-   why — so it carries the break down to the stamp itself. */
+   why. It closes the office and draws no break of its own: the break belongs to
+   the boundary, and .office owns it whether this row is set or not. */
 .button-row {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-sm);
-    margin-bottom: var(--space-3xl);
 }
 
 /* --- buttons ------------------------------------------------------------- */
