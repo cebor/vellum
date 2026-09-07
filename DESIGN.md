@@ -224,12 +224,49 @@ opposite spacing — the whole gap above it and none below — and proximity rea
 first card. Only its paragraphs are toned down, so a table or a code block in an `_index.md` keeps
 its ordinary treatment.
 
-**The landing page is a drawing office, and its extra material is a set of views.** The profile block
-is that sheet's title block, so the status fields set under the name are the block's own rows — the
-same `title-block__row` markup, with only the outer frame dropped because `.profile` already draws
-it. Under it sit up to five views — about, skills, record, projects, contact — each rendered only
-when its params exist, indexed by a row of lettered entries, and marked live the way everything else
-in the theme is marked live: the 2px amber rule under the active item, the main nav's own mark.
+**The landing page is a drawing office, and its extra material is a set of views.** The whole of it —
+profile block, views, cross-references — is one `.office`, and that wrapper owns the single generous
+break that closes the person's half of the page. The break belongs to the boundary, not to the last
+block inside it: hung on the button row, which a site need not set, it disappeared with the buttons
+and the stamp then arrived at the same interval that separates the view index from its own view.
+
+The profile block is that sheet's title block, so the status fields set under the name are the
+block's own rows — the same `title-block__row` markup, with only the outer frame dropped because
+`.profile` already draws it. That drop is written two selectors deep on purpose: `.title-block` is
+declared in `50-single.css` and the home rules are in `30-`, so a single-class override carries the
+same specificity and loses on source order. It did lose, silently, for as long as the block existed —
+the fields drew the title block's own 2px frame caps instead, so the block closed on two identical
+`--rule-frame` lines 26px apart with bare sheet between them. **The numeric prefix is the cascade
+order, and that cuts both ways**: a home rule that has to beat a later file says so in its selector.
+
+Under it sit up to five views — about, skills, record, projects, contact — each rendered only when
+its params exist, indexed by a row of lettered entries, and marked live the way everything else in
+the theme is marked live: the 2px amber rule under the active item, the main nav's own mark.
+
+**That mark is drawn on the tab's own bottom edge, not onto a container rule.** The index used to
+carry a hairline and the mark was positioned at a negative offset onto it, which holds only while the
+row does not wrap — and at 320px, or at 390px as soon as the five labels are set in a language with
+longer words than English, the index breaks onto two rows and a first-row mark landed clear of the
+row gap and into the labels below. The transparent border is declared on every tab, so marking one
+does not move the row.
+
+**The main nav keeps the offset technique**, because there the mark replacing a segment of the
+sheet's edge is the point rather than an implementation detail, and it lands on the rule at every
+width the nav holds one row. What it does not keep is the assumption that the gap below is deep
+enough to fall into: the gap was `--space-md`, tightened to `--space-sm` below 40rem, and the drop is
+`--space-sm + --line-frame` — 2px deeper than the gap it fell into, so a wrapped nav marked the top
+edge of the row beneath. A menu of six entries wraps at 390px, so this was reachable on a phone, not
+only at the 320px floor. The drop is now named once as `--nav-mark-drop` and the row gap is derived
+from it, so the mark clears the row below by a hairline and no token change can reopen it. Wrapped,
+the mark sits under its own word instead of on the rule: degraded, but never ambiguous.
+
+**The three ruled instruments of the office share one label column**, `--office-label` at 8.5rem with
+a `--space-lg` gap. They were set at 7.5rem, 8.5rem and 10rem with two different gaps, which put the
+status fields' values, the record's roles and the schedule's items at three different offsets on one
+sheet — and since the reader turns between two of them with a tab, the column visibly re-indented on
+every switch. 8.5rem is the narrowest that clears the widest label any of them sets. A post's own
+title block keeps 7.5rem: its labels are the theme's own, the widest measures 67px, and it never
+appears beside these.
 
 That index is deliberately **not numbered**. A numbered list of views would put a second reference
 system on a page whose other one — the rail's letters — is earned by each letter marking a real
@@ -249,9 +286,29 @@ on this site*, which a repository elsewhere is not. **Contact is a title block.*
 Without JavaScript every view stands open, the index becomes anchor links, and nothing claims to be
 active — the zone rail's fallback, for the rail's reason. That stacked state is also what prints.
 
+Each view is a named region, and switching one moves focus into it. A tab is a link that was stopped
+from navigating, so nothing announces the swap on its own: a screen reader is left on the tab it just
+read, in front of a section it was never told about. The focus never scrolls — changing a view must
+not pull the sheet out from under a sighted reader — and the panel is made focusable only at the
+moment focus is moved, because a fragment that names a focusable element makes the browser focus it
+on arrival, and `/#profile-view-skills` then drew the amber focus ring around the whole panel for a
+reader who had asked for a view rather than for focus.
+
 The band heading a view is the same `.sheet-band` the latest-posts head is, extracted so the two are
 one rule rather than two that resemble each other. Only the three views with something to count carry
 one; a band over the prose would repeat the index entry directly above it.
+
+**A section gets one rule, and whatever opens the view carries it.** The index drew a `--rule-strong`
+hairline of its own and the band drew the same hairline 68px below — two rules at the same width,
+weight and ink with one label row between them, and on the two views with no band the first of them
+stood over nothing at all. That, and not the missing bands, is what made turning between the views
+read as uneven. The index is now a row of tabs and nothing else, bound to its view by the tightest
+interval in the office; the rule below it is the band's on three views, the contact block's own frame
+cap on the fourth, and on the prose there is none, which is what prose wants.
+
+The office's intervals get tighter as they get more local, so the depth of a break is legible from
+its size: `3xl` at the boundary the wrapper owns, `2xl` under the profile block, `xl` to the
+cross-references, `md` from the index to the view it opens.
 
 **The buttons are not one of the block's rows.** A title block states — name, discipline, location,
 status — and a button does not state anything; it leaves the sheet. Set as the block's last row it
