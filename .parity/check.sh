@@ -64,14 +64,30 @@ build "$ROOT" "$CAND_OUT"
 # Fingerprints and Hugo's content-hashed image names change whenever the bytes
 # change, which is expected and is not a moved URL. Everything else is compared
 # literally.
+#
+# LC_ALL=C on both the sort and the comm is load-bearing, not tidiness. A
+# locale collation folds punctuation away, so en_US.UTF-8 sorts
+# `cover_hu_HASH.webp` before `cover.png` while a byte comparison wants the
+# reverse — and comm merges on the assumption that its input is ordered the way
+# it compares. Where the two disagree, comm walks past a match and reports a
+# path as lost that both builds emit: on this exampleSite, 11 of 103 paths
+# mis-report that way under a single deletion, and the false positive is always
+# the .png sitting next to the resized WebP it produced. That is a red parity
+# check on a release that has broken nothing, and `.release/release.sh` refuses
+# to release on one. Byte order on both sides makes the two agree, and makes
+# the result the same on every checkout rather than a property of the
+# maintainer's locale — which matters now that this script ships with the
+# repo. (GNU comm compares with the locale and would have agreed with a locale
+# sort; the uutils comm on this machine compares bytes. Pinning both ends the
+# question either way.)
 norm() {
     (cd "$1" 2>/dev/null && find . -type f \
         | sed -E 's|^\./||; s|\.[0-9a-f]{64}\.|.HASH.|; s|_hu_[0-9a-f]+\.|_hu_HASH.|' \
-        | sort)
+        | LC_ALL=C sort)
 }
 
-lost=$(comm -23 <(norm "$BASE_OUT") <(norm "$CAND_OUT"))
-added=$(comm -13 <(norm "$BASE_OUT") <(norm "$CAND_OUT"))
+lost=$(LC_ALL=C comm -23 <(norm "$BASE_OUT") <(norm "$CAND_OUT"))
+added=$(LC_ALL=C comm -13 <(norm "$BASE_OUT") <(norm "$CAND_OUT"))
 
 short=$(git -C "$ROOT" rev-parse --short "$REF")
 echo "### $REF ($short) → working tree, via exampleSite"
