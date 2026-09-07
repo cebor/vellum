@@ -71,8 +71,17 @@
 
 /* The status fields reuse the title block's own rows, so there is one ruled
    instrument on the site rather than two that resemble each other. Only the
-   outer frame is dropped: .profile already draws it around the whole block. */
-.profile__fields {
+   outer frame is dropped: .profile already draws it around the whole block.
+
+   Two selectors deep on purpose, and this is the whole reason the block looked
+   wrong. `.title-block` is declared in 50-single.css and this file is 30-, so a
+   bare `.profile__fields` carries the same specificity and loses on source
+   order — the numeric prefix *is* the cascade order, which cuts both ways. Every
+   declaration here was dead: the fields drew the title block's own 2px frame
+   cap top and bottom instead of a hairline and nothing, so the block closed on
+   two identical --rule-frame lines 26px apart with bare sheet between them, and
+   carried the title block's --space-lg top margin on top of the grid's gap. */
+.profile .profile__fields {
     grid-area: fields;
     margin-top: 0;
     border-block: 0;
