@@ -233,21 +233,38 @@ a.sheet-band__label:hover {
     margin-top: var(--space-2xl);
 }
 
-/* The index of views. Which one is live is said the way the whole theme says
-   it — a drawn rule in the signal colour under the active item, never a tint,
-   so it survives greyscale and colour vision deficiency. Same mark as the main
-   nav, because it is the same statement. */
+/* The index of views: a row of tabs and nothing else.
+
+   It drew a --rule-strong hairline of its own, and the band at the head of the
+   view below drew the same hairline 68px further down — two identical rules at
+   the same width, weight and ink, with one 13px label row between them. The
+   section is entitled to one rule, and the band carries it, because the band is
+   the head of the thing being read rather than the index that opens it.
+
+   Bound to its view by the tightest interval on the sheet: the index and the
+   view it opens are one statement, and everything around them is separated by
+   more than this. */
 .profile-views__index {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-xs) var(--space-lg);
-    padding-bottom: var(--space-sm);
-    border-bottom: var(--line-thin) solid var(--rule-strong);
-    margin-bottom: var(--space-xl);
+    /* The row gap clears the live tab's own mark: at --space-xs the 2px rule
+       under a first-row tab sat 8px off the labels below it. */
+    gap: var(--space-sm) var(--space-lg);
+    margin-bottom: var(--space-md);
 }
 
+/* Which view is live is said the way the whole theme says it — a drawn rule in
+   the signal colour under the active item, never a tint, so it survives
+   greyscale and colour vision deficiency.
+
+   Drawn on the tab's own bottom edge, not absolutely positioned at a negative
+   offset onto a container rule. That technique holds only while the row does not
+   wrap: at 320px, and at 390px the moment the five labels are set in a language
+   with longer words than English, the index breaks onto two rows and the mark
+   for a first-row tab landed 13px below it — clear of the 8px row gap and into
+   the second row of labels. The transparent border is declared on every tab so
+   that marking one does not move the row. */
 .profile-views__tab {
-    position: relative;
     text-decoration: none;
     font-stretch: var(--font-stretch-label);
     font-size: var(--step--2);
@@ -256,7 +273,8 @@ a.sheet-band__label:hover {
     text-transform: uppercase;
     color: var(--meta);
     padding-block: var(--space-3xs);
-    transition: color var(--transition);
+    border-bottom: var(--line-frame) solid transparent;
+    transition: color var(--transition), border-color var(--transition);
 }
 
 .profile-views__tab:hover,
@@ -264,15 +282,8 @@ a.sheet-band__label:hover {
     color: var(--text);
 }
 
-/* Drawn onto the index's own hairline rather than floated above it: the heavier
-   amber line replaces the light one for the width of the live view. */
-.profile-views__tab.is-active::after {
-    content: "";
-    position: absolute;
-    inset-inline: 0;
-    bottom: calc((var(--space-sm) + var(--line-thin)) * -1);
-    height: var(--line-frame);
-    background: var(--accent);
+.profile-views__tab.is-active {
+    border-bottom-color: var(--accent);
 }
 
 /* --- the schedule -------------------------------------------------------- */

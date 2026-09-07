@@ -16,9 +16,27 @@
        Which view is live is said the way this theme says it everywhere else:
        the 2px amber rule under the active item, exactly as the main nav.
 
+       The band over a view names the instrument it is set in rather than the
+       view — Skills is set as a Schedule, Projects as References — and carries
+       its count. Only the views with something to count get one: over the prose
+       or the contact block it would repeat the tab that is already lit directly
+       above it, in the same lettering, saying the same word.
+
+       The index no longer draws a rule of its own. It had one, and the band drew
+       the same hairline 68px below it — two rules at the same width, weight and
+       ink with a single label row between them, and on the two views with no
+       band the first of them stood over nothing. That is what made turning
+       between the views feel uneven, not the missing bands. The section gets one
+       rule and whatever opens the view carries it: the band on three of them,
+       the title block's own cap on the contact sheet, and on the prose nothing
+       at all, which is what prose wants. The index is a row of tabs, and the
+       live mark is drawn on the tab rather than on a rule that is gone.
+
        Without JavaScript every view stands open and the index is a row of
        anchor links to them — the same honest fallback the rail takes. Nothing
-       is emitted as active server-side, because with all views open none is. */ -}}
+       is emitted as active server-side, because with all views open none is.
+       That is also why every view keeps its band: with five open at once the
+       bands are the only thing saying where one ends and the next begins. */ -}}
 {{- /* Two presentations of the same params. The drawn index is the default and
        what the rest of this file builds; `profile.view = "terminal"` hands the
        identical data to profile-terminal.html instead. Nothing about the params
@@ -72,7 +90,9 @@
         {{- with $view.band }}
         <div class="sheet-band">
             <h2 class="sheet-band__label">{{ . }}</h2>
-            <span class="sheet-band__label">{{ $view.count }}</span>
+            {{- with $view.count }}
+            <span class="sheet-band__label">{{ . }}</span>
+            {{- end }}
         </div>
         {{- end }}
 
