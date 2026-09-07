@@ -49,6 +49,30 @@ capitalizeListTitles = false
         imageAlt = "Placeholder portrait, drawn as a construction"
         imageWidth = 120
 
+        # The five profile views. Each renders only when its own key is set, so
+        # this block is also the demo of that: English sets all five, German
+        # deliberately leaves `projects` out so the "view absent" path is built
+        # rather than assumed.
+        about = """
+Placeholder prose, but the shape is the point: a paragraph or two in the
+author's own voice, set on the reading measure rather than squeezed into a
+caption. Markdown works here, so a [link](https://gohugo.io/) does too.
+"""
+
+        # Status fields. They sit in the profile block itself and stay open on
+        # every view, because they are what the sheet states about itself.
+        [[languages.en.params.profile.fields]]
+          label = "Location"
+          value = "Bremen, DE"
+
+        [[languages.en.params.profile.fields]]
+          label = "Discipline"
+          value = "Backend and platform"
+
+        [[languages.en.params.profile.fields]]
+          label = "Status"
+          value = "Open to consulting"
+
         [[languages.en.params.profile.buttons]]
           name = "Posts"
           url = "posts"
@@ -56,6 +80,87 @@ capitalizeListTitles = false
         [[languages.en.params.profile.buttons]]
           name = "Archive"
           url = "archive"
+
+        # The schedule. Both item forms are exercised here on purpose: a plain
+        # list of strings stays a single line, and the moment one item in a
+        # group carries a `note` that whole group becomes ruled rows with the
+        # grades in a column. Only a site with both in it builds both branches.
+        [[languages.en.params.profile.skills]]
+          name  = "Languages"
+          items = ["Go", "Rust", "TypeScript", "Python"]
+
+        [[languages.en.params.profile.skills]]
+          name = "Infrastructure"
+
+          [[languages.en.params.profile.skills.items]]
+            name = "Kubernetes"
+            note = "in production"
+
+          [[languages.en.params.profile.skills.items]]
+            name = "Terraform"
+            note = "4 years"
+
+          [[languages.en.params.profile.skills.items]]
+            name = "Nix"
+            note = "daily"
+
+        [[languages.en.params.profile.skills]]
+          name  = "Data"
+          items = ["PostgreSQL", "Redis", "ClickHouse"]
+
+        [[languages.en.params.profile.skills]]
+          name  = "Typesetting"
+          items = ["Hugo", "CSS", "Inkscape"]
+
+        # The record, newest first. `note` is optional and only the first entry
+        # sets one, so both rows are rendered.
+        [[languages.en.params.profile.record]]
+          period = "2022–"
+          role   = "Principal engineer"
+          org    = "Acme Werke"
+          note   = "Platform, build tooling and the drawing standards nobody else wanted to own."
+
+        [[languages.en.params.profile.record]]
+          period = "2019–2022"
+          role   = "Senior backend engineer"
+          org    = "Beispiel AG"
+
+        [[languages.en.params.profile.record]]
+          period = "2016–2019"
+          role   = "Backend engineer"
+          org    = "Kleinbetrieb GmbH"
+
+        [[languages.en.params.profile.record]]
+          period = "2014–2016"
+          role   = "Working student"
+          org    = "Universität Bremen"
+
+        # Reference drawings. The first URL is external and the second is
+        # relative, so both branches of the link — target/rel plus the external
+        # glyph, or relLangURL — are built.
+        [[languages.en.params.profile.projects]]
+          name        = "vellum"
+          url         = "https://github.com/cebor/vellum"
+          description = "This theme. Every page set as an engineering drawing sheet."
+          tags        = ["Hugo", "CSS", "Go templates"]
+
+        [[languages.en.params.profile.projects]]
+          name        = "Writing"
+          url         = "posts"
+          description = "Notes on build tooling, typesetting and the things that break in between."
+          tags        = ["Markdown"]
+
+        [[languages.en.params.profile.contact]]
+          label = "Email"
+          value = "[you@example.org](mailto:you@example.org)"
+
+        [[languages.en.params.profile.contact]]
+          label = "Fediverse"
+          value = "[@you@mastodon.social](https://mastodon.social/)"
+
+        [[languages.en.params.profile.contact]]
+          label = "Code"
+          value = "[github.com/you](https://github.com/)"
 
       # Per-language, because .File.Path is relative to that language's
       # contentDir and a single URL could only ever be right for one of them.
@@ -101,11 +206,50 @@ capitalizeListTitles = false
       DateFormat = ":date_long"
 
       [languages.de.params.profile]
+        # Dieselben Profil-Params wie im Englischen, nur anders dargestellt:
+        # Englisch zeigt den gezeichneten Ansichtsindex, Deutsch die Terminal-
+        # Sitzung. Beide Zweige werden damit von jedem Build gerendert, und die
+        # beiden Startseiten sind ein direkter Vergleich. Zum Umschalten diesen
+        # einen Wert ändern oder löschen.
+        view = "terminal"
+
+        # Deutsch lässt bewusst eine Ansicht weg, damit der Fall „Ansicht nicht
+        # gesetzt" tatsächlich gebaut wird — hier `contact`, nicht `projects`.
+        # Andersherum wäre die Projektausgabe des Terminals (.term__projects mit
+        # Link und Tags) von keinem Build je gerendert worden, und ein Markup,
+        # das nichts rendert, ist ein Markup, das nichts testet.
         title = "Dein Name"
         subtitle = "was du machst, in einer Zeile"
         image = "images/profile.png"
         imageAlt = "Platzhalter-Porträt, als Konstruktion gezeichnet"
         imageWidth = 120
+
+        # Dieselben Ansichten wie im Englischen, mit einer bewussten Ausnahme:
+        # `projects` fehlt hier, damit der Fall „Ansicht nicht gesetzt“ auch
+        # tatsächlich gebaut wird. Der Index zeigt dann vier statt fünf Einträge.
+        about = """
+Platzhaltertext, aber die Form ist der Punkt: ein, zwei Absätze in der Stimme
+des Autors, gesetzt auf dem Lesemaß statt in eine Bildunterschrift gequetscht.
+Markdown funktioniert hier, also auch ein [Link](https://gohugo.io/).
+"""
+
+        [[languages.de.params.profile.fields]]
+          label = "Standort"
+          value = "Bremen, DE"
+
+        [[languages.de.params.profile.fields]]
+          label = "Fachgebiet"
+          value = "Backend und Plattform"
+
+        [[languages.de.params.profile.fields]]
+          label = "Status"
+          value = "Offen für Anfragen"
+
+        # Eine Zeile mehr als im Englischen — die Feldzahl ist frei, und ein
+        # Block mit vier Zeilen zeigt das.
+        [[languages.de.params.profile.fields]]
+          label = "Sprachen"
+          value = "Deutsch, Englisch"
 
         [[languages.de.params.profile.buttons]]
           name = "Beiträge"
@@ -114,6 +258,68 @@ capitalizeListTitles = false
         [[languages.de.params.profile.buttons]]
           name = "Archiv"
           url = "archive"
+
+        [[languages.de.params.profile.skills]]
+          name  = "Sprachen"
+          items = ["Go", "Rust", "TypeScript", "Python"]
+
+        [[languages.de.params.profile.skills]]
+          name = "Infrastruktur"
+
+          [[languages.de.params.profile.skills.items]]
+            name = "Kubernetes"
+            note = "produktiv"
+
+          [[languages.de.params.profile.skills.items]]
+            name = "Terraform"
+            note = "4 Jahre"
+
+          [[languages.de.params.profile.skills.items]]
+            name = "Nix"
+            note = "täglich"
+
+        [[languages.de.params.profile.skills]]
+          name  = "Daten"
+          items = ["PostgreSQL", "Redis", "ClickHouse"]
+
+        [[languages.de.params.profile.skills]]
+          name  = "Satz"
+          items = ["Hugo", "CSS", "Inkscape"]
+
+        [[languages.de.params.profile.record]]
+          period = "2022–"
+          role   = "Principal Engineer"
+          org    = "Acme Werke"
+          note   = "Plattform, Build-Werkzeug und die Zeichnungsnormen, die sonst niemand übernehmen wollte."
+
+        [[languages.de.params.profile.record]]
+          period = "2019–2022"
+          role   = "Senior Backend Engineer"
+          org    = "Beispiel AG"
+
+        [[languages.de.params.profile.record]]
+          period = "2016–2019"
+          role   = "Backend Engineer"
+          org    = "Kleinbetrieb GmbH"
+
+        [[languages.de.params.profile.record]]
+          period = "2014–2016"
+          role   = "Werkstudent"
+          org    = "Universität Bremen"
+
+        # Wie im Englischen: die erste URL ist extern, die zweite relativ, damit
+        # beide Zweige der Verlinkung gebaut werden.
+        [[languages.de.params.profile.projects]]
+          name        = "vellum"
+          url         = "https://github.com/cebor/vellum"
+          description = "Dieses Theme. Jede Seite als technische Zeichnung gesetzt."
+          tags        = ["Hugo", "CSS", "Go-Templates"]
+
+        [[languages.de.params.profile.projects]]
+          name        = "Schreiben"
+          url         = "posts"
+          description = "Notizen zu Build-Werkzeug, Satz und dem, was dazwischen kaputtgeht."
+          tags        = ["Markdown"]
 
       [languages.de.params.editPost]
         URL = "https://github.com/cebor/vellum/edit/main/exampleSite/content/de"
