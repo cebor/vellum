@@ -41,17 +41,5 @@
         {{- end }}
     </dl>
     {{- end }}
-
-    {{- with .buttons }}
-    <div class="button-row">
-        {{- range . }}
-        {{- $external := strings.HasPrefix .url "http" }}
-        <a class="button" href="{{ if $external }}{{ .url }}{{ else }}{{ .url | relLangURL }}{{ end }}"
-            {{- if $external }} rel="noopener noreferrer" target="_blank"{{ end }}>
-            <span>{{ .name }}</span>{{ if $external }}{{ partialCached "icon.html" "external" "external" }}{{ else }}{{ partialCached "icon.html" "arrow-right" "arrow-right" }}{{ end }}
-        </a>
-        {{- end }}
-    </div>
-    {{- end }}
 </div>
 {{- end }}

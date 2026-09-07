@@ -51,6 +51,11 @@
     .search-status,
     .heading__anchor,
     .profile-views__index,
+    /* The landing page's cross-references are navigation, and this sheet drops
+       navigation: unlike a link in the prose, a button prints no destination,
+       so on paper it is a black box that points nowhere. Same argument the
+       window's own chrome is dropped on below. */
+    .button-row,
     .latest {
         display: none !important;
     }

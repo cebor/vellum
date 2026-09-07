@@ -7,13 +7,18 @@
     grid-template-areas:
         "avatar identity"
         "avatar social"
-        "fields fields"
-        "buttons buttons";
+        "fields fields";
     align-items: start;
     gap: var(--space-md) var(--space-lg);
-    padding-block: var(--space-lg) var(--space-xl);
+    /* Even top and bottom now that the block closes on its own last row rather
+       than on a row of buttons: the heavier padding under them was clearance
+       for a solid black box, and under a hairline it only reads as a gap. */
+    padding-block: var(--space-lg);
     border-block: var(--line-frame) solid var(--rule-frame);
-    margin-bottom: var(--space-3xl);
+    /* The person's half of the page is three blocks — this one, the views and
+       the row of cross-references — set one step apart, so the 3xl break under
+       the buttons is what separates the person from the index of sheets. */
+    margin-bottom: var(--space-2xl);
 }
 
 .profile__avatar {
@@ -84,11 +89,13 @@
     background: var(--accent-soft);
 }
 
+/* No longer a row of the title block above it — see profile-buttons.html for
+   why — so it carries the break down to the stamp itself. */
 .button-row {
-    grid-area: buttons;
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-sm);
+    margin-bottom: var(--space-3xl);
 }
 
 /* --- buttons ------------------------------------------------------------- */
@@ -186,8 +193,10 @@ a.sheet-band__label:hover {
 
 /* --- the office sheet's views -------------------------------------------- */
 
+/* Closer to the row of cross-references under it than that row is to the stamp
+   below: the buttons belong to the person, and proximity is what says so. */
 .profile-views {
-    margin-bottom: var(--space-3xl);
+    margin-bottom: var(--space-xl);
 }
 
 /* Two open views only ever sit next to each other with JavaScript off, where
@@ -461,8 +470,7 @@ a.sheet-band__label:hover {
             "avatar"
             "identity"
             "social"
-            "fields"
-            "buttons";
+            "fields";
         gap: var(--space-md);
     }
 

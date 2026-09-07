@@ -212,6 +212,11 @@ site sets the param to `false`.
     url = "posts"
 ```
 
+`buttons` renders as a row under the views below — the last thing the profile
+says before the index of posts starts. A `url` beginning with `http` is treated
+as external and opens in a new tab; anything else is resolved against the
+current language.
+
 #### Status fields
 
 Label/value rows in the profile block itself, set in the same ruled instrument a

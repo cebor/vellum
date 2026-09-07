@@ -4,6 +4,11 @@
        than after the stamp: what follows the stamp — the sheet note and the
        index of latest sheets — is about the posts. */}}
 {{ partial "profile-views.html" . }}
+{{- /* The cross-references come after the views, not inside the title block:
+       the block states what this sheet is, the buttons leave it. They are the
+       last thing the person's half of the page says before the stamp opens the
+       index of sheets. */}}
+{{ partial "profile-buttons.html" . }}
 {{ partial "sheet-stamp.html" . }}
 {{ with .Content }}
 <div class="content sheet-note">{{ . }}</div>

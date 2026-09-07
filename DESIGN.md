@@ -253,6 +253,15 @@ The band heading a view is the same `.sheet-band` the latest-posts head is, extr
 one rule rather than two that resemble each other. Only the three views with something to count carry
 one; a band over the prose would repeat the index entry directly above it.
 
+**The buttons are not one of the block's rows.** A title block states — name, discipline, location,
+status — and a button does not state anything; it leaves the sheet. Set as the block's last row it
+was also the loudest thing in an instrument whose whole point is that it is quiet, and it offered the
+way out before the sheet had said what it is. So the row closes the person's half of the page
+instead: under the views, or under the terminal, and one step nearer them than the stamp is to it,
+because proximity is what says the buttons belong to the person rather than to the index of sheets.
+It prints nowhere — a button carries no destination onto paper, so on a printed sheet it is a black
+box pointing at nothing, and this stylesheet drops navigation.
+
 **The same views have a second presentation, and it is a deliberate foreign object.**
 `profile.view = "terminal"` renders the identical params as a working macOS shell
 instead of the drawn index. It is the one component in the theme that carries a

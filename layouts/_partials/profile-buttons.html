@@ -1,0 +1,26 @@
+{{- /* The landing sheet's cross-references.
+
+       They sit apart from the profile block on purpose. That block is this
+       sheet's title block, and a title block *states* — name, discipline,
+       location, status. A button does not state anything; it leaves the sheet.
+       Kept as the block's last row it was also the loudest thing in an
+       instrument whose whole point is that it is quiet, and it offered the way
+       out before the sheet had said what it is.
+
+       So they close the person's half of the page instead: after the views —
+       or the terminal, which is the same material — and immediately before the
+       stamp that opens the index of sheets. Nothing about the params changed;
+       only where the row is drawn. */ -}}
+{{- with site.Params.profile }}
+{{- with .buttons }}
+<div class="button-row">
+    {{- range . }}
+    {{- $external := strings.HasPrefix .url "http" }}
+    <a class="button" href="{{ if $external }}{{ .url }}{{ else }}{{ .url | relLangURL }}{{ end }}"
+        {{- if $external }} rel="noopener noreferrer" target="_blank"{{ end }}>
+        <span>{{ .name }}</span>{{ if $external }}{{ partialCached "icon.html" "external" "external" }}{{ else }}{{ partialCached "icon.html" "arrow-right" "arrow-right" }}{{ end }}
+    </a>
+    {{- end }}
+</div>
+{{- end }}
+{{- end }}

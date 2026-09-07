@@ -45,7 +45,10 @@
    that names a size it does not have is the costume this component has to avoid
    to be worth shipping. */
 .term {
-    margin-bottom: var(--space-3xl);
+    /* Not the full break: the row of cross-references under it is still the
+       person's half of the page, and the 3xl break belongs under that — the
+       same rhythm .profile-views keeps. */
+    margin-bottom: var(--space-xl);
 }
 
 /* --- the window ---------------------------------------------------------- */
