@@ -1,0 +1,46 @@
+{{- /* The schedule: a drawing's parts list, which is what a list of skills
+       actually is — grouped items, each with an optional grade against it.
+
+       Two forms, and the simple one has to work on its own. `items` may be a
+       plain list of strings, in which case the group stays a single line and the
+       items are set as a run. The moment any item in a group carries a `note`,
+       that whole group becomes ruled rows with the grade in its own column,
+       because "Go (8 yrs) · Rust (2 yrs)" is neither a readable run nor a
+       schedule. The note is free text the author writes: a percentage nobody
+       could measure is exactly the fabricated field this theme refuses, and a
+       five-step bar is that percentage wearing tick marks.
+
+       The groups are deliberately *not* lettered. A parts list numbers its rows
+       so a balloon on the drawing can point at one, and nothing here points at
+       one — the zone rail's letters are earned because each marks a position on
+       the sheet, and a letter that resolves to nothing is the decoration this
+       theme was built against.
+
+       Usage: {{ partial "profile-skills.html" $groups }} */ -}}
+<dl class="schedule">
+    {{- range $group := . }}
+    {{- $items := slice }}
+    {{- $graded := false }}
+    {{- range $group.items }}
+    {{- if reflect.IsMap . }}
+    {{- $items = $items | append (dict "name" .name "note" (.note | default "")) }}
+    {{- if .note }}{{ $graded = true }}{{ end }}
+    {{- else }}
+    {{- $items = $items | append (dict "name" . "note" "") }}
+    {{- end }}
+    {{- end }}
+    {{- if $items }}
+    <div class="schedule__group">
+        <dt class="schedule__name">{{ $group.name }}</dt>
+        <dd class="schedule__items{{ if $graded }} schedule__items--graded{{ end }}">
+            {{- range $items }}
+            <span class="schedule__item">
+                <span class="schedule__item-name">{{ .name }}</span>
+                {{- with .note }}<span class="schedule__item-note">{{ . }}</span>{{ end }}
+            </span>
+            {{- end }}
+        </dd>
+    </div>
+    {{- end }}
+    {{- end }}
+</dl>

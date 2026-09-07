@@ -1,0 +1,541 @@
+{{- /* The profile as a terminal session — the alternative presentation to the
+       drawn view index, over exactly the same params.
+
+       This is a deliberate foreign object on the sheet, and it does not pretend
+       otherwise: a window with a shadow, sitting on top, the way a photograph is
+       pasted onto a drawing. That shadow is the one place in this theme where
+       depth is not carried by line weight, and it is the whole reason the window
+       reads as a window. Turning it off would leave a mono-coloured box that
+       claims to be a terminal and looks like a code block.
+
+       It is a real shell, not a picture of one: commands are typed, history walks
+       with the arrow keys, Tab completes, Ctrl+C and Ctrl+L do what they do, and
+       an unknown word gets zsh's own error. The window controls work — close
+       collapses it to a single line, minimise to the title bar, zoom to the
+       frame's full width — because three painted dots that do nothing are the
+       lie this whole component would otherwise be.
+
+       Without JavaScript there is no input line at all (an input that cannot run
+       anything is worse than none) and the window instead shows the complete
+       session already run: every command, every output, in order. The script
+       does not fetch or rebuild that content — it hides the transcript and
+       replays the very same nodes on demand, so there is one copy of the text,
+       it is translated by Hugo, and it is in the HTML for a crawler. */ -}}
+{{- $p := site.Params.profile }}
+{{- $t := $p.terminal | default dict }}
+{{- /* A shell account has no space in it and site.Params.author usually does,
+       so the fallback is slugified rather than printed as written. */ -}}
+{{- $user := $t.user | default (site.Params.author | urlize) | default "you" }}
+{{- $host := $t.host | default (site.Title | urlize) }}
+{{- $dir := $t.dir | default "~" }}
+{{- $prompt := printf "%s@%s %s %%" $user $host $dir }}
+
+{{- /* One entry per command that has data. The order is the order `help` lists
+       them and the order the no-JS transcript runs them in. */ -}}
+{{- $cmds := slice }}
+{{- with $p.about }}{{ $cmds = $cmds | append (dict "name" "about" "help" (i18n "term_help_about") "data" .) }}{{ end }}
+{{- with $p.skills }}{{ $cmds = $cmds | append (dict "name" "skills" "help" (i18n "term_help_skills") "data" .) }}{{ end }}
+{{- with $p.record }}{{ $cmds = $cmds | append (dict "name" "record" "help" (i18n "term_help_record") "data" .) }}{{ end }}
+{{- with $p.projects }}{{ $cmds = $cmds | append (dict "name" "projects" "help" (i18n "term_help_projects") "data" .) }}{{ end }}
+{{- with $p.contact }}{{ $cmds = $cmds | append (dict "name" "contact" "help" (i18n "term_help_contact") "data" .) }}{{ end }}
+
+{{- with $cmds }}
+<section class="term" data-prompt="{{ $prompt }}">
+    {{- /* Closed state. Lettered like the rest of the sheet, because with the
+           window shut this line is the only thing left of it. */}}
+    <button type="button" class="term__reopen" hidden>{{ i18n "term_reopen" }}</button>
+
+    <div class="term__window">
+        <div class="term__bar">
+            <span class="term__lights">
+                <button type="button" class="term__light term__light--close" aria-label="{{ i18n "term_close" }}" title="{{ i18n "term_close" }}"></button>
+                <button type="button" class="term__light term__light--min" aria-label="{{ i18n "term_min" }}" title="{{ i18n "term_min" }}"></button>
+                <button type="button" class="term__light term__light--zoom" aria-label="{{ i18n "term_zoom" }}" title="{{ i18n "term_zoom" }}"></button>
+            </span>
+            <span class="term__title">{{ $user }} — -zsh<span class="term__title-size"> — 80×24</span></span>
+        </div>
+
+        <div class="term__body">
+            <div class="term__scroll">
+                {{- /* The transcript. Shown as-is without JavaScript; hidden and
+                       used as the source of every replayed output with it. */}}
+                <div class="term__transcript">
+                    {{- range $cmds }}
+                    <div class="term__entry" data-command="{{ .name }}">
+                        <p class="term__line"><span class="term__prompt">{{ $prompt }}</span> <span class="term__typed">{{ .name }}</span></p>
+                        <div class="term__out">
+
+                            {{- if eq .name "about" }}
+                            <div class="term__prose">{{ .data | markdownify }}</div>
+
+                            {{- else if eq .name "skills" }}
+                            <dl class="term__table">
+                                {{- range $group := .data }}
+                                {{- $items := slice }}
+                                {{- $graded := false }}
+                                {{- range $group.items }}
+                                {{- if reflect.IsMap . }}
+                                {{- $items = $items | append (dict "name" .name "note" (.note | default "")) }}
+                                {{- if .note }}{{ $graded = true }}{{ end }}
+                                {{- else }}
+                                {{- $items = $items | append (dict "name" . "note" "") }}
+                                {{- end }}
+                                {{- end }}
+                                {{- if $items }}
+                                <div class="term__row">
+                                    <dt class="term__key">{{ $group.name }}</dt>
+                                    <dd class="term__val{{ if $graded }} term__val--graded{{ end }}">
+                                        {{- range $items }}
+                                        <span class="term__cell">
+                                            <span>{{ .name }}</span>
+                                            {{- with .note }}<span class="term__dim">{{ . }}</span>{{ end }}
+                                        </span>
+                                        {{- end }}
+                                    </dd>
+                                </div>
+                                {{- end }}
+                                {{- end }}
+                            </dl>
+
+                            {{- else if eq .name "record" }}
+                            <ol class="term__record">
+                                {{- range .data }}
+                                <li class="term__record-row">
+                                    <span class="term__key">{{ .period }}</span>
+                                    <span class="term__role">{{ .role }}</span>
+                                    {{- with .org }}<span class="term__dim">{{ . | markdownify }}</span>{{ end }}
+                                    {{- with .note }}<p class="term__record-note">{{ . | markdownify }}</p>{{ end }}
+                                </li>
+                                {{- end }}
+                            </ol>
+
+                            {{- else if eq .name "projects" }}
+                            <ul class="term__projects">
+                                {{- range $proj := .data }}
+                                <li class="term__project">
+                                    <span class="term__project-name">{{ $proj.name }}</span>
+                                    {{- with $proj.description }}<span class="term__project-desc">{{ . | markdownify }}</span>{{ end }}
+                                    {{- with $proj.url }}
+                                    {{- $external := strings.HasPrefix . "http" }}
+                                    <a class="term__link" href="{{ if $external }}{{ . }}{{ else }}{{ . | relLangURL }}{{ end }}"
+                                        {{- if $external }} rel="noopener noreferrer" target="_blank"{{ end }}>{{ . }}</a>
+                                    {{- end }}
+                                    {{- with $proj.tags }}
+                                    <span class="term__tags">
+                                        {{- range . }}<span class="term__tag">{{ . }}</span>{{ end -}}
+                                    </span>
+                                    {{- end }}
+                                </li>
+                                {{- end }}
+                            </ul>
+
+                            {{- else if eq .name "contact" }}
+                            <dl class="term__table">
+                                {{- range .data }}
+                                <div class="term__row">
+                                    <dt class="term__key">{{ .label }}</dt>
+                                    <dd class="term__val">{{ .value | markdownify }}</dd>
+                                </div>
+                                {{- end }}
+                            </dl>
+                            {{- end }}
+
+                        </div>
+                    </div>
+                    {{- end }}
+                </div>
+
+                <div class="term__live" role="log" aria-live="polite" aria-atomic="false"></div>
+
+                {{- /* Only rendered live: an input that can run nothing is worse
+                       than no input, so .js gates it in CSS. */}}
+                <form class="term__form" autocomplete="off">
+                    <label class="term__prompt" for="term-input">{{ $prompt }}</label>
+                    <input class="term__input" id="term-input" type="text" name="command"
+                        spellcheck="false" autocapitalize="off" autocorrect="off"
+                        aria-label="{{ i18n "term_input_label" }}">
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{- /* The structured payload, for `<command> --json` only. Everything a
+           command prints in its normal form comes from the transcript above;
+           this exists because a real CLI can hand you the data instead of the
+           table, and because it is the shortest honest answer to "what is in
+           here". Only the command data goes in — not the avatar path, the
+           buttons or the shell's own settings, none of which any command
+           prints. Go's encoder escapes < > & as \u003c and friends, so a value
+           carrying a closing script tag cannot end this element. */}}
+    {{- $payload := dict "whoami" ($p.title | default site.Title) }}
+    {{- range $cmds }}{{ $payload = merge $payload (dict .name .data) }}{{ end }}
+    {{- $help := dict }}
+    {{- range $cmds }}{{ $help = merge $help (dict .name .help) }}{{ end }}
+    <script type="application/json" id="term-json">{{ $payload | jsonify | safeJS }}</script>
+
+    <script>
+        (function () {
+            var root = document.querySelector(".term");
+            if (!root) return;
+
+            var win = root.querySelector(".term__window");
+            var body = root.querySelector(".term__body");
+            var scroll = root.querySelector(".term__scroll");
+            var transcript = root.querySelector(".term__transcript");
+            var live = root.querySelector(".term__live");
+            var form = root.querySelector(".term__form");
+            var input = root.querySelector(".term__input");
+            var reopen = root.querySelector(".term__reopen");
+            var sizeLabel = root.querySelector(".term__title-size");
+            if (!win || !body || !scroll || !transcript || !live || !form || !input) return;
+
+            var PROMPT = root.dataset.prompt || "%";
+            var TEXT = {{ dict
+                "notFound" (i18n "term_not_found")
+                "usage" (i18n "term_usage")
+                "builtins" (i18n "term_builtins")
+                "welcome" (i18n "term_welcome") | jsonify | safeJS }};
+            var HELP = {{ $help | jsonify | safeJS }};
+
+            /* Every data command, taken from the transcript rather than from a
+               second copy of the content. */
+            var outputs = {};
+            var order = [];
+            Array.prototype.forEach.call(transcript.querySelectorAll(".term__entry"), function (entry) {
+                outputs[entry.dataset.command] = entry.querySelector(".term__out");
+                order.push(entry.dataset.command);
+            });
+
+            var data = {};
+            try { data = JSON.parse(document.getElementById("term-json").textContent) || {}; } catch (e) {}
+
+            transcript.hidden = true;
+
+            function el(tag, cls, text) {
+                var node = document.createElement(tag);
+                if (cls) node.className = cls;
+                if (text != null) node.textContent = text;
+                return node;
+            }
+
+            /* --- the wire ------------------------------------------------
+
+               Output does not appear, it arrives — a character at a time, the
+               way a line does when something at the other end is sending it.
+               Two rates, because they are two different events: a command is a
+               hand at a keyboard, its output is a line coming back down the
+               wire. Both are clamped at each end, so a two-word line still
+               registers as typed and a twenty-row table never becomes a wait. */
+            function span(chars, msPerChar, min, max) {
+                return Math.min(max, Math.max(min, chars * msPerChar));
+            }
+
+            var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+            var queue = [];
+            var busy = false;
+            var current = -1;
+
+            /* A keystroke or a submit means the reader is here and not waiting
+               on a show, so everything already queued finishes at once. It is a
+               high-water mark rather than a flag: anything enqueued after the
+               interruption still types, which is the whole point of clicking a
+               command and watching it appear. */
+            var seq = 0;
+            var flushed = -1;
+
+            function pump() {
+                if (busy) return;
+                var item = queue.shift();
+                if (!item) return;
+                busy = true;
+                current = item.id;
+                item.run(function () { busy = false; pump(); });
+            }
+
+            function enqueue(job) {
+                queue.push({ id: seq++, run: job });
+                pump();
+            }
+
+            function flush() { flushed = seq - 1; }
+            function skipping() { return current <= flushed; }
+
+            function drive(total, ms, tick, done) {
+                if (reduced.matches || skipping() || total <= 0) {
+                    tick(total);
+                    done();
+                    return;
+                }
+                var start = null;
+                requestAnimationFrame(function step(now) {
+                    if (start === null) start = now;
+                    var shown = skipping() ? total : Math.min(total, total * ((now - start) / ms));
+                    tick(shown);
+                    scroll.scrollTop = scroll.scrollHeight;
+                    if (shown >= total) { done(); return; }
+                    requestAnimationFrame(step);
+                });
+            }
+
+            function append(node) {
+                live.appendChild(node);
+                scroll.scrollTop = scroll.scrollHeight;
+            }
+
+            function promptLine() {
+                var line = el("p", "term__line");
+                line.appendChild(el("span", "term__prompt", PROMPT));
+                line.appendChild(document.createTextNode(" "));
+                return line;
+            }
+
+            /* A command the machine issues — one the reader clicked — is typed
+               into the real input line, not into a fabricated one above it. A
+               terminal has exactly one place where typing happens, and putting a
+               second caret over a second prompt while the first sits empty below
+               is the tell that the whole thing is a picture.
+
+               readOnly rather than disabled while it types: the reader keeps
+               focus and their keystrokes still reach the handler that cuts the
+               animation short, they just cannot land in the middle of it.
+
+               A command the reader typed themselves is never re-typed — that
+               would be a puppet of their own hand. */
+            function typeCommand(text, done) {
+                input.readOnly = true;
+                drive(text.length, span(text.length, 38, 150, 1200), function (shown) {
+                    input.value = text.slice(0, Math.floor(shown));
+                }, function () {
+                    input.value = "";
+                    input.readOnly = false;
+                    echoCommand(text);
+                    done();
+                });
+            }
+
+            function echoCommand(text) {
+                var line = promptLine();
+                line.appendChild(el("span", "term__typed", text));
+                append(line);
+            }
+
+            /* Reveals any subtree progressively by walking its text nodes, so
+               the effect works on a table with markup in it and not only on a
+               plain string — there is no second, flattened copy of the output
+               anywhere. */
+            function reveal(node, done) {
+                var walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
+                var parts = [];
+                var total = 0;
+                var n;
+                while ((n = walker.nextNode())) {
+                    parts.push({ node: n, text: n.nodeValue });
+                    total += n.nodeValue.length;
+                }
+                if (reduced.matches || skipping() || !total) {
+                    append(node);
+                    done();
+                    return;
+                }
+                parts.forEach(function (part) { part.node.nodeValue = ""; });
+                /* A live region mutating one character at a time would make a
+                   screen reader stutter through the whole output. It is hidden
+                   while it arrives and announced once, finished. */
+                node.setAttribute("aria-hidden", "true");
+                append(node);
+                drive(total, span(total, 1.4, 180, 1100), function (shown) {
+                    var left = Math.floor(shown);
+                    parts.forEach(function (part) {
+                        var want = Math.max(0, Math.min(part.text.length, left));
+                        var value = want === part.text.length ? part.text : part.text.slice(0, want);
+                        if (part.node.nodeValue !== value) part.node.nodeValue = value;
+                        left -= part.text.length;
+                    });
+                }, function () {
+                    node.removeAttribute("aria-hidden");
+                    done();
+                });
+            }
+
+            function print(text, cls) {
+                var node = el("p", "term__out-line" + (cls ? " " + cls : ""), text);
+                enqueue(function (done) { reveal(node, done); });
+            }
+
+            /* --- the size the title bar states ---------------------------
+
+               Measured, never assumed: the window is as wide as the sheet gives
+               it, so the only honest number is the one the box currently holds.
+               Re-measured on resize and once the web fonts have settled, since
+               both change the advance width under it. */
+            function measure() {
+                if (!sizeLabel) return;
+                var style = getComputedStyle(scroll);
+                var probe = el("span");
+                probe.style.cssText = "position:absolute;visibility:hidden;white-space:pre";
+                probe.textContent = "0000000000000000000000000000000000000000";
+                scroll.appendChild(probe);
+                var advance = probe.getBoundingClientRect().width / 40;
+                probe.remove();
+                var lineHeight = parseFloat(style.lineHeight);
+                if (!advance || !lineHeight) return;
+                var wide = scroll.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+                var tall = scroll.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+                var cols = Math.max(1, Math.floor(wide / advance));
+                var rows = Math.max(1, Math.floor(tall / lineHeight));
+                sizeLabel.textContent = " — " + cols + "×" + rows;
+            }
+
+            var pending = null;
+            function remeasure() {
+                if (pending) return;
+                pending = requestAnimationFrame(function () { pending = null; measure(); });
+            }
+
+            /* --- commands ------------------------------------------------ */
+
+            var builtins = {
+                help: function () {
+                    print(TEXT.usage, "term__dim");
+                    order.forEach(function (name) {
+                        var row = el("p", "term__out-line term__help-row");
+                        var button = el("button", "term__cmd", name);
+                        button.type = "button";
+                        /* Typeable and clickable: a phone has no Tab key and no
+                           patience for a keyboard that covers the output. */
+                        button.addEventListener("click", function () {
+                            flush();
+                            run(name, true);
+                        });
+                        row.appendChild(button);
+                        row.appendChild(el("span", "term__dim", HELP[name] || ""));
+                        enqueue(function (done) { reveal(row, done); });
+                    });
+                    print(TEXT.builtins, "term__dim");
+                },
+                clear: function () {
+                    enqueue(function (done) { live.textContent = ""; done(); });
+                },
+                whoami: function () { print(data.whoami || "—"); },
+                date: function () { print(new Date().toString()); },
+                ls: function () { print(order.join("  ")); }
+            };
+
+            function run(raw, machineTyped) {
+                var line = (raw || "").trim();
+
+                if (machineTyped) {
+                    enqueue(function (done) { typeCommand(line, done); });
+                } else {
+                    enqueue(function (done) { echoCommand(line); done(); });
+                }
+                if (!line) return;
+
+                var parts = line.split(/\s+/);
+                var name = parts[0];
+
+                if (builtins[name]) { builtins[name](); return; }
+
+                if (outputs[name]) {
+                    if (parts.indexOf("--json") !== -1) {
+                        print(JSON.stringify(data[name], null, 2), "term__json");
+                    } else {
+                        /* The transcript's own nodes, cloned — one copy of the
+                           text in the document, and the links stay live. */
+                        var node = outputs[name].cloneNode(true);
+                        enqueue(function (done) { reveal(node, done); });
+                    }
+                    return;
+                }
+
+                print(TEXT.notFound.replace("{cmd}", name), "term__error");
+            }
+
+            /* --- input --------------------------------------------------- */
+
+            var past = [];
+            var cursor = 0;
+
+            form.addEventListener("submit", function (event) {
+                event.preventDefault();
+                var value = input.value;
+                input.value = "";
+                if (value.trim()) past.push(value);
+                cursor = past.length;
+                flush();
+                run(value, false);
+            });
+
+            input.addEventListener("keydown", function (event) {
+                /* Any key means the reader is here and not waiting on a show. */
+                flush();
+
+                if (event.key === "ArrowUp") {
+                    event.preventDefault();
+                    if (cursor > 0) { cursor--; input.value = past[cursor]; }
+                } else if (event.key === "ArrowDown") {
+                    event.preventDefault();
+                    if (cursor < past.length - 1) { cursor++; input.value = past[cursor]; }
+                    else { cursor = past.length; input.value = ""; }
+                } else if (event.key === "Tab") {
+                    event.preventDefault();
+                    var stem = input.value.trim();
+                    var all = order.concat(Object.keys(builtins));
+                    var hits = all.filter(function (n) { return n.indexOf(stem) === 0; });
+                    if (hits.length === 1) input.value = hits[0];
+                    else if (hits.length > 1) {
+                        enqueue(function (done) { echoCommand(stem); done(); });
+                        print(hits.join("  "));
+                    }
+                } else if (event.ctrlKey && (event.key === "c" || event.key === "C")) {
+                    event.preventDefault();
+                    var typed = input.value;
+                    input.value = "";
+                    enqueue(function (done) { echoCommand(typed + "^C"); done(); });
+                } else if (event.ctrlKey && (event.key === "l" || event.key === "L")) {
+                    event.preventDefault();
+                    builtins.clear();
+                }
+            });
+
+            /* A real terminal takes the caret wherever you click in it — but not
+               out of a link, not while text is being selected, and never on page
+               load, which would scroll the reader here and open a phone's
+               keyboard uninvited. */
+            body.addEventListener("click", function (event) {
+                if (event.target.closest("a, button")) return;
+                if (String(window.getSelection())) return;
+                input.focus();
+            });
+
+            var lights = {
+                "term__light--close": function () { root.classList.add("is-closed"); reopen.hidden = false; },
+                "term__light--min": function () { root.classList.toggle("is-minimised"); },
+                "term__light--zoom": function () { root.classList.toggle("is-zoomed"); remeasure(); }
+            };
+            Object.keys(lights).forEach(function (cls) {
+                var button = root.querySelector("." + cls);
+                if (button) button.addEventListener("click", lights[cls]);
+            });
+            if (reopen) reopen.addEventListener("click", function () {
+                root.classList.remove("is-closed");
+                reopen.hidden = true;
+                remeasure();
+                input.focus();
+            });
+
+            window.addEventListener("resize", remeasure, { passive: true });
+            if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+            measure();
+
+            /* The boot sequence. A real "Last login" line, from the visitor's own
+               clock: a frozen one would be a fabricated fact on a sheet whose
+               whole argument is that its metadata is specification. */
+            var now = new Date();
+            print(TEXT.welcome + " " + now.toDateString().replace(/(\d{4})$/, "").trim()
+                + " " + now.toTimeString().slice(0, 8) + " on ttys001", "term__dim");
+            builtins.help();
+        })();
+    </script>
+</section>
+{{- end }}

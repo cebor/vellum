@@ -1,0 +1,149 @@
+{{- /* The office sheet's views.
+
+       A drawing set is several sheets you turn between, named by an index that
+       says what each one holds. The landing page is the drawing office rather
+       than a drawing, so its extra material — a note about the person, their
+       schedule of skills, their record, the drawings they reference, how to
+       reach them — is set as that: one index, and the views under it.
+
+       Each view appears only when its own params are set. Fewer than two and
+       there is no index at all, which is the zone rail's rule for the same
+       reason: an index over a single field indexes nothing.
+
+       The index is lettered, not numbered. Numbering it would put a second
+       reference system on a page whose other one — the rail's letters — is
+       earned by marking real positions, and nothing here points back at a "02".
+       Which view is live is said the way this theme says it everywhere else:
+       the 2px amber rule under the active item, exactly as the main nav.
+
+       Without JavaScript every view stands open and the index is a row of
+       anchor links to them — the same honest fallback the rail takes. Nothing
+       is emitted as active server-side, because with all views open none is. */ -}}
+{{- /* Two presentations of the same params. The drawn index is the default and
+       what the rest of this file builds; `profile.view = "terminal"` hands the
+       identical data to profile-terminal.html instead. Nothing about the params
+       changes between them, so a site can switch and switch back. */ -}}
+{{- if eq (lower (site.Params.profile.view | default "index")) "terminal" }}
+{{- partial "profile-terminal.html" . }}
+{{- else }}
+
+{{- $views := slice }}
+{{- with site.Params.profile }}
+
+{{- with .about }}
+{{- $views = $views | append (dict "id" "about" "label" (i18n "view_about") "data" .) }}
+{{- end }}
+
+{{- with .skills }}
+{{- $views = $views | append (dict "id" "skills" "label" (i18n "view_skills") "data" .
+    "band" (i18n "band_schedule") "count" (i18n "group_count" (len .))) }}
+{{- end }}
+
+{{- with .record }}
+{{- $views = $views | append (dict "id" "record" "label" (i18n "view_record") "data" .
+    "band" (i18n "band_record") "count" (i18n "entry_count" (len .))) }}
+{{- end }}
+
+{{- with .projects }}
+{{- $views = $views | append (dict "id" "projects" "label" (i18n "view_projects") "data" .
+    "band" (i18n "band_references") "count" (i18n "project_count" (len .))) }}
+{{- end }}
+
+{{- with .contact }}
+{{- $views = $views | append (dict "id" "contact" "label" (i18n "view_contact") "data" .) }}
+{{- end }}
+
+{{- end }}
+
+{{- with $views }}
+<section class="profile-views">
+    {{- if gt (len .) 1 }}
+    <nav class="profile-views__index" aria-label="{{ i18n "view_index" }}">
+        {{- range . }}
+        <a class="profile-views__tab" href="#profile-view-{{ .id }}">{{ .label }}</a>
+        {{- end }}
+    </nav>
+    {{- end }}
+
+    {{- range $view := . }}
+    <div class="profile-view" id="profile-view-{{ $view.id }}" data-profile-view>
+        {{- /* Only the views with something to count carry a band. One over the
+               prose would repeat the index entry directly above it. */}}
+        {{- with $view.band }}
+        <div class="sheet-band">
+            <h2 class="sheet-band__label">{{ . }}</h2>
+            <span class="sheet-band__label">{{ $view.count }}</span>
+        </div>
+        {{- end }}
+
+        {{- if eq $view.id "about" }}
+        <div class="content">{{ $view.data | markdownify }}</div>
+
+        {{- else if eq $view.id "skills" }}
+        {{ partial "profile-skills.html" $view.data }}
+
+        {{- else if eq $view.id "record" }}
+        {{ partial "profile-record.html" $view.data }}
+
+        {{- else if eq $view.id "projects" }}
+        {{ partial "profile-projects.html" $view.data }}
+
+        {{- else if eq $view.id "contact" }}
+        <dl class="title-block">
+            {{- range $view.data }}
+            <div class="title-block__row">
+                <dt class="title-block__label">{{ .label }}</dt>
+                <dd class="title-block__value">{{ .value | markdownify }}</dd>
+            </div>
+            {{- end }}
+        </dl>
+        {{- end }}
+    </div>
+    {{- end }}
+</section>
+
+{{- if gt (len .) 1 }}
+<script>
+    // Runs immediately rather than on DOMContentLoaded: the markup it closes
+    // over is already parsed above it, and deferring it would let every view
+    // paint open for a frame before all but one is shut.
+    (function () {
+        var root = document.querySelector(".profile-views");
+        if (!root) return;
+        var index = root.querySelector(".profile-views__index");
+        if (!index) return;
+
+        var tabs = Array.prototype.slice.call(index.querySelectorAll(".profile-views__tab"));
+        var panels = Array.prototype.slice.call(root.querySelectorAll("[data-profile-view]"));
+        // Anything but a one-to-one pairing means the markup moved; leave every
+        // view open rather than hiding one nothing can reopen.
+        if (!tabs.length || tabs.length !== panels.length) return;
+
+        function show(i) {
+            panels.forEach(function (panel, n) { panel.hidden = n !== i; });
+            tabs.forEach(function (tab, n) {
+                tab.classList.toggle("is-active", n === i);
+                if (n === i) tab.setAttribute("aria-current", "true");
+                else tab.removeAttribute("aria-current");
+            });
+        }
+
+        // A view is linkable: /#profile-view-skills opens it.
+        var start = 0;
+        tabs.forEach(function (tab, i) { if (tab.hash === location.hash) start = i; });
+        show(start);
+
+        tabs.forEach(function (tab, i) {
+            tab.addEventListener("click", function (event) {
+                event.preventDefault();
+                show(i);
+                // replaceState, not the default jump: the sheet must not scroll
+                // out from under the reader to change a view in place.
+                if (history.replaceState) history.replaceState(null, "", tab.hash);
+            });
+        });
+    })();
+</script>
+{{- end }}
+{{- end }}
+{{- end }}

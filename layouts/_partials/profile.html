@@ -26,6 +26,22 @@
 
     {{- partial "social-icons.html" . }}
 
+    {{- /* The status fields, set in the title block's own instrument rather than
+           in a second one invented for them: the profile block already is this
+           sheet's title block, and these are its rows. They stay open on every
+           view because they are what the sheet states about itself, not one of
+           the things you turn to. */}}
+    {{- with .fields }}
+    <dl class="title-block profile__fields">
+        {{- range . }}
+        <div class="title-block__row">
+            <dt class="title-block__label">{{ .label }}</dt>
+            <dd class="title-block__value">{{ .value | markdownify }}</dd>
+        </div>
+        {{- end }}
+    </dl>
+    {{- end }}
+
     {{- with .buttons }}
     <div class="button-row">
         {{- range . }}

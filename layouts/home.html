@@ -1,5 +1,9 @@
 {{ define "main" }}
 {{ partial "profile.html" . }}
+{{- /* The views belong to the person, so they sit with the profile block rather
+       than after the stamp: what follows the stamp — the sheet note and the
+       index of latest sheets — is about the posts. */}}
+{{ partial "profile-views.html" . }}
 {{ partial "sheet-stamp.html" . }}
 {{ with .Content }}
 <div class="content sheet-note">{{ . }}</div>

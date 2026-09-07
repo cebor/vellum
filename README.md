@@ -212,6 +212,145 @@ site sets the param to `false`.
     url = "posts"
 ```
 
+#### Status fields
+
+Label/value rows in the profile block itself, set in the same ruled instrument a
+post's title block uses. They stay visible whichever view is open. The value is
+Markdown, so a link works.
+
+```toml
+[[params.profile.fields]]
+  label = "Location"
+  value = "Bremen, DE"
+```
+
+#### Views
+
+The landing page can carry up to five views, switched from an index under the
+profile block: **about**, **skills**, **record**, **projects** and **contact**.
+Each appears only when its own key is set, so there is nothing to switch off —
+set none and the landing page is exactly what it was.
+
+Fewer than two and no index is drawn; the single view simply stands open. The
+index needs no JavaScript: without it every view stands open and the index
+entries are anchor links to them. With it, one view is shown at a time and
+`/#profile-view-skills` opens that view directly.
+
+The five view names come from the theme's translations (`view_about`,
+`view_skills`, `view_record`, `view_projects`, `view_contact`) — override them in
+your own `i18n/` the way you would any other label.
+
+> [!IMPORTANT]
+> On a multilingual site, set these per language, under
+> `[languages.<lang>.params.profile]`. They are per-language content, not site
+> settings.
+
+**about** — one string of Markdown, set on the reading measure.
+
+```toml
+[params.profile]
+  about = "A paragraph or two, in your own voice."
+```
+
+**skills** — grouped items, set as a drawing's schedule. `items` takes either a
+plain list of strings, which stays on one line, or a list of tables with an
+optional `note`, which turns that group into ruled rows with the notes in a
+column of their own. The note is whatever you write — "8 years", "daily", "in
+production" — because a percentage nobody could measure is not a fact about you.
+
+```toml
+[[params.profile.skills]]
+  name  = "Languages"
+  items = ["Go", "Rust", "TypeScript"]
+
+[[params.profile.skills]]
+  name = "Infrastructure"
+
+  [[params.profile.skills.items]]
+    name = "Kubernetes"
+    note = "in production"
+
+  [[params.profile.skills.items]]
+    name = "Terraform"
+    note = "4 years"
+```
+
+**record** — newest first, set as the revision table a drawing carries. `org` and
+`note` are optional; `note` is Markdown.
+
+```toml
+[[params.profile.record]]
+  period = "2022–"
+  role   = "Principal engineer"
+  org    = "Acme Werke"
+  note   = "What the job actually was."
+```
+
+**projects** — work this sheet points at but does not contain. `url` may be
+external or a path on this site; `description` is Markdown and `tags` is a plain
+list. All three are optional.
+
+```toml
+[[params.profile.projects]]
+  name        = "vellum"
+  url         = "https://github.com/cebor/vellum"
+  description = "A Hugo theme."
+  tags        = ["Hugo", "CSS"]
+```
+
+**contact** — label/value rows like the status fields above, in their own view.
+The value is Markdown.
+
+```toml
+[[params.profile.contact]]
+  label = "Email"
+  value = "[you@example.org](mailto:you@example.org)"
+```
+
+#### Presentation: index or shell
+
+The five views have two presentations over exactly the same params. The default
+is the drawn index above. Setting `view = "terminal"` renders them as a working
+macOS-style shell instead — same keys, same content, nothing to migrate, and you
+can switch back by deleting the line.
+
+```toml
+[params.profile]
+  view = "terminal"            # "index" (default) or "terminal"
+
+  [params.profile.terminal]    # all optional
+    user = "you"               # defaults to a slug of params.author
+    host = "vellum"            # defaults to a slug of the site title
+    dir  = "~"
+```
+
+The shell is real: commands are typed, the arrow keys walk the history, Tab
+completes, `Ctrl+C` and `Ctrl+L` do what they do, and `<command> --json` prints
+the raw data instead of the table. Every command in `help` is also a button, so a
+phone reaches everything without a keyboard. The three window buttons work —
+close collapses the window to a single line, minimise to its title bar, zoom
+grows it from 24 rows to 40.
+
+Output arrives a character at a time rather than appearing, and a command you
+click is typed into the prompt. Any keystroke finishes what is still pending at
+once, so nothing is ever held behind the effect, and
+`prefers-reduced-motion: reduce` turns all of it off. The window spans the
+sheet's full width, and its title bar states the size it actually has — measured,
+and re-measured when the window changes.
+
+Without JavaScript there is no prompt, and the window shows the whole session
+already run — every command and its output, in order. Nothing is lost and nothing
+pretends to be interactive. That transcript is also what prints, without the
+window around it.
+
+> [!NOTE]
+> The window does not run Terminal's "Basic" white profile — it runs one matched
+> to the theme, on the same sunk surface and syntax inks every code block on the
+> site already uses, so it sits on the page rather than on top of it. The one
+> rule it breaks is `box-shadow`, and the only bare colours left in it are the
+> three window buttons; both are argued at the top of
+> `assets/css/35-terminal.css`.
+
 ### Social icons
 
 ```toml

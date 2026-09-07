@@ -88,6 +88,108 @@
 - id: tagged_with
   translation: "Thema:"
 
+# --- Bürotafel --------------------------------------------------------------
+# Die Ansichten der Startseite. Ein Zeichnungssatz führt seine Blätter unter
+# Nummern; das Startblatt führt seine Ansichten genauso. Wer andere Wörter
+# will, überschreibt diese ids im eigenen i18n/-Verzeichnis — so wird in diesem
+# Theme jede Beschriftung geändert.
+
+- id: view_index
+  translation: "Profilansichten"
+
+- id: view_about
+  translation: "Über mich"
+
+- id: view_skills
+  translation: "Fähigkeiten"
+
+- id: view_record
+  translation: "Werdegang"
+
+- id: view_projects
+  translation: "Projekte"
+
+- id: view_contact
+  translation: "Kontakt"
+
+# Die Banderole über einer Ansicht benennt das zeichnerische Instrument, in dem
+# die Ansicht gesetzt ist, und trägt deren Anzahl. Nur die drei Ansichten, die
+# überhaupt etwas zu zählen haben, bekommen eine: eine Banderole über der Prosa,
+# die nur den Reiter darüber wiederholt, ist Beiwerk.
+
+- id: band_schedule
+  translation: "Stückliste"
+
+- id: band_record
+  translation: "Stationen"
+
+- id: band_references
+  translation: "Verweise"
+
+- id: group_count
+  translation:
+    one: "1 Gruppe"
+    other: "{{ .Count }} Gruppen"
+
+- id: entry_count
+  translation:
+    one: "1 Eintrag"
+    other: "{{ .Count }} Einträge"
+
+- id: project_count
+  translation:
+    one: "1 Projekt"
+    other: "{{ .Count }} Projekte"
+
+# --- Profil-Shell -----------------------------------------------------------
+# Die alternative Darstellung derselben Profil-Params: eine echte Terminal-
+# Sitzung statt des gezeichneten Ansichtsindex. Was die Shell selbst ausgibt,
+# bleibt bewusst im Wortlaut der Shell — „command not found“ ist, was zsh sagt,
+# in jeder Locale, in der es je gelesen wurde.
+
+- id: term_reopen
+  translation: "Profil-Shell"
+
+- id: term_close
+  translation: "Schließen"
+
+- id: term_min
+  translation: "Minimieren"
+
+- id: term_zoom
+  translation: "Zoomen"
+
+- id: term_input_label
+  translation: "Terminal-Befehl"
+
+- id: term_welcome
+  translation: "Letzte Anmeldung:"
+
+- id: term_usage
+  translation: "Befehle — eingeben oder anklicken:"
+
+- id: term_builtins
+  translation: "Außerdem help, clear, whoami, date, ls. Pfeiltasten für den Verlauf, Tab vervollständigt, --json für die Rohdaten."
+
+# {cmd} wird durch das Eingetippte ersetzt.
+- id: term_not_found
+  translation: "zsh: command not found: {cmd}"
+
+- id: term_help_about
+  translation: "wer das ist"
+
+- id: term_help_skills
+  translation: "womit gearbeitet wird"
+
+- id: term_help_record
+  translation: "wo gearbeitet wurde"
+
+- id: term_help_projects
+  translation: "was gebaut wurde"
+
+- id: term_help_contact
+  translation: "wie man erreichbar ist"
+
 # --- Metadaten --------------------------------------------------------------
 
 - id: read_time

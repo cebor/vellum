@@ -87,6 +87,107 @@
 - id: tagged_with
   translation: "Subject:"
 
+# --- the office sheet -------------------------------------------------------
+# The landing page's views. A drawing set indexes its sheets by number; the
+# home sheet indexes its views the same way. These are the view names — a site
+# that wants different words overrides these ids in its own i18n/ directory,
+# which is how every other label in the theme is changed.
+
+- id: view_index
+  translation: "Profile views"
+
+- id: view_about
+  translation: "About"
+
+- id: view_skills
+  translation: "Skills"
+
+- id: view_record
+  translation: "Record"
+
+- id: view_projects
+  translation: "Projects"
+
+- id: view_contact
+  translation: "Contact"
+
+# The band heading a view names the drawing instrument the view is set in, and
+# carries its count. Only the three views that have something to count get one:
+# a band over the prose that just repeats the tab above it is chrome.
+
+- id: band_schedule
+  translation: "Schedule"
+
+- id: band_record
+  translation: "Record"
+
+- id: band_references
+  translation: "References"
+
+- id: group_count
+  translation:
+    one: "1 group"
+    other: "{{ .Count }} groups"
+
+- id: entry_count
+  translation:
+    one: "1 entry"
+    other: "{{ .Count }} entries"
+
+- id: project_count
+  translation:
+    one: "1 project"
+    other: "{{ .Count }} projects"
+
+# --- the profile shell ------------------------------------------------------
+# The alternative presentation of the same profile params: a real terminal
+# session instead of the drawn view index. Shell output is deliberately left in
+# the shell's own wording — "command not found" is what zsh says, in every
+# locale a developer has ever read it in.
+
+- id: term_reopen
+  translation: "Profile shell"
+
+- id: term_close
+  translation: "Close"
+
+- id: term_min
+  translation: "Minimise"
+
+- id: term_zoom
+  translation: "Zoom"
+
+- id: term_input_label
+  translation: "Terminal command"
+
+- id: term_welcome
+  translation: "Last login:"
+
+- id: term_usage
+  translation: "Commands — type one, or click it:"
+
+- id: term_builtins
+  translation: "Also help, clear, whoami, date, ls. Arrow keys for history, Tab to complete, --json for the raw data."
+
+# {cmd} is replaced with what was typed.
+- id: term_not_found
+  translation: "zsh: command not found: {cmd}"
+
+- id: term_help_about
+  translation: "who this is"
+
+- id: term_help_skills
+  translation: "what they work in"
+
+- id: term_help_record
+  translation: "where they have worked"
+
+- id: term_help_projects
+  translation: "what they have built"
+
+- id: term_help_contact
+  translation: "how to reach them"
+
 # --- meta -------------------------------------------------------------------
 
 - id: read_time

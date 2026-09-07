@@ -224,6 +224,95 @@ opposite spacing — the whole gap above it and none below — and proximity rea
 first card. Only its paragraphs are toned down, so a table or a code block in an `_index.md` keeps
 its ordinary treatment.
 
+**The landing page is a drawing office, and its extra material is a set of views.** The profile block
+is that sheet's title block, so the status fields set under the name are the block's own rows — the
+same `title-block__row` markup, with only the outer frame dropped because `.profile` already draws
+it. Under it sit up to five views — about, skills, record, projects, contact — each rendered only
+when its params exist, indexed by a row of lettered entries, and marked live the way everything else
+in the theme is marked live: the 2px amber rule under the active item, the main nav's own mark.
+
+That index is deliberately **not numbered**. A numbered list of views would put a second reference
+system on a page whose other one — the rail's letters — is earned by each letter marking a real
+position, and nothing ever points back at a "02". The same test removed the letters from the schedule
+below: a parts list numbers its rows so a balloon on the drawing can point at one, and none does here.
+
+Each view is set in an instrument the theme already had, never a new one. **Skills are a schedule** —
+a drawing's parts list, grouped, with an optional grade against each item in its own column; a group
+whose items carry no grade stays a single line, so the plain form is a list of strings and nothing
+more. The grade is free text the author writes, never a bar or a percentage: a five-step scale is a
+fabricated measurement wearing tick marks, which is the same failure as the numbered revision triangle
+this theme already removed once. **A record is the revision table**, period in mono with tabular
+figures so two rows read as a column. **Projects are reference drawings**, ruled apart and never
+boxed, and deliberately not `post-card.html` — that partial states an invariant field grid for *pages
+on this site*, which a repository elsewhere is not. **Contact is a title block.**
+
+Without JavaScript every view stands open, the index becomes anchor links, and nothing claims to be
+active — the zone rail's fallback, for the rail's reason. That stacked state is also what prints.
+
+The band heading a view is the same `.sheet-band` the latest-posts head is, extracted so the two are
+one rule rather than two that resemble each other. Only the three views with something to count carry
+one; a band over the prose would repeat the index entry directly above it.
+
+**The same views have a second presentation, and it is a deliberate foreign object.**
+`profile.view = "terminal"` renders the identical params as a working macOS shell
+instead of the drawn index. It is the one component in the theme that carries a
+`box-shadow`, and the exception is argued at the head of `35-terminal.css` rather
+than smuggled in: a window without a shadow is not a window but a coloured box
+claiming to be one. The shadow does the same job as the photograph's clipped
+registration corner — it says this object *lies on* the sheet rather than being
+drawn on it — and it is mixed from the frame's own ink at low alpha, because a
+black shadow on cool paper is a bruise.
+
+Bare colour values survive in exactly one place: the three window buttons.
+#ff5f57 has no correct second value, and those colours are recognisable precisely
+because they are macOS's and nothing near them.
+
+**Everything else is this theme's palette, and that is the whole reason the
+window sits on the page instead of on top of it.** The window is deliberately not
+running Terminal's "Basic" profile: a screen of pure white punches a hole in a
+sheet of cool paper, and a terminal green and blue that came from no palette here
+fought every other colour on the page. It runs a profile matched to the site —
+`--surface-sunk` and `--line-height-code`, the same material and line box every
+fenced code block already uses; `--syn-string` for the prompt, `--syn-func` for
+links, `--syn-comment` for dim text, `--syn-number` for tags; `--rule-strong` for
+the window edge and `--rule` for the bar's. Matching a terminal to what you are
+looking at is the most ordinary thing a person with a terminal does, and every one
+of those inks was contrast-checked long before this component existed, which a
+hand-picked terminal green never was. The measured minimum across the shell is
+5.1:1. The screen is set at `--step--1` and not the label step below it: at 13px
+the window read as a footnote panel beside 20px body copy, and that size gap was
+doing as much to make it foreign as the colour was.
+
+It earns the skin by being real rather than a picture of one: typed commands, a
+history on the arrow keys, Tab completion, `Ctrl+C` and `Ctrl+L`, zsh's own
+"command not found", a `--json` flag that prints the data instead of the table,
+and three window buttons that actually close, minimise and zoom. Three painted
+dots that do nothing would make the whole component the costume the rest of this
+theme refuses. The window spans the sheet's full width, so the size in its title
+bar is **measured rather than stated** — the script reads the real column and row
+count out of the box and re-reads it on resize and once the fonts settle. A
+window that names a size it does not have is the same failure as a rail lettering
+an empty field.
+
+Output **arrives** rather than appearing: revealed a character at a time by
+walking the text nodes of the very markup Hugo rendered, so the effect works on a
+table and there is still exactly one copy of the content. A command the reader
+clicks is typed into the real input line — a terminal has one place where typing
+happens, and a second caret over a second prompt while the first sits empty below
+is the tell that the thing is a picture. Any keystroke finishes everything still
+pending at once, because no reader is ever held behind an animation, and
+`prefers-reduced-motion: reduce` removes it entirely. While output is arriving it
+carries `aria-hidden` and is announced once, finished: a live region mutating one
+character at a time would make a screen reader stutter through the whole thing.
+
+There is exactly one copy of the content. The transcript of every command is in
+the HTML, rendered by Hugo and translated with the rest of the site; the script
+hides it and replays those same nodes on demand. So without JavaScript the window
+holds the complete session already run and shows no prompt at all — a prompt that
+can run nothing is a worse lie than no prompt — and that transcript is also what
+prints, with the window's chrome dropped, because a title bar and an input line
+are controls and paper has none.
+
 **AI provenance is drawing furniture, not a badge.** A post that discloses AI use carries a stamp
 **beside the title**, at the end of the title row and dropped onto the title's cap band, so it reads
 as struck on the sheet's name rather than floated above it. It is not drawn inside the title block:

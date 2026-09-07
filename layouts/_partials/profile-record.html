@@ -1,0 +1,19 @@
+{{- /* The record: a drawing carries a revision table that says what changed,
+       when, and by whose hand. A working life is the same table — a period, a
+       role, and the organisation it was done for — so it is set with the same
+       instrument rather than as a styled list.
+
+       The period is mono with tabular figures, because it is a measurement and
+       because two rows only read as a column when their digits line up.
+
+       Usage: {{ partial "profile-record.html" $entries }} */ -}}
+<ol class="record">
+    {{- range . }}
+    <li class="record__row">
+        <span class="record__period">{{ .period }}</span>
+        <span class="record__role">{{ .role }}</span>
+        {{- with .org }}<span class="record__org">{{ . | markdownify }}</span>{{ end }}
+        {{- with .note }}<p class="record__note">{{ . | markdownify }}</p>{{ end }}
+    </li>
+    {{- end }}
+</ol>

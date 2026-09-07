@@ -1,0 +1,30 @@
+{{- /* Reference drawings: the sheets this one points at but does not contain.
+       A title block has a field for exactly that, so external work belongs in
+       one rather than in a grid of cards — and it is not set with post-card.html
+       for the reason that partial states its own invariant field grid for
+       *pages* on this site, which a repository somewhere else is not.
+
+       Ruled apart, never boxed, like every other index in the theme.
+
+       Usage: {{ partial "profile-projects.html" $projects }} */ -}}
+<ul class="projects">
+    {{- range $p := . }}
+    <li class="projects__row">
+        <h3 class="projects__name">
+            {{- with $p.url }}
+            {{- $external := strings.HasPrefix . "http" }}
+            <a href="{{ if $external }}{{ . }}{{ else }}{{ . | relLangURL }}{{ end }}"
+                {{- if $external }} rel="noopener noreferrer" target="_blank"{{ end }}>{{ $p.name }}{{ if $external }}{{ partialCached "icon.html" "external" "external" }}{{ end }}</a>
+            {{- else }}
+            {{ $p.name }}
+            {{- end }}
+        </h3>
+        {{- with $p.description }}<p class="projects__description">{{ . | markdownify }}</p>{{ end }}
+        {{- with $p.tags }}
+        <p class="projects__tags">
+            {{- range . }}<span class="projects__tag">{{ . }}</span>{{ end -}}
+        </p>
+        {{- end }}
+    </li>
+    {{- end }}
+</ul>

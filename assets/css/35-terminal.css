@@ -1,0 +1,528 @@
+/* The profile as a terminal session — the alternative to the drawn view index,
+   selected with `profile.view = "terminal"`.
+
+   THIS FILE BREAKS ONE OF THE THEME'S OWN RULES, and it is declared here rather
+   than smuggled in: it uses box-shadow, which DESIGN.md forbids because depth on
+   a drawing is line weight. A macOS window without a shadow is not a window; it
+   is a coloured box that claims to be one. The shadow says that this object is
+   *lying on* the sheet rather than drawn on it — the same statement the profile
+   photograph makes with its clipped registration corner. It is drawn in the
+   sheet's own frame ink at low alpha rather than in black, because a black
+   shadow on cool paper is a bruise.
+
+   It carries bare colour values in exactly one place: the three window buttons.
+   Those are macOS's own system colours and are recognisable precisely because
+   they are #ff5f57, #febc2e and #28c840 and nothing near them. There is no
+   correct second value for them, so tokenising them would only make them
+   adjustable.
+
+   Everything else is the theme's palette. **The window is not running Terminal's
+   "Basic" profile**, and it should not: a screen of pure white punches a hole in
+   a sheet of cool paper, and a terminal green and blue that came from no palette
+   here fought every other colour on the page. It runs a profile matched to the
+   site — the sunk surface every code block on this site already uses, the
+   theme's own syntax inks for its prompt, links and dim text, its line rule for
+   the window edge. That is not a compromise with the metaphor: matching your
+   terminal to what you are looking at is the most ordinary thing a person with a
+   terminal does, and every one of those inks is already contrast-checked, which
+   a hand-picked terminal green never was.
+
+   The 24-row geometry, the title bar height and the button sizes are this
+   component's own geometry — a terminal is measured in rows and characters — so
+   they are literals at their point of use, the exception 00-tokens.css allows. */
+
+/* The window sits on the reading column, sharing its left edge with the title
+   block, the buttons and every card below it. It was briefly pulled out to the
+   frame's inner edge, which put it hard against .main's own border-inline-start
+   — the rule the zone rail reads against — so the window read as clipped by the
+   sheet rather than lying on it. An object placed on a drawing does not overlap
+   the drawing's own lines, and one left edge down the sheet is worth more than
+   the 48px it cost.
+
+   The window is therefore as wide as the column gives it rather than a fixed 80
+   characters, which is why the title bar states no size of its own: the script
+   measures the real one and writes it there, and re-measures on resize. A window
+   that names a size it does not have is the costume this component has to avoid
+   to be worth shipping. */
+.term {
+    margin-bottom: var(--space-3xl);
+}
+
+/* --- the window ---------------------------------------------------------- */
+
+/* The same edge a code block is given on this site — one thin rule in the
+   strong ink — and a shadow mixed from the frame's own colour rather than from
+   black, close and low so the window rests on the sheet instead of hovering a
+   centimetre above it. */
+.term__window {
+    border-radius: 10px;
+    overflow: hidden;
+    border: var(--line-thin) solid var(--rule-strong);
+    box-shadow:
+        0 1px 2px color-mix(in srgb, var(--rule-frame) 34%, transparent),
+        0 8px 20px color-mix(in srgb, var(--rule-frame) 22%, transparent);
+}
+
+.term.is-closed .term__window {
+    display: none;
+}
+
+/* --- the title bar ------------------------------------------------------- */
+
+/* 28px is the real height of a macOS window title bar, and the system font is
+   the correct face here for the same reason the buttons are the system colours:
+   this is a picture of an operating system's chrome, not of the sheet. The
+   content below it is set in the theme's own faces. */
+.term__bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 28px;
+    padding-inline: 14px;
+    background: var(--surface);
+    border-bottom: var(--line-thin) solid var(--rule);
+    user-select: none;
+}
+
+.term__lights {
+    display: flex;
+    gap: 8px;
+    z-index: 1;
+}
+
+.term__light {
+    width: 12px;
+    height: 12px;
+    padding: 0;
+    border-radius: 50%;
+    border: 0;
+    cursor: pointer;
+    position: relative;
+    /* The glyphs are drawn from geometry rather than typed, so the button needs
+       no font and no icon file to publish. */
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 6px 6px;
+}
+
+.term__light--close { background-color: #ff5f57; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14); }
+.term__light--min   { background-color: #febc2e; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14); }
+.term__light--zoom  { background-color: #28c840; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14); }
+
+/* macOS reveals all three glyphs when the pointer is over the group, not over
+   one button — that group behaviour is most of what makes them recognisable. */
+.term__lights:hover .term__light--close,
+.term__light--close:focus-visible {
+    background-image: linear-gradient(45deg, transparent 44%, rgba(0, 0, 0, 0.55) 44%, rgba(0, 0, 0, 0.55) 56%, transparent 56%),
+                      linear-gradient(-45deg, transparent 44%, rgba(0, 0, 0, 0.55) 44%, rgba(0, 0, 0, 0.55) 56%, transparent 56%);
+}
+
+.term__lights:hover .term__light--min,
+.term__light--min:focus-visible {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55));
+    background-size: 7px 1.5px;
+}
+
+.term__lights:hover .term__light--zoom,
+.term__light--zoom:focus-visible {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
+                      linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55));
+    background-size: 7px 1.5px, 1.5px 7px;
+}
+
+/* Centred on the window, not on what is left of the bar beside the buttons —
+   which is why it is taken out of the flex flow rather than given margin.
+
+   The two Apple faces first and the sheet's own face behind them: on a Mac this
+   is San Francisco, which is what a title bar there is actually set in, and
+   everywhere else it is Archivo rather than whichever UI face the machine
+   happens to ship. The chrome still reads as chrome — small, centred, semibold —
+   without introducing a third typeface to a page that has two. */
+.term__title {
+    position: absolute;
+    inset-inline: 0;
+    text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--meta);
+    pointer-events: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-inline: 76px;
+}
+
+/* --- the screen ---------------------------------------------------------- */
+
+/* The sunk surface and the code line height every fenced block on this site
+   already uses, so a terminal and a code block are the same material rather than
+   two different ideas of what code looks like. --step--1 rather than the label
+   step below it: at 13px the window read as a footnote panel beside 20px body
+   copy, and the size gap was doing as much to make it foreign as the colour was. */
+.term__body {
+    background: var(--surface-sunk);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    line-height: var(--line-height-code);
+    cursor: text;
+}
+
+.term.is-minimised .term__body {
+    display: none;
+}
+
+.term__scroll {
+    padding: 10px 12px 14px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+/* A terminal has a viewport, and the title bar states its size, so the window is
+   actually that size: 24 rows of the line box it is set in. Claiming 80x24 above
+   a box of some other height is the kind of costume this whole component has to
+   avoid to be worth shipping.
+
+   It only becomes a viewport once there is a shell to scroll. Without JavaScript
+   the window holds the whole session already run, and putting that behind an
+   inner scrollbar would hide the page's only copy of it. */
+.js .term__scroll {
+    height: calc(20 * var(--line-height-code) * var(--step--1));
+}
+
+/* Zoom grows rows, not columns. Width is the one dimension the title bar states,
+   so it is the one dimension a control must not quietly contradict — and rows
+   are the axis that actually buys the reader anything. */
+.js .term.is-zoomed .term__scroll {
+    height: calc(34 * var(--line-height-code) * var(--step--1));
+}
+
+.term__line {
+    margin: 0;
+}
+
+/* The prompt is the string ink: green, but this site's green, and already
+   measured against this surface. */
+.term__prompt {
+    color: var(--syn-string);
+    white-space: nowrap;
+}
+
+.term__typed {
+    color: var(--text);
+}
+
+.term__out {
+    margin-block: var(--space-3xs) var(--space-sm);
+}
+
+
+.term__out-line {
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+/* Dim terminal text is a comment in everything but name, so it is set in the
+   comment ink. */
+.term__dim {
+    color: var(--syn-comment);
+}
+
+.term__error {
+    color: var(--syn-error);
+}
+
+.term__json {
+    white-space: pre;
+    overflow-x: auto;
+}
+
+/* Every command in `help` is a button as well as a word to type: a phone has no
+   Tab key, and its keyboard covers the output it would complete. */
+.term__help-row {
+    display: grid;
+    grid-template-columns: 11ch minmax(0, 1fr);
+    gap: var(--space-sm);
+}
+
+.term__cmd {
+    font: inherit;
+    text-align: start;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--syn-func);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    cursor: pointer;
+}
+
+.term__cmd:hover {
+    text-decoration-thickness: 2px;
+}
+
+.term__link {
+    color: var(--syn-func);
+    text-underline-offset: 0.2em;
+    overflow-wrap: anywhere;
+}
+
+/* --- printed output ------------------------------------------------------ */
+
+/* Columns are measured in characters, because that is the unit the face this is
+   set in actually has. */
+.term__table {
+    display: grid;
+}
+
+.term__row {
+    display: grid;
+    grid-template-columns: 17ch minmax(0, 1fr);
+    gap: var(--space-sm);
+}
+
+.term__key {
+    color: var(--syn-comment);
+    text-transform: uppercase;
+}
+
+.term__val {
+    margin: 0;
+    min-width: 0;
+}
+
+.term__val .term__cell + .term__cell::before {
+    content: "·";
+    margin-inline: 0.5ch;
+    color: var(--syn-punct);
+}
+
+/* Capped in characters, not left to the window. A grade column pushed to the
+   far edge of a 105-column terminal is aligned but unreadable — the eye has to
+   cross the whole window to pair a name with its measure. This is the width at
+   which the pair still reads as one row. */
+.term__val--graded {
+    display: grid;
+    max-inline-size: 52ch;
+}
+
+.term__val--graded .term__cell {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-sm);
+}
+
+.term__val--graded .term__cell + .term__cell::before {
+    content: none;
+}
+
+.term__val--graded .term__dim {
+    text-align: end;
+}
+
+.term__record {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    /* Same argument as the schedule's grade column: the organisation belongs
+       beside the role, not at the far edge of whatever width the sheet gives. */
+    max-inline-size: 76ch;
+}
+
+.term__record-row {
+    display: grid;
+    grid-template-columns: 12ch minmax(0, 1fr) auto;
+    gap: 0 var(--space-sm);
+}
+
+.term__role {
+    color: var(--text);
+}
+
+.term__record-note {
+    grid-column: 2 / -1;
+    margin: 0;
+    color: var(--syn-comment);
+}
+
+.term__projects {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--space-sm);
+}
+
+.term__project {
+    display: grid;
+}
+
+.term__project-name::before {
+    content: "$ ";
+    color: var(--syn-string);
+}
+
+.term__project-desc {
+    color: var(--syn-comment);
+}
+
+.term__tag::before { content: "["; }
+.term__tag::after { content: "] "; }
+
+/* The number ink, which is what a tag is closest to here — and it is the same
+   value as --accent, so the sheet's one signal colour still means one thing. */
+.term__tag {
+    color: var(--syn-number);
+}
+
+/* Wraps at the window's width the way a shell's own output does. Deliberately
+   not pre-wrap: the line breaks in the source are how the param was typed into
+   hugo.toml, not where the author meant the line to end. */
+.term__prose {
+    margin: 0;
+}
+
+.term__prose p {
+    margin: 0;
+}
+
+.term__prose p + p {
+    margin-top: var(--space-sm);
+}
+
+/* --- the input line ------------------------------------------------------ */
+
+/* Hidden without JavaScript: a prompt that cannot run anything is a worse lie
+   than no prompt at all, and the transcript above it has already said
+   everything the commands would. */
+.term__form {
+    display: none;
+}
+
+.js .term__form {
+    display: flex;
+    align-items: baseline;
+    gap: 1ch;
+}
+
+.term__input {
+    flex: 1;
+    min-width: 0;
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    padding: 0;
+    caret-color: var(--text);
+}
+
+.term__input:focus {
+    outline: none;
+}
+
+/* The focus ring belongs to the window, because the window is what the caret is
+   inside — a ring around a bare input line in a shell would be furniture no
+   terminal has. */
+.term__window:has(.term__input:focus-visible) {
+    outline: var(--line-frame) solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* --- closed -------------------------------------------------------------- */
+
+/* The class sets a display, so it has to say what [hidden] means as well —
+   otherwise the attribute loses on specificity and the closed-state line shows
+   over an open window. */
+.term__reopen[hidden] {
+    display: none;
+}
+
+.term__reopen {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs) 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    font-stretch: var(--font-stretch-label);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--meta);
+    transition: color var(--transition);
+}
+
+.term__reopen::before {
+    content: "▸";
+}
+
+.term__reopen:hover {
+    color: var(--accent);
+}
+
+@media (max-width: 40rem) {
+    /* The buttons end at 66px; the title starts clear of them rather than
+       against the green one. Left-aligned, because a bar this narrow has no
+       centre left to speak of once the buttons have taken their end of it. */
+    .term__title {
+        padding-inline: 78px 14px;
+        text-align: start;
+    }
+
+    .js .term__scroll {
+        height: calc(14 * var(--line-height-code) * var(--step--1));
+    }
+
+    .js .term.is-zoomed .term__scroll {
+        height: calc(24 * var(--line-height-code) * var(--step--1));
+    }
+
+    /* A phone is not 80 columns wide, so the key becomes a line of its own
+       rather than squeezing the value into nothing. The help list keeps its two
+       columns: those names are eight characters at most and fit even here, and
+       stacking them would double the length of the one thing a reader needs to
+       scan before they can do anything at all. */
+    .term__row,
+    .term__record-row {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    /* Stacked, the key and its value are one unit and must read as one. The
+       column gap that separated them side by side becomes a paragraph break
+       when it turns into a row gap, and the space belongs between the groups
+       instead. */
+    .term__row {
+        gap: 0;
+    }
+
+    .term__row + .term__row,
+    .term__record-row + .term__record-row {
+        margin-top: var(--space-sm);
+    }
+
+    .term__record-note {
+        grid-column: 1;
+    }
+
+    .term__val--graded .term__dim {
+        text-align: end;
+    }
+}
+
+@media (pointer: coarse) {
+    /* The window buttons keep their 12px look and gain a real target around it,
+       which is what macOS does with its own hit rectangles. */
+    .term__light {
+        outline-offset: 8px;
+    }
+
+    .term__lights {
+        gap: 16px;
+    }
+
+    .term__cmd {
+        padding-block: var(--space-3xs);
+    }
+}

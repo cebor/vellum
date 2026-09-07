@@ -50,8 +50,65 @@
     .search-results,
     .search-status,
     .heading__anchor,
+    .profile-views__index,
     .latest {
         display: none !important;
+    }
+
+    /* On screen the views are turned between and only one is open. Paper has no
+       control to turn them with, so every view prints, in order, and the index
+       that switched them goes away. */
+    .profile-view[hidden] {
+        display: block;
+    }
+
+    .profile-view + .profile-view {
+        margin-top: var(--space-2xl);
+    }
+
+    /* The profile shell prints as what it always was underneath: a transcript.
+       A window is a thing on a screen — its title bar, its buttons and its
+       prompt are all controls, and paper has none. What survives is the session
+       itself, in paper ink, at whatever length it runs to. The reader's own
+       session goes with the window; the transcript is the same on every copy. */
+    .term__bar,
+    .term__form,
+    .term__live,
+    .term__reopen {
+        display: none !important;
+    }
+
+    .term__window {
+        border: 0.5pt solid #999;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .term__body {
+        background: #fff;
+        color: #000;
+    }
+
+    .term__scroll {
+        height: auto;
+        overflow: visible;
+    }
+
+    .term__transcript[hidden] {
+        display: block;
+    }
+
+    .term__prompt,
+    .term__project-name::before {
+        color: #666;
+    }
+
+    .term__key,
+    .term__dim,
+    .term__project-desc,
+    .term__record-note,
+    .term__tag {
+        color: #666;
     }
 
     .sheet__frame {

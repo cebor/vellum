@@ -12,10 +12,10 @@
 {{- $posts = where $posts "Params.hiddenInHomeList" "!=" true }}
 {{- if and (gt $count 0) $posts }}
 <section class="latest">
-    <div class="latest__head">
-        <h2 class="latest__title">{{ i18n "latest_posts" }}</h2>
+    <div class="sheet-band">
+        <h2 class="sheet-band__label">{{ i18n "latest_posts" }}</h2>
         {{- with site.GetPage (index $sections 0) }}
-        <a class="latest__all" href="{{ .RelPermalink }}">{{ i18n "all_posts" }}{{ partialCached "icon.html" "arrow-right" "arrow-right" }}</a>
+        <a class="sheet-band__label" href="{{ .RelPermalink }}">{{ i18n "all_posts" }}{{ partialCached "icon.html" "arrow-right" "arrow-right" }}</a>
         {{- end }}
     </div>
     <ul class="post-list post-list--latest">

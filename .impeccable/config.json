@@ -22,6 +22,16 @@
         ],
         "createdAt": "2026-09-07T15:22:47.330Z",
         "reason": "Advisory, and the stripes are the theme's committed visual world rather than surface decoration: DESIGN.md records graph paper printed inside the frame and nowhere else, drawn in 20-layout.css as two hairline repeating gradients specifically so the substrate never becomes an image request. Verified it is the only repeating gradient on the page. Page-level finding, so an inline marker at the declaration was tested and does not reach it. Agent 2026-09-07."
+      },
+      {
+        "rule": "gpt-thin-border-wide-shadow",
+        "value": "*",
+        "files": [
+          "http://127.0.0.1:1313/de/",
+          "http://localhost:1313/de/"
+        ],
+        "createdAt": "2026-09-07T15:33:08.502Z",
+        "reason": "The macOS terminal window on the German landing page, and the theme's one sanctioned box-shadow. DESIGN.md records the exception and 35-terminal.css argues it at the head of the file: a window without a shadow is not a window but a mono-coloured box claiming to be one, and the shadow is what says the object lies on the sheet rather than being drawn on it. Measured, it is not the generated-UI floating-card glow the rule looks for: 0 1px 2px plus 0 8px 20px, mixed from the sheet's own --rule-frame at 34%/22% rather than from black, offset down so it grounds the window instead of haloing it. Scoped to the one route that renders profile.view = terminal, so the rule stays armed on every other page and would fire again if a shadow appeared anywhere else. Agent 2026-09-07."
       }
     ]
   }
