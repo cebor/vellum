@@ -9,9 +9,14 @@
     display: flex;
 }
 
+/* A highlighted line is a surface every syntax ink is read off, so it is an
+   opaque token rather than an alpha wash. At the old 10% the amber pushed
+   --syn-comment to 4.46:1 light and 4.38:1 dark; --hl-line is the same amber at
+   6%, which keeps the line visibly lit — about 3 L* off its ground, the same
+   step the graph substrate uses — and the comment above 4.5:1. */
 .chroma .hl {
     display: flex;
-    background: var(--accent-soft);
+    background: var(--hl-line);
 }
 
 .chroma .lntable {

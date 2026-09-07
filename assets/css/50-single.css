@@ -522,10 +522,13 @@
     margin-bottom: var(--space-3xs);
 }
 
+/* The panel tokens, not the -soft ones: an alert is a surface a label is read
+   off, and an alpha fill over the graph substrate is not a surface — it is a
+   composite that changes wherever a grid line runs under it. See 00-tokens.css. */
 .alert--warning,
 .alert--caution {
     border-color: var(--danger);
-    background: var(--danger-soft);
+    background: var(--danger-panel);
 }
 
 .alert--warning .alert__label,
@@ -536,7 +539,7 @@
 .alert--important,
 .alert--tip {
     border-color: var(--accent);
-    background: var(--accent-soft);
+    background: var(--accent-panel);
 }
 
 .alert--important .alert__label,

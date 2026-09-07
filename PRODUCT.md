@@ -211,7 +211,9 @@ third-party requests, with fonts self-hosted and Fuse.js bundled.
   has found a real defect, not a machine that was never given the harness.
 - **Measured figures that must not be re-estimated:** the 92-character measure was counted from a
   rendered line, against a conventional 83-character column counted the same way. The minimum
-  measured contrast across the palette is 4.87:1. Re-measure before changing either; a
+  measured contrast across the palette is 4.70:1 — `--syn-comment` on `--hl-line`, the
+  highlighted code line — down from a recorded 4.87:1 when the alert panels and that
+  highlight were alpha washes rather than opaque surfaces. Re-measure before changing either; a
   characters-per-pixel estimate is reliably wrong.
 - **No** adoption numbers, download counts, user testimonials, performance benchmarks or press exist.
   Do not fabricate them.

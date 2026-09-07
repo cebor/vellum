@@ -84,6 +84,34 @@
     --danger-soft: light-dark(rgba(163, 34, 24, 0.09), rgba(242, 164, 156, 0.12));
     --mark: light-dark(#f4dfae, #4a3a12);
 
+    /* --- surfaces that carry text, baked opaque ------------------------
+
+       The two -soft tokens above are alpha, which is correct for a hover wash
+       or a selection: nothing reads text off them. It was not correct for the
+       alert panels and the highlighted code line, and that difference had gone
+       unnoticed because the contrast audit checks tokens against *surfaces* and
+       these were not surfaces — they were the composite of a token and whatever
+       happened to be underneath. Underneath an alert is the graph substrate, so
+       the ground moved with the grid: a TIP label measured 4.86:1 over paper and
+       4.47:1 where a glyph crossed a grid line, which is under the binding
+       4.5:1 and was never visible to a check that reads only tokens.
+
+       These three are the same colours baked against the surface they sit on,
+       so the value a label is measured against is the value that renders. The
+       alert panels are the current tints at their current alphas over --bg, so
+       nothing about an alert changes except that the grid no longer shows
+       through it. --hl-line steps the amber back from 10% to 6% over
+       --surface-sunk, because --syn-comment is the dimmest ink the palette has
+       and any more amber than that pushes a commented highlighted line under
+       the line.
+
+       The measured minimum across the palette now sits here, at 4.70:1, and any
+       new value in this group is checked against every --syn-* ink rather than
+       against --text alone. */
+    --accent-panel: light-dark(#e5e0d4, #302b1e);
+    --danger-panel: light-dark(#e8ddd9, #2d272a);
+    --hl-line: light-dark(#e3e2d8, #232422);
+
     --selection: light-dark(rgba(138, 82, 0, 0.18), rgba(233, 169, 58, 0.24));
 
     /* Every text token above clears 4.5:1 against the surface it sits on in
@@ -245,6 +273,9 @@
         --accent-soft: rgba(138, 82, 0, 0.1);
         --danger: #a32218;
         --danger-soft: rgba(163, 34, 24, 0.09);
+        --accent-panel: #e5e0d4;
+        --danger-panel: #e8ddd9;
+        --hl-line: #e3e2d8;
         --mark: #f4dfae;
         --selection: rgba(138, 82, 0, 0.18);
         --syn-keyword: #8a4b18;
