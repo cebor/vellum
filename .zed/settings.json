@@ -1,0 +1,18 @@
+{
+  // Every .html file in this repo is a Hugo template — all 58 live under
+  // layouts/ and all contain {{ … }} actions. Plain HTML highlighting treats
+  // those actions as text, so they are mapped to the language the "Gotmpl"
+  // extension (hjr265/zed-gotmpl) registers. Without that extension installed
+  // the name does not resolve and Zed falls back to HTML.
+  "file_types": {
+    "Go HTML Template": ["html"]
+  },
+  // The extension's own defaults are hard_tabs = true; .editorconfig says
+  // spaces. Restated here so the two cannot disagree.
+  "languages": {
+    "Go HTML Template": {
+      "tab_size": 4,
+      "hard_tabs": false
+    }
+  }
+}
