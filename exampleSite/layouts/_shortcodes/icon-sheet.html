@@ -1,0 +1,26 @@
+{{- /* Renders a row of the theme's icons, each under its own name.
+
+       Deliberately a *site* shortcode rather than a theme one. A shortcode in
+       layouts/_shortcodes/ of the theme would be public API: documented in the
+       README, kept working across releases, and one more thing a post can call.
+       This exists to document the icon set, which is a job for the demo.
+
+       The names are written out at the call site rather than derived, because a
+       template cannot introspect icon.html. That is the point of rendering them
+       instead of listing them: a name that stops existing draws the fallback
+       link glyph here, in the open, rather than going quietly wrong in someone's
+       socialIcons.
+
+       Usage: {{< icon-sheet names="github, gitlab, codeberg" >}} */ -}}
+{{- $names := split (.Get "names") "," -}}
+<ul class="icon-sheet" role="list">
+{{- range $names }}
+{{- $n := trim . " " }}
+{{- with $n }}
+    <li class="icon-sheet__item">
+        {{ partialCached "icon.html" . . }}
+        <code class="icon-sheet__name">{{ . }}</code>
+    </li>
+{{- end }}
+{{- end }}
+</ul>

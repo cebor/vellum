@@ -1,0 +1,68 @@
+/* Demo-site styles, not theme styles.
+ *
+ * This file is here to be the worked example of what the README calls "Your own
+ * CSS": a site drops assets/css/99-local.css next to the theme's own numbered
+ * files, Hugo's asset union puts it in the same glob, and the numeric prefix
+ * makes it land last so its rules win without a fork. Until now the demo
+ * documented that path without ever walking it.
+ *
+ * Everything below styles the icon sheet on /docs/icons/ and nothing else. */
+
+/* A parts schedule, not a swatch grid: shared hairlines rather than gaps, so
+ * the cells read as ruled fields on the sheet like the title block does.
+ * The container draws the top and left rule, each cell the other two. */
+.icon-sheet {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+    /* A one-off component geometry: 7.5rem is what fits the longest name
+     * (`chevron-right`) on one line at --step--2 in the mono face. It belongs
+     * to this component and to nothing else, so it is a literal here rather
+     * than a token. */
+    margin: var(--space-lg) 0;
+    padding: 0;
+    list-style: none;
+    border-top: var(--line-thin) solid var(--rule);
+    border-left: var(--line-thin) solid var(--rule);
+}
+
+.icon-sheet__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-md) var(--space-2xs);
+    border-right: var(--line-thin) solid var(--rule);
+    border-bottom: var(--line-thin) solid var(--rule);
+}
+
+/* The set is authored at 24x24; drawn here at 28 so the stroke weight is
+ * legible as a stroke weight, which is the thing a name cannot tell you. */
+.icon-sheet__item .icon {
+    width: 28px;
+    height: 28px;
+    color: var(--text);
+}
+
+/* Two classes deliberately: the theme styles inline code as a chip with
+ * `.content code`, which outranks a single class however late this file lands
+ * in the cascade. Here the cell is the field the name sits in, so a second
+ * field drawn around the name is one box too many. */
+.icon-sheet .icon-sheet__name {
+    font-size: var(--step--2);
+    line-height: var(--line-height-snug);
+    color: var(--meta-soft);
+    text-align: center;
+    overflow-wrap: anywhere;
+    /* The name is the string you type into socialIcons, so it is set as code
+     * and carries no background of its own -- the cell is the field. */
+    background: none;
+    padding: 0;
+}
+
+@media print {
+    /* A cell split across a page break loses either the mark or its name, and
+     * one without the other is useless. */
+    .icon-sheet__item {
+        break-inside: avoid;
+    }
+}

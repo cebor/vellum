@@ -181,6 +181,11 @@ caption. Markdown works here, so a [link](https://gohugo.io/) does too.
       weight = 10
 
     [[languages.en.menus.main]]
+      name = "Docs"
+      pageRef = "/docs"
+      weight = 15
+
+    [[languages.en.menus.main]]
       name = "Tags"
       pageRef = "/tags"
       weight = 20
@@ -340,6 +345,11 @@ Markdown funktioniert hier, also auch ein [Link](https://gohugo.io/).
       name = "Beiträge"
       pageRef = "/posts"
       weight = 10
+
+    [[languages.de.menus.main]]
+      name = "Doku"
+      pageRef = "/docs"
+      weight = 15
 
     [[languages.de.menus.main]]
       name = "Tags"
