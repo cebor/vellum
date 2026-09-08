@@ -9,6 +9,18 @@ the format they follow is in [`CONTRIBUTING.md`](CONTRIBUTING.md). Only changes 
 can see are listed — refactors, documentation, CI and build chores are not. Releases up to 0.1.2
 predate the generated format and were written by hand.
 
+## [0.3.1](https://github.com/cebor/vellum/compare/v0.3.0...v0.3.1) - 2026-09-08
+
+### Fixed
+
+- **print:** carry .js into the terminal's print height override (c991e1a)
+- **css:** sort the stylesheet glob so a site's own CSS lands last (1be7957)
+- **print:** drop the graph substrate from the printed sheet (0b2a806)
+
+### Performance
+
+- **css:** drop the terminal sheet from the bundle when it is unused (47acdca)
+
 ## [0.3.0](https://github.com/cebor/vellum/compare/v0.2.10...v0.3.0) - 2026-09-08
 
 ### Added
