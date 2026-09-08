@@ -87,7 +87,16 @@
 
        .Name carries a leading slash, like the font names above. */}}
 {{- $terminal := eq (lower (site.Params.profile.view | default "index")) "terminal" }}
-{{- $sheets := resources.Match "css/*.css" }}
+{{- /* Sorted explicitly, and it is load-bearing. resources.Match walks the
+       union of the site's assets and the theme's, and it returns the site's
+       first rather than merging the two runs alphabetically — so a consuming
+       site's own css/99-local.css was concatenated *before* 00-tokens.css and
+       lost every tie it should have won. That is the exact opposite of what
+       README's "Customising → Your own CSS" promises, and it failed silently:
+       a local rule with more specificity than the theme's still worked, so the
+       bug only showed up on a plain one-class override. The theme's own files
+       are already in prefix order, so this sort moves nothing but the site's. */}}
+{{- $sheets := sort (resources.Match "css/*.css") "Name" }}
 {{- if not $terminal }}
 {{- $sheets = where $sheets "Name" "!=" "/css/35-terminal.css" }}
 {{- end }}
