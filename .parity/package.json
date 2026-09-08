@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "playwright-core": "^1.62.1"
+  },
+  "devDependencies": {
+    "sharp": "^0.34.4"
   }
 }

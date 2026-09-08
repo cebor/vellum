@@ -26,6 +26,17 @@
  */
 import { chromium } from 'playwright-core';
 import { mkdirSync, writeFileSync } from 'node:fs';
+/* A devDependency, not a dependency: taking a shot still needs only
+ * playwright-core, and `npm install --omit=dev` leaves a harness that reviews
+ * fine and cannot regenerate the fixtures. It is here because Chrome cannot
+ * encode what these images need. canvas.toDataURL('image/webp', 1) is WebP
+ * quality 100 and still lossy, and hairline rules, frame edges and tracked
+ * lettering are exactly the subject that smears under it -- on the one image
+ * that has to prove the theme draws cleanly. sharp does lossless WebP.
+ *
+ * Nothing about this rides into a consuming site: node_modules/ is ignored, so
+ * a module download takes package.json and package-lock.json and no more. */
+import sharp from 'sharp';
 
 const BASE = `http://localhost:${process.env.VELLUM_SHOTS_PORT || 1313}`;
 const OUT = '.impeccable/review';
@@ -50,6 +61,12 @@ const pages = [
     ['tags', '/en/tags/'],
     ['tag', '/en/tags/reference/'],
     ['search', '/en/search/'],
+    /* The demo's docs section. /docs/icons/ is the only page that builds every
+     * branch of icon.html, including the unknown-name fallback, so it is the
+     * only place a broken glyph would show up in a review round at all. */
+    ['docs', '/en/docs/'],
+    ['docs-icons', '/en/docs/icons/'],
+    ['docs-landing', '/en/docs/the-landing-page/'],
     ['post-ai', '/en/posts/multilingual-by-design/'],
     /* The zone rail is the theme's signature surface and had no shot of its
      * own; the paginated list is the only place the pager renders at all. */
@@ -102,17 +119,59 @@ const viewports = [
  * The README hero stays a genuine pair rather than a split: its <picture> already
  * hands each reader the right variant at full width. */
 const FIXTURE_HERO = '/en/posts/code-and-terminal-output/';
+const FIXTURE_VIEWPORT = { width: 1500, height: 1000 };
+/* A4 at 96dpi is 794x1123; this is that shape with room to breathe. */
+const PAPER_VIEWPORT = { width: 900, height: 1240 };
+
+/* Two formats, and the split is not a preference. themes.gohugo.io accepts only
+ * .png/.jpg, so the registry pair has to stay PNG; the README is served to a
+ * browser and is free, so everything it loads is lossless WebP -- same pixels,
+ * roughly a third of the bytes. That matters more here than page weight: every
+ * tracked byte is downloaded by every site that runs `hugo mod get` on this
+ * theme, which is the same argument that keeps .claude/ untracked.
+ *
+ * `anchor` scrolls a selector to the top of the viewport before the shot, so a
+ * gallery frame is composed on the thing it is meant to show rather than on a
+ * pixel offset that drifts the moment the content above it changes.
+ * `media: 'print'` shoots through the print stylesheet. */
 const fixtures = [
-    /* file, path, scheme, deviceScaleFactor */
-    ['images/screenshot.png', FIXTURE_HERO, 'split', 1],
+    { file: 'images/screenshot.png', path: FIXTURE_HERO, scheme: 'split', dsf: 1 },
     /* 900x600 out of the same 1500x1000 layout: a sub-1 DPR scales the raster
      * without moving a single breakpoint, so the thumbnail is the screenshot
      * rather than a second, differently-composed shot of the same page. */
-    ['images/tn.png', FIXTURE_HERO, 'split', 0.6],
-    ['images/hero-light.png', FIXTURE_HERO, 'light', 1],
-    ['images/hero-dark.png', FIXTURE_HERO, 'dark', 1],
+    { file: 'images/tn.png', path: FIXTURE_HERO, scheme: 'split', dsf: 0.6 },
+    { file: 'images/hero-light.webp', path: FIXTURE_HERO, scheme: 'light', dsf: 1 },
+    { file: 'images/hero-dark.webp', path: FIXTURE_HERO, scheme: 'dark', dsf: 1 },
+
+    /* The README gallery. Each one exists because the README makes a claim there
+     * that prose alone cannot settle.
+     *
+     * Genuine pairs, not splits -- for the reason stated above the hero, which
+     * applies to every README image and only stops applying at the registry: a
+     * <picture> hands each reader the right variant at full width, and the
+     * gallery is read in the README. Two of them could not be split anyway. A
+     * split's seam has to fall where only paper and ink change, and the icon
+     * grid's cell rules land wherever they land, so a 50% cut bisects a cell and
+     * truncates its name. The terminal is worse: it is animated and measures its
+     * own window, so two loads are two different states and the composite would
+     * show a filled window beside an empty one. */
+    { file: 'images/gallery-terminal-light.webp', path: '/de/', scheme: 'light', dsf: 1, anchor: '.term', click: '.term__cmd:text-is("skills")' },
+    { file: 'images/gallery-terminal-dark.webp', path: '/de/', scheme: 'dark', dsf: 1, anchor: '.term', click: '.term__cmd:text-is("skills")' },
+    { file: 'images/gallery-icons-light.webp', path: '/en/docs/icons/', scheme: 'light', dsf: 1, anchor: '.icon-sheet' },
+    { file: 'images/gallery-icons-dark.webp', path: '/en/docs/icons/', scheme: 'dark', dsf: 1, anchor: '.icon-sheet' },
+    /* "A dedicated print stylesheet, not an afterthought" was the one claim in
+     * the README no reader could check. Paper is not a scheme -- 95-print.css
+     * sets its own ink -- so this is one frame, and it is shot on a
+     * paper-proportioned viewport rather than the 3:2 landscape the others use,
+     * because a print stylesheet stretched across 1500px is not what anyone's
+     * printer does with it. */
+    { file: 'images/gallery-print.webp', path: '/en/posts/reading-a-sheet/', scheme: 'light', dsf: 1, media: 'print', viewport: PAPER_VIEWPORT },
 ];
-const FIXTURE_VIEWPORT = { width: 1500, height: 1000 };
+
+/* PNG in, the tracked format out, dimensions untouched. */
+const encode = (file, buf) => file.endsWith('.webp')
+    ? sharp(buf).webp({ lossless: true, effort: 6 }).toBuffer()
+    : sharp(buf).png({ compressionLevel: 9, effort: 10 }).toBuffer();
 
 const argv = process.argv.slice(2);
 const FIXTURES = argv.includes('--fixtures');
@@ -185,16 +244,79 @@ if (FIXTURES) {
 
     /* One route in one scheme, at the fixture viewport. Returns the PNG buffer,
      * or null once visit() has already recorded why not. */
-    const shoot = async (label, path, scheme, dsf) => {
+    const shoot = async (label, path, scheme, dsf, anchor, media, viewport, click) => {
         const ctx = await browser.newContext({
-            viewport: FIXTURE_VIEWPORT,
+            viewport: viewport || FIXTURE_VIEWPORT,
             colorScheme: scheme,
             deviceScaleFactor: dsf,
+            /* Not a stylistic choice — it is what makes a fixture a fixture.
+             * 10-base.css turns on scroll-behavior: smooth under
+             * no-preference, so an anchored scroll would still be in flight
+             * when the shutter falls; and the terminal types its output a
+             * character at a time, so two loads of /de/ are two different
+             * states. Under reduce both settle instantly and the same frame
+             * comes out every run. The content is identical either way: the
+             * theme's reduced-motion path shows the finished session, it does
+             * not show less of it. */
+            reducedMotion: 'reduce',
         });
         const page = await ctx.newPage();
         let buf = null;
         if (await visit(page, label, path)) {
+            /* Emulated before settle(), so the fonts and images that settle()
+             * waits on are the ones the print sheet actually asks for. */
+            if (media) await page.emulateMedia({ media });
             await settle(page);
+            if (click) {
+                /* Staging, not faking. The terminal opens on `help` and 24 rows,
+                 * so a frame of it untouched is a third of a window and
+                 * two-thirds of an empty field — a picture of the chrome rather
+                 * than of the thing. This runs one of the commands the window
+                 * itself offers as a button, which is what a visitor does with
+                 * it, and under reducedMotion the output lands at once instead
+                 * of being typed, so the frame is the same every run. */
+                const target = page.locator(click);
+                if (!await target.count()) {
+                    failures.push(`${label} ${path} — nothing matches ${click}`);
+                    await ctx.close();
+                    return null;
+                }
+                await target.first().click();
+                await page.waitForTimeout(400);
+            }
+            if (anchor) {
+                /* A missing anchor is a composition silently taken on whatever
+                 * happened to be at the top of the page — the same class of
+                 * quiet wrong as a stale route, so it fails the round instead. */
+                const found = await page.evaluate(sel => {
+                    const el = document.querySelector(sel);
+                    if (!el) return false;
+                    /* .header is sticky, so scrolling the anchor to y=0 parks
+                     * it underneath the header instead of below it. */
+                    const head = document.querySelector('.header');
+                    const offset = head ? head.getBoundingClientRect().height : 0;
+                    /* Plus a little air, so the anchored element's own top rule
+                     * is inside the frame rather than flush against the header
+                     * and shaved off by it. */
+                    window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - offset - 24);
+                    return true;
+                }, anchor);
+                if (!found) {
+                    failures.push(`${label} ${path} — no element matches ${anchor}`);
+                    await ctx.close();
+                    return null;
+                }
+                await page.waitForTimeout(200);
+            }
+            /* A fixture must not carry a state nobody asked for. After a
+             * click the pointer is still resting on what it hit and the focus
+             * ring is still on it, so the frame shows one control lit up for
+             * reasons that are about the harness rather than the theme. Park
+             * the pointer off-canvas and drop focus before the shutter. */
+            await page.mouse.move(0, 0);
+            await page.evaluate(() => document.activeElement?.blur());
+            await page.waitForTimeout(150);
+
             buf = await page.screenshot({ fullPage: false });
         }
         await ctx.close();
@@ -208,24 +330,27 @@ if (FIXTURES) {
      * the whole round is two page loads, and the composite's halves are provably
      * the heroes rather than merely another shot of them. */
     const cache = new Map();
-    const capture = (label, path, scheme, dsf) => {
-        const key = `${path}|${scheme}|${dsf}`;
-        if (!cache.has(key)) cache.set(key, shoot(label, path, scheme, dsf));
+    const capture = (label, path, scheme, dsf, anchor, media, viewport, click) => {
+        const vp = viewport || FIXTURE_VIEWPORT;
+        const key = `${path}|${scheme}|${dsf}|${anchor || ''}|${media || ''}|${vp.width}x${vp.height}|${click || ''}`;
+        if (!cache.has(key)) cache.set(key, shoot(label, path, scheme, dsf, anchor, media, viewport, click));
         return cache.get(key);
     };
 
     /* Both sources always at DPR 1: the composite carries the fixture's own
      * scale, and a source shot at 0.6 would have nothing left to scale down. */
-    const frames = (label, path) => Promise.all([
-        capture(label, path, 'light', 1),
-        capture(label, path, 'dark', 1),
+    const frames = (label, path, anchor, media) => Promise.all([
+        capture(label, path, 'light', 1, anchor, media),
+        capture(label, path, 'dark', 1, anchor, media),
     ]);
 
-    /* Composited by the browser that is already open, rather than by an image
-     * library: the harness vendors playwright-core and nothing else, and anything
-     * vendored here rides into every consuming site's module cache with the
-     * theme. The two frames go in as data URIs and the dark one is clipped to the
-     * right half; settle() forces the decode before the shot. */
+    /* Composited by the browser that is already open rather than by sharp, which
+     * is now on hand and could do it. Keeping it here is not inertia: the halves
+     * have to line up on a seam that runs through the header rule, the frame's
+     * top edge and every title-block row rule, and the browser is what laid those
+     * out in the first place. The two frames go in as data URIs and the dark one
+     * is clipped to the right half; settle() forces the decode before the shot.
+     * sharp's job is the encode at the end, where the pixels are already fixed. */
     const composite = async (light, dark, dsf) => {
         const ctx = await browser.newContext({
             viewport: FIXTURE_VIEWPORT,
@@ -252,13 +377,13 @@ if (FIXTURES) {
         return buf;
     };
 
-    for (const [file, path, scheme, dsf] of fixtures) {
+    for (const { file, path, scheme, dsf, anchor, media, viewport, click } of fixtures) {
         if (scheme === 'split') {
-            const [light, dark] = await frames(file, path);
+            const [light, dark] = await frames(file, path, anchor, media);
             if (light && dark) captured.push([file, await composite(light, dark, dsf)]);
             continue;
         }
-        const buf = await capture(file, path, scheme, dsf);
+        const buf = await capture(file, path, scheme, dsf, anchor, media, viewport, click);
         if (buf) captured.push([file, buf]);
     }
 
@@ -266,8 +391,9 @@ if (FIXTURES) {
 
     if (captured.length === fixtures.length) {
         for (const [file, buf] of captured) {
-            writeFileSync(file, buf);
-            console.log(`    ${file}`);
+            const out = await encode(file, buf);
+            writeFileSync(file, out);
+            console.log(`    ${file}  ${(out.length / 1024).toFixed(0)} KB`);
             shots++;
         }
     }
