@@ -215,6 +215,9 @@ forward with the next patch.
   existed. The README hero and gallery stay real light/dark pairs — a `<picture>` already serves the
   right one at full width, and two of the gallery frames could not be split anyway: a seam through
   the icon grid bisects a cell, and the terminal is animated, so two loads are two different states.
+  The print frame is a third case: `95-print.css` forces a white ground in either scheme, so its
+  "pair" is a comparison — the page on screen at the left, on paper at the right — and the left half
+  is what carries the reader's scheme.
   The composite is still assembled in the browser the script already drives, because the halves have
   to line up on rules that browser laid out.
 

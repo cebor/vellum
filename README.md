@@ -85,14 +85,15 @@ unknown one, so the typo fallback is visible rather than described.
 
 ### On paper
 
-The site chrome goes, the sheet stays: breadcrumb trail, ruled title block, figures with their
-captions. Paper gets its own ink rather than the screen palette, because paper is not a surface the
-screen palette was contrast-checked against — so the printed page is white in either scheme, and
-what follows your theme here is the field it is laid on.
+The same post twice: **on screen at the left, on paper at the right.** The site chrome goes, and
+the sheet stays — breadcrumb trail, ruled title block, figures with their captions, the title block
+printing heavier rather than lighter. The graph substrate goes too, because on paper the reader's own
+sheet is the substrate. Paper gets its own ink rather than the screen palette, which is why the right
+half stays white whichever scheme you are reading this in.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/cebor/vellum/main/images/gallery-print-dark.webp">
-  <img alt="A print preview: the same post on a white sheet, with no header or navigation, a breadcrumb trail, the title block ruled out as a table, and the cover figure with its caption"
+  <img alt="The same post side by side: on the left as rendered on screen, with header, navigation, zone rail and contents panel; on the right as printed, with all of that gone, a breadcrumb trail at the top, the title block ruled heavier, and the cover figure with its caption"
        src="https://raw.githubusercontent.com/cebor/vellum/main/images/gallery-print-light.webp">
 </picture>
 

@@ -120,8 +120,17 @@ const viewports = [
  * hands each reader the right variant at full width. */
 const FIXTURE_HERO = '/en/posts/code-and-terminal-output/';
 const FIXTURE_VIEWPORT = { width: 1500, height: 1000 };
-/* A4 at 96dpi is 794x1123; this is that shape with room to breathe. */
-const PAPER_VIEWPORT = { width: 900, height: 1240 };
+/* The two halves of the print comparison. Both are 3:4, which is what a half of
+ * the 3:2 gallery frame is, so each fills its side exactly and neither has to be
+ * letterboxed or cropped to fit.
+ *
+ * The screen half is 1000 wide and cannot go much below it: --frame-collapse is
+ * 60rem, so a narrower viewport gives the collapsed layout and the comparison
+ * would be against a page the desktop reader never sees. The paper half is near
+ * A4's 794x1123 at 96dpi, because a print stylesheet stretched across 1500px is
+ * not what anyone's printer does with it. */
+const SCREEN_VIEWPORT = { width: 1000, height: 1333 };
+const PAPER_VIEWPORT = { width: 900, height: 1200 };
 
 /* Two formats, and the split is not a preference. themes.gohugo.io accepts only
  * .png/.jpg, so the registry pair has to stay PNG; the README is served to a
@@ -160,22 +169,25 @@ const fixtures = [
     { file: 'images/gallery-icons-light.webp', path: '/en/docs/icons/', scheme: 'light', dsf: 1, anchor: '.icon-sheet' },
     { file: 'images/gallery-icons-dark.webp', path: '/en/docs/icons/', scheme: 'dark', dsf: 1, anchor: '.icon-sheet' },
     /* "A dedicated print stylesheet, not an afterthought" was the one claim in
-     * the README no reader could check.
+     * the README no reader could check, and it is the one frame that cannot be
+     * a plain screenshot of the result.
      *
-     * The page itself is shot on a paper-proportioned viewport, because a print
-     * stylesheet stretched across 1500px is not what anyone's printer does with
-     * it -- but a portrait frame among two landscape ones read as a mistake in
-     * the gallery, so the sheet is then mounted on the 3:2 field the others use.
-     *
-     * That mount is also the only honest way to give this one a dark variant.
      * 95-print.css forces color-scheme: light and a white ground whatever the
-     * reader has chosen, because paper is not a surface the screen palette was
-     * contrast-checked against — so there is no dark rendering of the printed
-     * page, and shooting one would be a picture of a feature the theme does not
-     * have. What can follow the reader is the ground the sheet lies on, which is
-     * what a print preview shows anyway. The paper stays paper in both. */
-    { file: 'images/gallery-print-light.webp', path: '/en/posts/reading-a-sheet/', scheme: 'light', dsf: 1, media: 'print', viewport: PAPER_VIEWPORT, mount: 'light' },
-    { file: 'images/gallery-print-dark.webp', path: '/en/posts/reading-a-sheet/', scheme: 'light', dsf: 1, media: 'print', viewport: PAPER_VIEWPORT, mount: 'dark' },
+     * reader chose, because paper is not a surface the screen palette was
+     * contrast-checked against. There is therefore no dark rendering of the
+     * printed page: a light/dark pair of it is the same image twice. Mounting the
+     * sheet on a dark field was tried and does not work either -- the field was
+     * 59% of the frame and the thing still read as a white block, because a white
+     * sheet on dark reads bright whatever surrounds it.
+     *
+     * So the frame shows the change instead of the result: the page on screen
+     * beside the same page on paper. The left half is the reader's own scheme,
+     * which is what makes the dark variant actually dark, and the comparison is
+     * the more useful image anyway -- it shows what the stylesheet *does*, which
+     * a picture of the output alone never did. Chrome and rail gone, the ink
+     * re-set, the title block heavier. */
+    { file: 'images/gallery-print-light.webp', path: '/en/posts/reading-a-sheet/', scheme: 'light', dsf: 1, compare: true },
+    { file: 'images/gallery-print-dark.webp', path: '/en/posts/reading-a-sheet/', scheme: 'dark', dsf: 1, compare: true },
 ];
 
 /* PNG in, the tracked format out, dimensions untouched. */
@@ -361,48 +373,26 @@ if (FIXTURES) {
      * out in the first place. The two frames go in as data URIs and the dark one
      * is clipped to the right half; settle() forces the decode before the shot.
      * sharp's job is the encode at the end, where the pixels are already fixed. */
-    /* The theme's own two background values, read out of the page rather than
-     * written down here: head-assets.html emits them as the theme-color pair,
-     * which tokens.html parses from --bg in 00-tokens.css. A recoloured theme
-     * therefore carries the gallery's mount with it, the same way it carries the
-     * pinned-tab tint. */
-    const themeGround = async (path) => {
-        const ctx = await browser.newContext({ viewport: FIXTURE_VIEWPORT });
-        const page = await ctx.newPage();
-        let out = null;
-        if (await visit(page, 'ground', path)) {
-            out = await page.evaluate(() => {
-                const read = q => document.querySelector(q)?.getAttribute('content');
-                return {
-                    light: read('meta[name="theme-color"][media*="light"]'),
-                    dark: read('meta[name="theme-color"][media*="dark"]'),
-                };
-            });
-        }
-        await ctx.close();
-        return out && out.light && out.dark ? out : null;
-    };
-
-    /* Lays the printed sheet on a field of the theme's background, at the 3:2 the
-     * rest of the gallery uses. Scaled to leave a margin on the long edge, and
-     * given a hairline edge rather than a drop shadow: this theme argues about
-     * box-shadow, and a rule is what it draws everything else with. */
-    const mount = async (paper, ground) => {
+    /* Screen beside paper, in the gallery's 3:2. Both sources are 3:4 and each
+     * half is 3:4, so they scale to fill without a crop or a letterbox, and the
+     * seam is a hairline rather than a gap -- a gap would read as two pictures,
+     * and this is one. */
+    const sideBySide = async (screen, paper) => {
         const ctx = await browser.newContext({ viewport: FIXTURE_VIEWPORT, deviceScaleFactor: 1 });
         const page = await ctx.newPage();
         const { width, height } = FIXTURE_VIEWPORT;
-        const sheetH = Math.round(height * 0.92);
-        const sheetW = Math.round(sheetH * PAPER_VIEWPORT.width / PAPER_VIEWPORT.height);
+        const half = width / 2;
         await page.setContent(`<!doctype html>
 <style>
   html, body { margin: 0; padding: 0; }
-  .field { width: ${width}px; height: ${height}px; background: ${ground};
-           display: flex; align-items: center; justify-content: center; }
-  .field img { display: block; width: ${sheetW}px; height: ${sheetH}px;
-               outline: 1px solid rgba(128, 128, 128, 0.35); }
+  .pair { display: flex; width: ${width}px; height: ${height}px; overflow: hidden; }
+  .pair img { display: block; width: ${half}px; height: ${height}px; }
+  .pair .paper { border-left: 1px solid rgba(128, 128, 128, 0.45); }
 </style>
-<div class="field"><img src="data:image/png;base64,${paper.toString('base64')}"></div>`,
-            { waitUntil: 'load' });
+<div class="pair">
+  <img src="data:image/png;base64,${screen.toString('base64')}">
+  <img class="paper" src="data:image/png;base64,${paper.toString('base64')}">
+</div>`, { waitUntil: 'load' });
         await settle(page);
         const buf = await page.screenshot({ fullPage: false });
         await ctx.close();
@@ -435,27 +425,24 @@ if (FIXTURES) {
         return buf;
     };
 
-    /* Resolved once, and only if something actually asks to be mounted. */
-    let ground = null;
-    if (fixtures.some(f => f.mount)) ground = await themeGround('/en/');
-
-    for (const { file, path, scheme, dsf, anchor, media, viewport, click, mount: on } of fixtures) {
+    for (const { file, path, scheme, dsf, anchor, media, viewport, click, compare } of fixtures) {
         if (scheme === 'split') {
             const [light, dark] = await frames(file, path, anchor, media);
             if (light && dark) captured.push([file, await composite(light, dark, dsf)]);
             continue;
         }
-        const buf = await capture(file, path, scheme, dsf, anchor, media, viewport, click);
-        if (!buf) continue;
-        if (on) {
-            if (!ground) {
-                failures.push(`${file} — could not read the theme-color pair to mount on`);
-                continue;
-            }
-            captured.push([file, await mount(buf, ground[on])]);
+        if (compare) {
+            /* The paper half is identical for both variants and comes out of the
+             * cache the second time round; only the screen half varies. */
+            const [screen, paper] = await Promise.all([
+                capture(file, path, scheme, 1, null, null, SCREEN_VIEWPORT, null),
+                capture(file, path, 'light', 1, null, 'print', PAPER_VIEWPORT, null),
+            ]);
+            if (screen && paper) captured.push([file, await sideBySide(screen, paper)]);
             continue;
         }
-        captured.push([file, buf]);
+        const buf = await capture(file, path, scheme, dsf, anchor, media, viewport, click);
+        if (buf) captured.push([file, buf]);
     }
 
     await browser.close();

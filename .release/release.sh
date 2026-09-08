@@ -137,8 +137,9 @@ check_img images/gallery-terminal-light.webp 1500x1000
 check_img images/gallery-terminal-dark.webp 1500x1000
 check_img images/gallery-icons-light.webp 1500x1000
 check_img images/gallery-icons-dark.webp 1500x1000
-# The print frame is shot on paper proportions and then mounted on the theme's own
-# background, so it lands at the same 3:2 as the rest of the gallery.
+# The print frame is a comparison rather than a screenshot -- screen at the left,
+# paper at the right, each half shot at 3:4 -- so it lands at the same 3:2 as the
+# rest of the gallery. See the fixture's comment in shots.mjs for why.
 check_img images/gallery-print-light.webp 1500x1000
 check_img images/gallery-print-dark.webp 1500x1000
 
