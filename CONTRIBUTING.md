@@ -153,7 +153,7 @@ wrong before:
 | Check                              | Why it stops the release                                                    |
 | ---------------------------------- | --------------------------------------------------------------------------- |
 | clean tree, on `main`, not behind   | a tag on a checkout that is not what `origin` has                           |
-| the four `images/` PNGs present and correctly sized | the theme gallery shows a placeholder, and the README's hero goes blank |
+| the nine `images/` fixtures present and correctly sized | the theme gallery shows a placeholder, and the README's hero and gallery go blank |
 | Hugo extended on `PATH`             | the standard edition builds green and silently drops the WebP ladder         |
 | every commit in range parseable     | a change that never appears in the changelog                                 |
 | at least one `feat`/`fix`/`perf`/`revert`, or anything breaking | a version bump nobody can be told the reason for         |
@@ -199,15 +199,29 @@ forward with the next patch.
 ### Notes
 
 - The changelog can be previewed on its own at any time: `.release/changelog.sh 0.2.0`.
-- The `images/` PNGs are cut, not drawn: start the dev server and run
-  `node .parity/shots.mjs --fixtures`. It writes all four or none, so a run interrupted halfway
-  cannot leave three fresh frames next to one stale one — which is indistinguishable from four
-  fresh ones once the timestamps settle. Re-cut them whenever a change moves what they show.
-  `screenshot.png` and `tn.png` are one frame carrying both schemes, cut down the centre line:
-  the gallery shows a single image per theme, so a light-only preview never said the dark scheme
-  existed. The README hero stays a real light/dark pair — its `<picture>` already serves the right
-  one at full width. The composite is assembled in the browser the script already drives, so the
-  harness still needs nothing but `playwright-core`.
+- The `images/` fixtures are cut, not drawn: `npm install` once in `.parity/`, then start the dev
+  server and run `node .parity/shots.mjs --fixtures`. It writes all nine or none, so a run
+  interrupted halfway cannot leave eight fresh frames next to one stale one — which is
+  indistinguishable from nine fresh ones once the timestamps settle. Re-cut them whenever a change
+  moves what they show.
+
+  Two formats, and the line between them is the registry: themes.gohugo.io accepts only `.png` and
+  `.jpg`, so `screenshot.png` and `tn.png` stay PNG. Everything the README loads is lossless WebP —
+  same pixels, roughly a third of the bytes, and every one of those bytes is downloaded by every
+  site that runs `hugo mod get` on this theme.
+
+  `screenshot.png` and `tn.png` are one frame carrying both schemes, cut down the centre line: the
+  gallery shows a single image per theme, so a light-only preview never said the dark scheme
+  existed. The README hero and gallery stay real light/dark pairs — a `<picture>` already serves the
+  right one at full width, and two of the gallery frames could not be split anyway: a seam through
+  the icon grid bisects a cell, and the terminal is animated, so two loads are two different states.
+  The composite is still assembled in the browser the script already drives, because the halves have
+  to line up on rules that browser laid out.
+
+  `sharp` is a **devDependency** of the harness and does the encoding only. Taking an ordinary
+  review shot still needs nothing but `playwright-core`, and nothing here reaches a consuming site:
+  `node_modules/` is ignored, so a module download takes `package.json` and `package-lock.json` and
+  no more.
 - `CHANGELOG.md` is generated. Editing prose in an old section is fine; new sections are the
   script's.
 - `.parity/` is tracked, so any checkout can cut a release; the builds it regenerates each run are
