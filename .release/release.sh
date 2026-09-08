@@ -137,8 +137,10 @@ check_img images/gallery-terminal-light.webp 1500x1000
 check_img images/gallery-terminal-dark.webp 1500x1000
 check_img images/gallery-icons-light.webp 1500x1000
 check_img images/gallery-icons-dark.webp 1500x1000
-# Paper proportions, not the 3:2 the others share — see PAPER_VIEWPORT in shots.mjs.
-check_img images/gallery-print.webp 900x1240
+# The print frame is shot on paper proportions and then mounted on the theme's own
+# background, so it lands at the same 3:2 as the rest of the gallery.
+check_img images/gallery-print-light.webp 1500x1000
+check_img images/gallery-print-dark.webp 1500x1000
 
 step "Changelog"
 

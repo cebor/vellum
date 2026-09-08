@@ -153,7 +153,7 @@ wrong before:
 | Check                              | Why it stops the release                                                    |
 | ---------------------------------- | --------------------------------------------------------------------------- |
 | clean tree, on `main`, not behind   | a tag on a checkout that is not what `origin` has                           |
-| the nine `images/` fixtures present and correctly sized | the theme gallery shows a placeholder, and the README's hero and gallery go blank |
+| the ten `images/` fixtures present and correctly sized | the theme gallery shows a placeholder, and the README's hero and gallery go blank |
 | Hugo extended on `PATH`             | the standard edition builds green and silently drops the WebP ladder         |
 | every commit in range parseable     | a change that never appears in the changelog                                 |
 | at least one `feat`/`fix`/`perf`/`revert`, or anything breaking | a version bump nobody can be told the reason for         |
@@ -200,9 +200,9 @@ forward with the next patch.
 
 - The changelog can be previewed on its own at any time: `.release/changelog.sh 0.2.0`.
 - The `images/` fixtures are cut, not drawn: `npm install` once in `.parity/`, then start the dev
-  server and run `node .parity/shots.mjs --fixtures`. It writes all nine or none, so a run
-  interrupted halfway cannot leave eight fresh frames next to one stale one — which is
-  indistinguishable from nine fresh ones once the timestamps settle. Re-cut them whenever a change
+  server and run `node .parity/shots.mjs --fixtures`. It writes all ten or none, so a run
+  interrupted halfway cannot leave nine fresh frames next to one stale one — which is
+  indistinguishable from ten fresh ones once the timestamps settle. Re-cut them whenever a change
   moves what they show.
 
   Two formats, and the line between them is the registry: themes.gohugo.io accepts only `.png` and

@@ -87,10 +87,14 @@ unknown one, so the typo fallback is visible rather than described.
 
 The site chrome goes, the sheet stays: breadcrumb trail, ruled title block, figures with their
 captions. Paper gets its own ink rather than the screen palette, because paper is not a surface the
-screen palette was contrast-checked against.
+screen palette was contrast-checked against — so the printed page is white in either scheme, and
+what follows your theme here is the field it is laid on.
 
-<img alt="The same post printed: no header or navigation, a breadcrumb trail, the title block ruled out as a table, and the cover figure with its caption, set on paper proportions"
-     src="https://raw.githubusercontent.com/cebor/vellum/main/images/gallery-print.webp" width="450">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/cebor/vellum/main/images/gallery-print-dark.webp">
+  <img alt="A print preview: the same post on a white sheet, with no header or navigation, a breadcrumb trail, the title block ruled out as a table, and the cover figure with its caption"
+       src="https://raw.githubusercontent.com/cebor/vellum/main/images/gallery-print-light.webp">
+</picture>
 
 ## Quick start
 

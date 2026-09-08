@@ -160,12 +160,22 @@ const fixtures = [
     { file: 'images/gallery-icons-light.webp', path: '/en/docs/icons/', scheme: 'light', dsf: 1, anchor: '.icon-sheet' },
     { file: 'images/gallery-icons-dark.webp', path: '/en/docs/icons/', scheme: 'dark', dsf: 1, anchor: '.icon-sheet' },
     /* "A dedicated print stylesheet, not an afterthought" was the one claim in
-     * the README no reader could check. Paper is not a scheme -- 95-print.css
-     * sets its own ink -- so this is one frame, and it is shot on a
-     * paper-proportioned viewport rather than the 3:2 landscape the others use,
-     * because a print stylesheet stretched across 1500px is not what anyone's
-     * printer does with it. */
-    { file: 'images/gallery-print.webp', path: '/en/posts/reading-a-sheet/', scheme: 'light', dsf: 1, media: 'print', viewport: PAPER_VIEWPORT },
+     * the README no reader could check.
+     *
+     * The page itself is shot on a paper-proportioned viewport, because a print
+     * stylesheet stretched across 1500px is not what anyone's printer does with
+     * it -- but a portrait frame among two landscape ones read as a mistake in
+     * the gallery, so the sheet is then mounted on the 3:2 field the others use.
+     *
+     * That mount is also the only honest way to give this one a dark variant.
+     * 95-print.css forces color-scheme: light and a white ground whatever the
+     * reader has chosen, because paper is not a surface the screen palette was
+     * contrast-checked against — so there is no dark rendering of the printed
+     * page, and shooting one would be a picture of a feature the theme does not
+     * have. What can follow the reader is the ground the sheet lies on, which is
+     * what a print preview shows anyway. The paper stays paper in both. */
+    { file: 'images/gallery-print-light.webp', path: '/en/posts/reading-a-sheet/', scheme: 'light', dsf: 1, media: 'print', viewport: PAPER_VIEWPORT, mount: 'light' },
+    { file: 'images/gallery-print-dark.webp', path: '/en/posts/reading-a-sheet/', scheme: 'light', dsf: 1, media: 'print', viewport: PAPER_VIEWPORT, mount: 'dark' },
 ];
 
 /* PNG in, the tracked format out, dimensions untouched. */
@@ -351,6 +361,54 @@ if (FIXTURES) {
      * out in the first place. The two frames go in as data URIs and the dark one
      * is clipped to the right half; settle() forces the decode before the shot.
      * sharp's job is the encode at the end, where the pixels are already fixed. */
+    /* The theme's own two background values, read out of the page rather than
+     * written down here: head-assets.html emits them as the theme-color pair,
+     * which tokens.html parses from --bg in 00-tokens.css. A recoloured theme
+     * therefore carries the gallery's mount with it, the same way it carries the
+     * pinned-tab tint. */
+    const themeGround = async (path) => {
+        const ctx = await browser.newContext({ viewport: FIXTURE_VIEWPORT });
+        const page = await ctx.newPage();
+        let out = null;
+        if (await visit(page, 'ground', path)) {
+            out = await page.evaluate(() => {
+                const read = q => document.querySelector(q)?.getAttribute('content');
+                return {
+                    light: read('meta[name="theme-color"][media*="light"]'),
+                    dark: read('meta[name="theme-color"][media*="dark"]'),
+                };
+            });
+        }
+        await ctx.close();
+        return out && out.light && out.dark ? out : null;
+    };
+
+    /* Lays the printed sheet on a field of the theme's background, at the 3:2 the
+     * rest of the gallery uses. Scaled to leave a margin on the long edge, and
+     * given a hairline edge rather than a drop shadow: this theme argues about
+     * box-shadow, and a rule is what it draws everything else with. */
+    const mount = async (paper, ground) => {
+        const ctx = await browser.newContext({ viewport: FIXTURE_VIEWPORT, deviceScaleFactor: 1 });
+        const page = await ctx.newPage();
+        const { width, height } = FIXTURE_VIEWPORT;
+        const sheetH = Math.round(height * 0.92);
+        const sheetW = Math.round(sheetH * PAPER_VIEWPORT.width / PAPER_VIEWPORT.height);
+        await page.setContent(`<!doctype html>
+<style>
+  html, body { margin: 0; padding: 0; }
+  .field { width: ${width}px; height: ${height}px; background: ${ground};
+           display: flex; align-items: center; justify-content: center; }
+  .field img { display: block; width: ${sheetW}px; height: ${sheetH}px;
+               outline: 1px solid rgba(128, 128, 128, 0.35); }
+</style>
+<div class="field"><img src="data:image/png;base64,${paper.toString('base64')}"></div>`,
+            { waitUntil: 'load' });
+        await settle(page);
+        const buf = await page.screenshot({ fullPage: false });
+        await ctx.close();
+        return buf;
+    };
+
     const composite = async (light, dark, dsf) => {
         const ctx = await browser.newContext({
             viewport: FIXTURE_VIEWPORT,
@@ -377,14 +435,27 @@ if (FIXTURES) {
         return buf;
     };
 
-    for (const { file, path, scheme, dsf, anchor, media, viewport, click } of fixtures) {
+    /* Resolved once, and only if something actually asks to be mounted. */
+    let ground = null;
+    if (fixtures.some(f => f.mount)) ground = await themeGround('/en/');
+
+    for (const { file, path, scheme, dsf, anchor, media, viewport, click, mount: on } of fixtures) {
         if (scheme === 'split') {
             const [light, dark] = await frames(file, path, anchor, media);
             if (light && dark) captured.push([file, await composite(light, dark, dsf)]);
             continue;
         }
         const buf = await capture(file, path, scheme, dsf, anchor, media, viewport, click);
-        if (buf) captured.push([file, buf]);
+        if (!buf) continue;
+        if (on) {
+            if (!ground) {
+                failures.push(`${file} — could not read the theme-color pair to mount on`);
+                continue;
+            }
+            captured.push([file, await mount(buf, ground[on])]);
+            continue;
+        }
+        captured.push([file, buf]);
     }
 
     await browser.close();
