@@ -94,8 +94,18 @@
         color: #000;
     }
 
-    .term__scroll {
+    /* .js has to be carried on the height. The 20-row viewport is set by
+       `.js .term__scroll` in 35-terminal.css, so a bare `.term__scroll` here
+       loses to it on specificity and the printed window kept its screen height:
+       the transcript ran out of a box 20 rows tall and over whatever followed
+       it, on every browser with JavaScript. A viewport is a screen idea; on
+       paper the session is as long as it is. */
+    .js .term__scroll,
+    .js .term.is-zoomed .term__scroll {
         height: auto;
+    }
+
+    .term__scroll {
         overflow: visible;
     }
 
