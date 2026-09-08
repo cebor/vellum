@@ -82,6 +82,12 @@
         display: block;
         max-width: none;
         padding: 0;
+        /* The graph substrate is drawn here, not on body, so the
+           `background-image: none` above never reached it and every printed page
+           carried the grid across the whole sheet — against the stated intent of
+           that rule and at the cost of toner on a field that means nothing on
+           paper, where the reader's own sheet is the substrate. */
+        background-image: none;
     }
 
     .main {
