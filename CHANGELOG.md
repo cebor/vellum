@@ -9,6 +9,23 @@ the format they follow is in [`CONTRIBUTING.md`](CONTRIBUTING.md). Only changes 
 can see are listed — refactors, documentation, CI and build chores are not. Releases up to 0.1.2
 predate the generated format and were written by hand.
 
+## [0.3.0](https://github.com/cebor/vellum/compare/v0.2.10...v0.3.0) - 2026-09-08
+
+### Added
+
+- **layouts:** give the landing page profile views (338cdf3)
+- **layouts:** set the landing page's buttons under the views (60dee96)
+
+### Fixed
+
+- **a11y:** read alert labels and code highlights off opaque surfaces (fe7e13e)
+- **layouts:** draw the landing page's closing break at the boundary (9c3edf3)
+- **css:** drop the title block's frame caps inside the profile block (477c459)
+- **css:** draw one rule under the profile view index, not two (fd92bdb)
+- **css:** set the office's ruled instruments on one label column (c84a719)
+- **a11y:** move focus into the profile view a tab opens (2e09ad5)
+- **css:** clear the nav's active mark of the row below when it wraps (8d93741)
+
 ## [0.2.10](https://github.com/cebor/vellum/compare/v0.2.9...v0.2.10) - 2026-09-03
 
 ### Added
