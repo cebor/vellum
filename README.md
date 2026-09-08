@@ -9,12 +9,12 @@ line usually mumbles.
 
 <picture>
   <source media="(prefers-color-scheme: dark)"
-          srcset="https://raw.githubusercontent.com/cebor/vellum/main/images/hero-dark.png">
+          srcset="https://raw.githubusercontent.com/cebor/vellum/main/images/hero-dark.webp">
   <img alt="A Vellum post: a drawn frame, a lettered zone rail down its left edge, a ruled title block of metadata, and a syntax-highlighted code block"
-       src="https://raw.githubusercontent.com/cebor/vellum/main/images/hero-light.png">
+       src="https://raw.githubusercontent.com/cebor/vellum/main/images/hero-light.webp">
 </picture>
 
-**[Live demo](https://pages.stkn.org/felix/vellum)** · **[Source](https://github.com/cebor/vellum)**
+**[Live demo](https://pages.stkn.org/felix/vellum)** · **[Docs](https://pages.stkn.org/felix/vellum/en/docs/)** · **[Source](https://github.com/cebor/vellum)**
 
 Built for technical writing that is mostly code. The reading column is wide — 800px, measuring
 **92 characters** at the 20px body size — because terminal output and command blocks are the
@@ -28,19 +28,69 @@ trackable.
 | **[Light / dark](#behaviour)** | Follows the OS, or a toggle; works with JavaScript disabled |
 | **Responsive images** | Bundle images auto-resized to a 480/800/1600 WebP ladder |
 | **[Self-hosted fonts](#fonts)** | Two variable faces, ~121 KB, no third-party requests |
-| **[Landing page](#landing-page)** | Profile block, buttons, latest posts |
+| **[Landing page](#landing-page)** | Profile block, buttons, latest posts — as a drawn index or a [working shell](#the-landing-page-two-ways) |
 | **[Post furniture](#display-toggles)** | Table of contents, reading time, breadcrumbs, share row, post nav, edit link |
 | **[Archives & taxonomies](#index-pages)** | Year/month archive, tag pages |
 | **[SEO](#seo-and-analytics)** | OpenGraph, Twitter cards, schema.org, RSS, canonical + hreflang |
-| **Print** | A dedicated print stylesheet, not an afterthought |
+| **[Print](#on-paper)** | A dedicated print stylesheet, not an afterthought |
 
 Linked rows have a section of their own below.
 
 ## Contents
 
-[Quick start](#quick-start) · [Requirements](#requirements) · [Configuration](#configuration) ·
-[Content](#content) · [Icons](#icons) · [Customising](#customising) · [Development](#development) ·
-[Licence](#licence)
+[Gallery](#gallery) · [Quick start](#quick-start) · [Upgrading](#upgrading) ·
+[Requirements](#requirements) · [Configuration](#configuration) · [Content](#content) ·
+[Icons](#icons) · [Customising](#customising) · [Development](#development) · [Licence](#licence)
+
+## Gallery
+
+The hero above is a post. These are the three things it cannot show, and each of them is a claim made
+elsewhere on this page that a sentence alone cannot settle. Every frame is generated from the demo
+site by [`.parity/shots.mjs --fixtures`](https://github.com/cebor/vellum/blob/main/.parity/shots.mjs),
+so none of them can drift away from what the theme actually renders.
+
+### The landing page, two ways
+
+`view = "terminal"` renders the profile's five views as a working shell instead of a drawn index —
+the same keys, the same content, nothing to migrate. It is typed into, the arrow keys walk the
+history, Tab completes, and `<command> --json` prints the raw data. Below, `skills` has just been
+run.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/cebor/vellum/main/images/gallery-terminal-dark.webp">
+  <img alt="A Vellum landing page rendered as a macOS-style terminal window: window buttons, a help listing of the available commands, and the output of the skills command laid out as a ruled table"
+       src="https://raw.githubusercontent.com/cebor/vellum/main/images/gallery-terminal-light.webp">
+</picture>
+
+The default presentation — the drawn index — is what the demo's [English landing
+page](https://pages.stkn.org/felix/vellum/en/) shows, with the shell running next to it on the
+[German one](https://pages.stkn.org/felix/vellum/de/). [The landing page, both
+ways](https://pages.stkn.org/felix/vellum/en/docs/the-landing-page/) walks through the difference.
+
+### The icon set
+
+Twenty-six marks, in two families that are drawn by different rules: UI glyphs on a 24×24 grid at a
+1.75 stroke, and brand logotypes as filled paths. The names are listed under [Icons](#icons) below;
+this is what they look like.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/cebor/vellum/main/images/gallery-icons-dark.webp">
+  <img alt="A ruled grid of the theme's icons, each drawn above its own name: arrows, external link, hash, search, pencil, chevron, check, moon, sun, RSS, mail and the AI nib, then the brand marks for GitHub, GitLab, Codeberg, Stack Overflow, Mastodon, Bluesky, X, LinkedIn, Reddit, Y Combinator, Telegram and WhatsApp"
+       src="https://raw.githubusercontent.com/cebor/vellum/main/images/gallery-icons-light.webp">
+</picture>
+
+The page that frame is taken from is [live](https://pages.stkn.org/felix/vellum/en/docs/icons/), and
+it renders every name through the same partial the header and share row call — including a deliberate
+unknown one, so the typo fallback is visible rather than described.
+
+### On paper
+
+The site chrome goes, the sheet stays: breadcrumb trail, ruled title block, figures with their
+captions. Paper gets its own ink rather than the screen palette, because paper is not a surface the
+screen palette was contrast-checked against.
+
+<img alt="The same post printed: no header or navigation, a breadcrumb trail, the title block ruled out as a table, and the cover figure with its caption, set on paper proportions"
+     src="https://raw.githubusercontent.com/cebor/vellum/main/images/gallery-print.webp" width="450">
 
 ## Quick start
 
@@ -135,6 +185,25 @@ Nothing then lands at the publish root for a web server to use as its error docu
   # Default language only — adding it to both makes them fight over /404.html.
   home = ["HTML", "RSS", "JSON", "ROOT404"]
 ```
+
+## Upgrading
+
+With the module import, `hugo mod get -u` takes the latest release. To stay on a known version
+instead — worth doing on a site you do not want moving under you — name the tag:
+
+```bash
+hugo mod get github.com/cebor/vellum@v0.3.0   # pin
+hugo mod get -u github.com/cebor/vellum       # take the latest
+```
+
+Read the **Breaking** entries in
+[`CHANGELOG.md`](https://github.com/cebor/vellum/blob/main/CHANGELOG.md) before you move. They are
+the ones that move a URL or drop a param; everything else is additive by intent. Below 1.0 a breaking
+change bumps the *minor*, so `v0.3.x` → `v0.4.0` is the step to read carefully.
+
+> [!NOTE]
+> The theme registry lists the *latest tag*, so a fresh `hugo mod get` without a version takes
+> whatever that is at the time.
 
 ## Requirements
 
@@ -332,29 +401,19 @@ can switch back by deleting the line.
 The shell is real: commands are typed, the arrow keys walk the history, Tab
 completes, `Ctrl+C` and `Ctrl+L` do what they do, and `<command> --json` prints
 the raw data instead of the table. Every command in `help` is also a button, so a
-phone reaches everything without a keyboard. The three window buttons work —
-close collapses the window to a single line, minimise to its title bar, zoom
-grows it from 24 rows to 40.
-
-Output arrives a character at a time rather than appearing, and a command you
-click is typed into the prompt. Any keystroke finishes what is still pending at
-once, so nothing is ever held behind the effect, and
-`prefers-reduced-motion: reduce` turns all of it off. The window spans the
-sheet's full width, and its title bar states the size it actually has — measured,
-and re-measured when the window changes.
+phone reaches everything without a keyboard, and the three window buttons work.
 
 Without JavaScript there is no prompt, and the window shows the whole session
 already run — every command and its output, in order. Nothing is lost and nothing
 pretends to be interactive. That transcript is also what prints, without the
 window around it.
 
-> [!NOTE]
-> The window does not run Terminal's "Basic" white profile — it runs one matched
-> to the theme, on the same sunk surface and syntax inks every code block on the
-> site already uses, so it sits on the page rather than on top of it. The one
-> rule it breaks is `box-shadow`, and the only bare colours left in it are the
-> three window buttons; both are argued at the top of
-> `assets/css/35-terminal.css`.
+There is a picture of it [above](#the-landing-page-two-ways), it is running on the
+demo's [German landing page](https://pages.stkn.org/felix/vellum/de/), and [The
+landing page, both
+ways](https://pages.stkn.org/felix/vellum/en/docs/the-landing-page/) covers the
+rest — the motion and how to turn it off, the window controls, and why the
+terminal's stylesheet is the one file a site can avoid shipping.
 
 ### Social icons
 
@@ -764,6 +823,10 @@ Brand marks, from [Simple Icons](https://simpleicons.org) (CC0) as filled paths:
 Unknown names fall back to a generic link glyph, so a typo in `socialIcons` is visible rather than
 silent. Extend the set by adding a branch to `_partials/icon.html`.
 
+They are [drawn above](#the-icon-set), and the [icon
+sheet](https://pages.stkn.org/felix/vellum/en/docs/icons/) on the demo renders every one of these
+names live — including the fallback.
+
 ## Customising
 
 ### Your own CSS
@@ -773,7 +836,9 @@ your rules win without forking anything.
 
 `assets/css/` holds numerically prefixed files that are globbed, concatenated, minified and
 fingerprinted into one stylesheet with an SRI hash. **The numeric prefix is the cascade order**, which
-is why a local file wants a high number.
+is why a local file wants a high number: the glob is sorted by name across your assets and the
+theme's together, so `99-local.css` lands after `95-print.css` and wins every tie at equal
+specificity.
 
 `00-tokens.css` is the single source of truth for colour, type, space and motion — override a token
 there and the whole sheet follows. Sizes come from `--step--2` … `--step-5` for type and `--space-4xs`
@@ -817,9 +882,16 @@ hugo server -D --source exampleSite --themesDir ../..
 ```
 
 `exampleSite/` is a standalone site that exercises the theme, and is what every change is tested
-against. [`DESIGN.md`](https://github.com/cebor/vellum/blob/main/DESIGN.md) records the visual
-system behind the stylesheet — line weights, palette, motion, print — if you want to extend it in
-keeping.
+against. Its [`docs/`](https://pages.stkn.org/felix/vellum/en/docs/) section is the other half of
+this file: the README is the reference, those pages are the theme shown working, and they never
+repeat a table from here. [`DESIGN.md`](https://github.com/cebor/vellum/blob/main/DESIGN.md) records
+the visual system behind the stylesheet — line weights, palette, motion, print — if you want to
+extend it in keeping.
+
+The images on this page are not cut by hand. With that server running,
+`node .parity/shots.mjs --fixtures` regenerates all nine of them — the two registry fixtures, the
+hero pair and the gallery — and writes nothing unless every route it needs answers with the status it
+expects. It needs `npm install` in `.parity/` first.
 
 ### Contributing
 
