@@ -529,3 +529,75 @@
         padding-block: var(--space-3xs);
     }
 }
+
+/* --- paper --------------------------------------------------------------- */
+
+/* These rules live here rather than in 95-print.css, which is where every other
+   @media print block in this theme is. They are the exception because this file
+   is the exception: it is the only sheet the build drops from the bundle when
+   the site does not turn the feature on (see the glob in head-assets.html), and
+   a component that is removed as a unit has to be written as one. Left in 95 the
+   print half would ship to every site that has no terminal, which is the thing
+   the split exists to stop.
+   Safe here: nothing between this file and 95 touches a .term selector, so the
+   rules sit at the same place in the cascade either way.
+
+   The profile shell prints as what it always was underneath: a transcript. A
+   window is a thing on a screen — its title bar, its buttons and its prompt are
+   all controls, and paper has none. What survives is the session itself, in
+   paper ink, at whatever length it runs to. The reader's own session goes with
+   the window; the transcript is the same on every copy.
+
+   Ink is stated in paper values rather than the screen palette, the exception
+   00-tokens.css allows for print. */
+@media print {
+    .term__bar,
+    .term__form,
+    .term__live,
+    .term__reopen {
+        display: none !important;
+    }
+
+    .term__window {
+        border: 0.5pt solid #999;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .term__body {
+        background: #fff;
+        color: #000;
+    }
+
+    /* .js has to be carried here. The 20-row viewport above is set by
+       `.js .term__scroll`, so a bare `.term__scroll` loses to it on specificity
+       and the printed window kept its screen height — the transcript ran out of
+       a box 20 rows tall and over whatever followed it, on every JS-enabled
+       browser. A viewport is a screen idea; on paper the session is as long as
+       it is. */
+    .js .term__scroll,
+    .js .term.is-zoomed .term__scroll {
+        height: auto;
+    }
+
+    .term__scroll {
+        overflow: visible;
+    }
+
+    .term__transcript[hidden] {
+        display: block;
+    }
+
+    .term__prompt,
+    .term__project-name::before {
+        color: #666;
+    }
+
+    .term__key,
+    .term__dim,
+    .term__project-desc,
+    .term__record-note,
+    .term__tag {
+        color: #666;
+    }
+}

@@ -24,7 +24,13 @@
 <link rel="canonical" href="{{ .Params.canonicalURL | default .Permalink }}">
 {{- end }}
 
-{{- partialCached "head-assets.html" . "assets" }}
+{{- /* Keyed on the profile view, not on a constant: the partial still reads no
+       page state, but the stylesheet it builds now depends on that one site
+       param, and Hugo's partial cache is shared across the languages of a
+       single build — the same reason footer.html is given .Lang in baseof.html.
+       Keyed on the value rather than the language so sites and languages that
+       agree still share the entry. */}}
+{{- partialCached "head-assets.html" . (lower (site.Params.profile.view | default "index")) }}
 
 {{- /* The search page is the only one that ships JavaScript beyond the two
        inline snippets, so its bundle is built here rather than site-wide.

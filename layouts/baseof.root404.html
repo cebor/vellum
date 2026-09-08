@@ -17,7 +17,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
     <title>404 · {{ site.Title }}</title>
-    {{- partialCached "head-assets.html" . "assets" }}
+    {{- /* Same key as head.html's call, and it has to be the same: two keys for
+           one partial would build the sheet twice. See the note there. */}}
+    {{- partialCached "head-assets.html" . (lower (site.Params.profile.view | default "index")) }}
     {{- partial "extend-head.html" . }}
 </head>
 

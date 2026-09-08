@@ -58,8 +58,40 @@
 {{- /* One stylesheet. The numeric filename prefixes make the alphabetical glob
        order the cascade order, so no explicit slice is needed. fingerprint must
        come last: it hashes the bytes that are actually served, and any step
-       after it would invalidate the integrity attribute. */}}
-{{- $css := resources.Match "css/*.css" | resources.Concat "css/main.css" | resources.Minify | fingerprint }}
+       after it would invalidate the integrity attribute.
+
+       One file is dropped from the glob rather than styled into it. The terminal
+       profile is the theme's only feature that is off by default, and its sheet
+       is 5.9 KB minified — every other numbered file is live somewhere on every
+       site, so this is the one place where a site can be shipping a stylesheet
+       for markup no page of it will ever contain. It is safe to drop because it
+       is airtight: every selector in 35-terminal.css begins with .term, print
+       rules included, so removing the file removes the feature and touches
+       nothing else.
+
+       Dropped from the concat rather than served as a second <link>. A second
+       sheet would cost a render-blocking request on exactly the page that needs
+       it, and — because it would load after this one — would put the terminal's
+       screen rules after their own @media print overrides, where they win on
+       source order at equal specificity and the printed page silently keeps the
+       window chrome. Filtering the glob leaves the cascade exactly as the
+       prefixes state it.
+
+       The Concat target has to differ between the two, and that is not
+       cosmetic: Hugo caches a concatenated resource under its target path, so a
+       second call naming css/main.css in the same build is handed the first
+       one's bytes whatever its inputs were. A multilingual site that sets the
+       view per language — which is what exampleSite does — would otherwise
+       serve one language the other's stylesheet. The default keeps the
+       css/main.css name so nothing moves for a site that never turns this on.
+
+       .Name carries a leading slash, like the font names above. */}}
+{{- $terminal := eq (lower (site.Params.profile.view | default "index")) "terminal" }}
+{{- $sheets := resources.Match "css/*.css" }}
+{{- if not $terminal }}
+{{- $sheets = where $sheets "Name" "!=" "/css/35-terminal.css" }}
+{{- end }}
+{{- $css := $sheets | resources.Concat (cond $terminal "css/main-terminal.css" "css/main.css") | resources.Minify | fingerprint }}
 <link rel="preload stylesheet" as="style" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}"
     crossorigin="anonymous">
 

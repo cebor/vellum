@@ -448,6 +448,11 @@ It must keep a numeric prefix after `90-syntax.css`: the CSS files are globbed a
 alphabetically, so **the numeric prefix is the cascade order**, and these rules only beat the syntax
 colours because they come later.
 
+One `@media print` block lives outside it, at the foot of `35-terminal.css`: that sheet is dropped
+from the bundle entirely on a site that leaves `profile.view` at its default, so its print half has to
+travel with it or ship to every site that has no terminal. Nothing between the two files touches a
+`.term` selector, so the rules sit at the same point in the cascade either way.
+
 ## Rules that are load-bearing
 
 1. `00-tokens.css` is the only file that may carry a bare hex, rem or duration.
