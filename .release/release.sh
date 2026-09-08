@@ -82,8 +82,9 @@ step "Registry fixtures"
 # themes.gohugo.io reads screenshot/tn out of the tagged release; without them the
 # theme gallery shows a placeholder, which is only visible on the theme site itself
 # and so is exactly the kind of thing that goes unnoticed for a release or two.
-# All four are cut by `node .parity/shots.mjs --fixtures` against a running server.
-# Dimensions come out of the PNG's IHDR chunk, at a fixed offset in every PNG.
+# All of them are cut by `node .parity/shots.mjs --fixtures` against a running
+# server. Dimensions come out of the PNG's IHDR chunk, at a fixed offset in every
+# PNG.
 #
 # --endian is GNU od's, and macOS ships BSD od, which does not have it — so this
 # check warned instead of running on exactly the machine releases are cut from,
@@ -92,20 +93,52 @@ step "Registry fixtures"
 # for first; the bare name is right on Linux and in CI.
 OD=od; command -v god >/dev/null && OD=god
 png_size() { "$OD" -An -v -tu4 -j16 -N8 --endian=big "$1" 2>/dev/null | awk 'NF{print $1"x"$2; exit}'; }
-check_png() { # check_png <path> <expected>
+
+# WebP is not readable the same way. Lossless WebP is a VP8L chunk with the two
+# dimensions bit-packed 14 bits each, or a VP8X container with them as 24-bit
+# little-endian — which one you get depends on whether the encoder needed the
+# extended container, so an `od` recipe would have to handle both and would be
+# wrong quietly when it did not. sharp already reads the header, is already what
+# writes these files, and is a devDependency of the harness rather than of the
+# theme. A checkout without it falls through to the same warn the od path uses.
+webp_size() {
+    (cd "$ROOT/.parity" && node -e '
+        import("sharp").then(m => m.default(process.argv[1]).metadata())
+            .then(d => console.log(d.width + "x" + d.height))
+            .catch(() => process.exit(1));
+    ' "$ROOT/$1") 2>/dev/null
+}
+
+check_img() { # check_img <path> <expected>
     [ -f "$1" ] || fail "$1 is missing; it has to be in the tag — see .parity/shots.mjs --fixtures"
-    got="$(png_size "$1")"
+    case "$1" in
+        *.webp) got="$(webp_size "$1")" ;;
+        *)      got="$(png_size "$1")" ;;
+    esac
     if [ -z "$got" ]; then echo "    warn: cannot read $1's dimensions here; expected $2"
     elif [ "$got" != "$2" ]; then fail "$1 is $got, must be $2 (regenerate with .parity/shots.mjs --fixtures)"
     else echo "    $1 $got"; fi
 }
-check_png images/screenshot.png 1500x1000
-check_png images/tn.png 900x600
-# The README's hero pair. Not a gallery fixture, but the same failure shape: the
-# README is served from the tag's raw URLs, so a missing or stale one is a broken
-# image on the page every prospective user reads first.
-check_png images/hero-light.png 1500x1000
-check_png images/hero-dark.png 1500x1000
+
+# The registry pair. PNG, and it has to stay PNG: themes.gohugo.io accepts only
+# .png and .jpg.
+check_img images/screenshot.png 1500x1000
+check_img images/tn.png 900x600
+
+# The README's hero pair and its gallery. Not registry fixtures, but the same
+# failure shape: the README is served from the tag's raw URLs, so a missing or
+# stale one is a broken image on the page every prospective user reads first —
+# and there are now five more of them to forget. Lossless WebP, because nothing
+# outside the registry constrains the format and it is a third of the bytes at
+# identical pixels, which every consuming site downloads with the module.
+check_img images/hero-light.webp 1500x1000
+check_img images/hero-dark.webp 1500x1000
+check_img images/gallery-terminal-light.webp 1500x1000
+check_img images/gallery-terminal-dark.webp 1500x1000
+check_img images/gallery-icons-light.webp 1500x1000
+check_img images/gallery-icons-dark.webp 1500x1000
+# Paper proportions, not the 3:2 the others share — see PAPER_VIEWPORT in shots.mjs.
+check_img images/gallery-print.webp 900x1240
 
 step "Changelog"
 
