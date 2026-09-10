@@ -596,6 +596,15 @@
         margin-block-start: calc((1em - var(--tap-target)) / 2);
     }
 
+    /* The brand and the feed link are standalone controls in the sheet's own
+       header and footer rules, not links inside a sentence, so the minimum
+       applies to them exactly as it does to a nav item. The "Hugo" link beside
+       the feed is deliberately not here: it sits inside "Built with Hugo", and
+       an inline target is what the size minimum exempts — growing it would push
+       the footer line apart to satisfy a rule it was never under. */
+    .skip-link,
+    .header__brand,
+    .footer__meta > a,
     .nav__item,
     .lang-switch,
     .theme-toggle,

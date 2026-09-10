@@ -569,6 +569,24 @@ a.sheet-band__label:hover {
 }
 
 @media (pointer: coarse) {
+    /* The band grows, not the label inside it. Setting the minimum on the link
+       would have made the band's height depend on whether a link is there —
+       exactly what the rule above it exists to prevent, since the 404 sets the
+       same band with the heading standing alone. Given the height, the link
+       stretches to fill it, so the target is the full row and both items still
+       read as one line. */
+    .sheet-band {
+        /* border-box, so the target has to be stated with everything drawn
+           around it: the padding either side and the rule the band closes on.
+           Short by just the rule, the stretched link came out at 43px. */
+        min-height: calc(var(--tap-target) + var(--space-2xs) * 2 + var(--line-thin));
+        align-items: center;
+    }
+
+    a.sheet-band__label {
+        align-self: stretch;
+    }
+
     .social-icons__link,
     .button,
     .profile-views__tab {

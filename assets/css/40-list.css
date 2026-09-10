@@ -386,4 +386,16 @@
     .pagination__link {
         min-height: var(--tap-target);
     }
+
+    /* An archive row is a list of links and nothing else, so each title is a
+       standalone control rather than a link inside a sentence — the same case
+       .search-results a makes in 60-search.css, and it takes the same shape:
+       the link carries no padding of its own, so the height has to centre what
+       it grows around or the title sits at the top of a 44px box. The date
+       column stays baseline-aligned against the row; only the link grows. */
+    .archive-item__link {
+        display: flex;
+        align-items: center;
+        min-height: var(--tap-target);
+    }
 }

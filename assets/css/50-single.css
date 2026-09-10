@@ -943,4 +943,15 @@ img.in-text {
     .tag-list a {
         min-height: var(--tap-target);
     }
+
+    /* Both summaries are the whole control — a reader opens the contents or a
+       collapsed block by hitting the label row — and both came out at 39px,
+       which is the label step plus its own padding and nothing to do with a
+       target size. min-height alone is enough: `summary` is already a centred
+       flex row in 10-base.css, so the drawn chevron and its label stay on the
+       row's optical centre as it grows. */
+    .toc__summary,
+    .collapse__summary {
+        min-height: var(--tap-target);
+    }
 }

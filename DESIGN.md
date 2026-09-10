@@ -508,6 +508,9 @@ travel with it or ship to every site that has no terminal. Nothing between the t
 5. Never add a `box-shadow`. Depth is line weight.
 6. Never encode state in colour alone.
 7. Touch-target minimums live behind `@media (pointer: coarse)` so pointer layouts keep their density.
+   Every standalone control clears `--tap-target` there; the exceptions are `.term__cmd`,
+   `.term__input` and the window buttons, each argued at its own declaration. A link inside a sentence
+   is exempt and a link that is its own row is not — the test is the element, not the file it is in.
 8. `--content-width` is the reading column; keep the frame arithmetic resolving to it.
 9. Any asset referenced only from CSS must have its `RelPermalink` evaluated somewhere in a template,
    or Hugo never publishes it and it 404s in production while working locally.
