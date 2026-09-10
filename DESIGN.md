@@ -353,6 +353,21 @@ hand-picked terminal green never was. The measured minimum across the shell is
 5.1:1. The screen is set at `--step--1` and not the label step below it: at 13px
 the window read as a footnote panel beside 20px body copy, and that size gap was
 doing as much to make it foreign as the colour was.
+
+**`.term__cmd` is the theme's one interactive target under `--tap-target`, and it
+stays there.** On a coarse pointer it gains `--space-3xs` of block padding and
+lands near 32px rather than 44px. That is a deliberate exception to the rule the
+rest of the theme applies without one, so it has to say why: the commands are set
+in the transcript's own line box, and growing them to 44px would space `help`'s
+rows apart until the window stopped looking like a terminal and started looking
+like a menu with a title bar. A shell's output is the one surface where the line
+box *is* the content, and the rule the theme already wrote for the AI mark —
+"an inline target is exactly what the size minimum exempts" — is the same
+argument. It is the weaker end of that exemption, because each command sits one
+per row in `.term__help-row` rather than inside a sentence, so the exception is
+recorded here rather than assumed. Every command is also a word the reader can
+type, and the window's own `Tab` completion reaches it without a pointer at all.
+
 It earns the skin by being real rather than a picture of one: typed commands, a
 history on the arrow keys, Tab completion, `Ctrl+C` and `Ctrl+L`, zsh's own
 "command not found", a `--json` flag that prints the data instead of the table,
