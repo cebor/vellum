@@ -32,6 +32,33 @@
         ],
         "createdAt": "2026-09-07T15:33:08.502Z",
         "reason": "The macOS terminal window on the German landing page, and the theme's one sanctioned box-shadow. DESIGN.md records the exception and 35-terminal.css argues it at the head of the file: a window without a shadow is not a window but a mono-coloured box claiming to be one, and the shadow is what says the object lies on the sheet rather than being drawn on it. Measured, it is not the generated-UI floating-card glow the rule looks for: 0 1px 2px plus 0 8px 20px, mixed from the sheet's own --rule-frame at 34%/22% rather than from black, offset down so it grounds the window instead of haloing it. Scoped to the one route that renders profile.view = terminal, so the rule stays armed on every other page and would fire again if a shadow appeared anywhere else. Agent 2026-09-07."
+      },
+      {
+        "rule": "repeating-stripes-gradient",
+        "value": "*",
+        "files": [
+          "exampleSite/public/**"
+        ],
+        "createdAt": "2026-09-10T08:00:12.351Z",
+        "reason": "Same finding as the dev-server entry above, reached through a static file scan of the built demo instead. The stripes are the theme's committed visual world, not surface decoration: DESIGN.md records graph paper printed inside the frame and nowhere else, drawn in 20-layout.css as two hairline repeating gradients specifically so the substrate never becomes an image request. Advisory in any case. The dev-server globs did not cover exampleSite/public, so every file-mode scan re-derived all 35. Agent 2026-09-10."
+      },
+      {
+        "rule": "extreme-negative-tracking",
+        "value": "*",
+        "files": [
+          "exampleSite/public/**"
+        ],
+        "createdAt": "2026-09-10T08:00:12.361Z",
+        "reason": "Detector arithmetic, not a tracking value. The only letter-spacing this theme declares for display type is --tracking-display: -0.015em (00-tokens.css); the built stylesheet contains no other value than 0, var(--tracking-display) and var(--tracking-label), and the built HTML carries no inline styles at all. The reported -0.08/-0.10/-0.12em vary inversely with the element's font size and all resolve to one constant of about -3.3px, which is the signature of the em being resolved against the wrong font size. At the sizes flagged the real value is -0.39px to -0.63px, five to eight times smaller. Archivo's 84% width axis is a designed axis, not a destructive transform, and DESIGN.md commits to it. Findings are page-level (line 0), so an inline marker at the declaration cannot reach them. Agent 2026-09-10."
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "exampleSite/public/de/index.html"
+        ],
+        "createdAt": "2026-09-10T08:00:12.371Z",
+        "reason": "The macOS window title bar, and it is not flush. .term__bar is height: 28px with align-items: center, so its 12px lights and its title sit centred with 8px clear above and below; the detector reads padding-block: 0 as children against the boundary. 28px is the real height of the thing being drawn and padding would make it a different object. Scoped to the one route that renders profile.view = terminal, so the rule stays armed on every other page of the build. Page-level finding, so an inline marker does not reach it. Agent 2026-09-10."
       }
     ]
   }
