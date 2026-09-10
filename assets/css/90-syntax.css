@@ -5,6 +5,28 @@
     background: none;
 }
 
+/* max-content, and it is load-bearing rather than tidiness. A flex line is a
+   block box, so it sizes to its containing block — the pre's *content* box, which
+   is the visible width and not the scroll width. Any block wide enough to scroll
+   therefore drew a highlight band that stopped where the viewport did: at 390px
+   the band measured 332px of a 697px line, and scrolled fully right it sat
+   entirely off-screen while the line it marks was still on it.
+
+   Both steps are needed. code is what max-content sizes to the longest line in
+   the block; without it, min-width: 100% on a line still resolves against the
+   visible column. With it, the band spans the block whatever the reader has
+   scrolled to, and a marked line stays marked all the way across. */
+.chroma code {
+    display: block;
+}
+
+.chroma code,
+.chroma .line,
+.chroma .hl {
+    width: max-content;
+    min-width: 100%;
+}
+
 .chroma .line {
     display: flex;
 }
@@ -126,6 +148,21 @@
 
 .chroma .err {
     color: var(--syn-error);
+}
+
+/* Banded across the line, not around the words. Chroma puts the diff token
+   inside the line rather than on it, so left as an inline span each fill stopped
+   at its own text and a diff came out as a ragged stack of highlights instead of
+   a run of marked lines. The line is already sized to the block by the rule at
+   the top of this file; .cl fills the line and the fill fills .cl, so a banded
+   line stays banded however far the reader has scrolled sideways. */
+.chroma .cl {
+    flex: 1;
+}
+
+.chroma .gi,
+.chroma .gd {
+    display: block;
 }
 
 .chroma .gi {

@@ -487,3 +487,8 @@ travel with it or ship to every site that has no terminal. Nothing between the t
 8. `--content-width` is the reading column; keep the frame arithmetic resolving to it.
 9. Any asset referenced only from CSS must have its `RelPermalink` evaluated somewhere in a template,
    or Hugo never publishes it and it 404s in production while working locally.
+10. **A band drawn on a code line is sized to the block, not to the viewport.** `.chroma code` and
+    `.chroma .line` are both `width: max-content; min-width: 100%`, and the diff fills are `display:
+    block` inside them. Without that chain a flex line sizes to the `pre`'s *visible* width, so at
+    390px a highlighted line's band covered 332px of a 697px line and scrolling right left the marked
+    line unmarked — on the one surface this theme exists for.
