@@ -4,6 +4,30 @@
        {{< intextimg url="icon.svg" alt="…" height="1.1em" >}} */ -}}
 {{- $src := .Get "url" | default (.Get "src") }}
 {{- $url := $src }}
-{{- with $.Page.Resources.GetMatch $src }}{{ $url = .RelPermalink }}{{ end }}
+{{- $ratio := "" }}
+{{- with $.Page.Resources.GetMatch $src }}
+    {{- $url = .RelPermalink }}
+    {{- /* The box before the bytes. Height comes from the caller and width from
+           the file, so the line reserves the mark's width instead of collapsing
+           it to nothing and reflowing the sentence when the image lands.
+
+           aspect-ratio rather than width/height attributes, because height is
+           already set in CSS here and the attribute pair would be overridden by
+           it on one axis and ignored on the other.
+
+           Two ways in, because Hugo has no .Width for an SVG and an SVG is what
+           this shortcode is for — a drawn mark set into a line. A raster is
+           measured; an SVG is read, since its viewBox states the ratio in the
+           file and parsing it is the only way to have the box before the fetch.
+           Either way a mark that states no ratio simply gets none, and the line
+           behaves as it did before. */ -}}
+    {{- if eq .MediaType.SubType "svg" }}
+        {{- with findRESubmatch `viewBox="[\d.]+ [\d.]+ ([\d.]+) ([\d.]+)"` .Content 1 }}
+            {{- $ratio = printf "aspect-ratio:%v/%v;" (index (index . 0) 1) (index (index . 0) 2) }}
+        {{- end }}
+    {{- else }}
+        {{- $ratio = printf "aspect-ratio:%d/%d;" .Width .Height }}
+    {{- end }}
+{{- end }}
 <img class="in-text" src="{{ $url | safeURL }}" alt="{{ .Get "alt" }}"
-    style="height:{{ .Get "height" | default "1em" }}" loading="lazy" decoding="async">
+    style="{{ $ratio | safeCSS }}height:{{ .Get "height" | default "1em" }}" loading="lazy" decoding="async">
