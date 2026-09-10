@@ -28,7 +28,7 @@
 }
 
 .post-card:hover {
-    background: var(--accent-soft);
+    background: var(--accent-panel);
 }
 
 /* 12rem is this component's own geometry, not a spacing step, so it is a
@@ -174,7 +174,7 @@
     align-items: center;
     padding-inline: var(--space-3xs);
     border: var(--line-thin) solid var(--danger);
-    background: var(--danger-soft);
+    background: var(--danger-panel);
     color: var(--danger);
     font-stretch: var(--font-stretch-label);
     font-size: var(--step--2);
@@ -213,7 +213,7 @@
 .tag-list a:hover {
     color: var(--accent);
     border-color: var(--accent);
-    background: var(--accent-soft);
+    background: var(--accent-panel);
 }
 
 .tag-list--index {

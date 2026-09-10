@@ -863,7 +863,7 @@ img.in-text {
 
 .post-nav__link:hover {
     border-color: var(--accent);
-    background: var(--accent-soft);
+    background: var(--accent-panel);
 }
 
 .post-nav__link--next {

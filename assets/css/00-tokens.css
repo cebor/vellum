@@ -78,32 +78,40 @@
     --grid: light-dark(#e5e8e2, #161b21);
 
     --accent: light-dark(#8a5200, #e9a93a);
-    --accent-soft: light-dark(rgba(138, 82, 0, 0.1), rgba(233, 169, 58, 0.14));
-
     --danger: light-dark(#a32218, #f2a49c);
-    --danger-soft: light-dark(rgba(163, 34, 24, 0.09), rgba(242, 164, 156, 0.12));
     --mark: light-dark(#f4dfae, #4a3a12);
 
     /* --- surfaces that carry text, baked opaque ------------------------
 
-       The two -soft tokens above are alpha, which is correct for a hover wash
-       or a selection: nothing reads text off them. It was not correct for the
-       alert panels and the highlighted code line, and that difference had gone
-       unnoticed because the contrast audit checks tokens against *surfaces* and
-       these were not surfaces — they were the composite of a token and whatever
-       happened to be underneath. Underneath an alert is the graph substrate, so
-       the ground moved with the grid: a TIP label measured 4.86:1 over paper and
-       4.47:1 where a glyph crossed a grid line, which is under the binding
-       4.5:1 and was never visible to a check that reads only tokens.
+       These were alpha washes — --accent-soft and --danger-soft — and the
+       argument for them was that nothing reads text off a hover or a selection.
+       That was never true of a hover here: a hovered post card carries its own
+       title, summary and meta line, and a hovered tag chip carries its count.
+       The difference had gone unnoticed because the contrast audit checks tokens
+       against *surfaces* and an alpha fill is not a surface — it is the composite
+       of a token and whatever happens to lie underneath. Underneath both an alert
+       and a card is the graph substrate, so the ground moved with the grid: a TIP
+       label measured 4.86:1 over paper and 4.47:1 where a glyph crossed a grid
+       line, and a hovered chip's count 4.61:1 over paper and 4.28:1 over the same
+       line — both under the binding 4.5:1, on every sheet the theme has rendered,
+       and neither visible to a check that reads only tokens.
 
-       These three are the same colours baked against the surface they sit on,
-       so the value a label is measured against is the value that renders. The
-       alert panels are the current tints at their current alphas over --bg, so
-       nothing about an alert changes except that the grid no longer shows
-       through it. --hl-line steps the amber back from 10% to 6% over
-       --surface-sunk, because --syn-comment is the dimmest ink the palette has
-       and any more amber than that pushes a commented highlighted line under
-       the line.
+       So every fill a reader can land text on is baked against the surface it
+       sits on, and the two alpha tokens are gone rather than kept for the cases
+       that looked safe: the one that was left is what came back. --selection
+       stays alpha, because a selection is drawn over arbitrary text at
+       --text's contrast and has no fixed ground to bake against.
+
+       Nothing changed appearance. Each of these is the tint it replaced at the
+       same alpha over --bg, matching to the byte in both schemes, so an alert
+       and a hover render exactly as before and only the grid stops showing
+       through. That an alert fill and a hover fill turn out to be the same value
+       is worth keeping rather than hiding behind two names: this theme has one
+       signal colour, and it now has one filled area to go with it.
+
+       --hl-line steps the amber back from 10% to 6% over --surface-sunk, because
+       --syn-comment is the dimmest ink the palette has and any more amber than
+       that pushes a commented highlighted line under the line.
 
        The measured minimum across the palette sits here, at 4.60:1 — --meta-soft,
        --syn-comment and --syn-punct are tied on --danger-panel — with
@@ -135,8 +143,29 @@
     --syn-op: light-dark(#3d474f, #b8c0c7);
     --syn-punct: light-dark(#59636d, #99a1a8);
     --syn-error: light-dark(#a32218, #f2a49c);
-    --syn-ins: light-dark(rgba(47, 107, 79, 0.13), rgba(143, 211, 172, 0.13));
-    --syn-del: light-dark(rgba(163, 34, 24, 0.11), rgba(242, 164, 156, 0.12));
+    /* The added and removed lines of a diff, and the last two fills in this file
+       a reader lands text on — so they are baked against --surface-sunk for the
+       reason the group above is baked against --bg, and they were the two that
+       group missed. As alpha they measured 4.28:1 and 4.26:1 against
+       --syn-comment, under the binding 4.5:1. Nothing on the demo reached that,
+       because Chroma's diff lexer wraps a whole line and emits no token inside
+       it, so the ink that lands here is --text; a lexer that does nest would
+       have shipped the breach with nothing to catch it.
+
+       The alphas step back from 13%/11% to 8%/6% light and 10%/11% dark, which
+       is what clears every --syn-* ink at the 4.60:1 the rest of the palette
+       holds. Light is the binding side: past 9% the comment goes under. Each
+       fill still sits 3.6-4.6 L* off its ground, more than the substrate's own
+       3 L* step, so a diff still reads as banded.
+
+       They are the theme's one state carried in hue alone, and the mark that
+       saves them is not one this stylesheet draws: it is the + and - the diff
+       already begins each line with. That is why a diff is readable in a
+       terminal with no colour at all, and it is the reason not to invent a
+       second mark here — the two fills cannot be separated in greyscale within
+       the contrast budget above, and would not need to be if they could. */
+    --syn-ins: light-dark(#dae1da, #222d2e);
+    --syn-del: light-dark(#e5dfda, #2e2a2e);
 
     /* --- type ---------------------------------------------------------
 
@@ -276,9 +305,7 @@
         --rule-frame: #8d968f;
         --grid: #e5e8e2;
         --accent: #8a5200;
-        --accent-soft: rgba(138, 82, 0, 0.1);
         --danger: #a32218;
-        --danger-soft: rgba(163, 34, 24, 0.09);
         --accent-panel: #e5e0d4;
         --danger-panel: #e8ddd9;
         --hl-line: #e3e2d8;
@@ -293,7 +320,7 @@
         --syn-op: #3d474f;
         --syn-punct: #59636d;
         --syn-error: #a32218;
-        --syn-ins: rgba(47, 107, 79, 0.13);
-        --syn-del: rgba(163, 34, 24, 0.11);
+        --syn-ins: #dae1da;
+        --syn-del: #e5dfda;
     }
 }

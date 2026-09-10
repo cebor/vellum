@@ -143,7 +143,7 @@
 .social-icons__link:hover {
     color: var(--accent);
     border-color: var(--accent);
-    background: var(--accent-soft);
+    background: var(--accent-panel);
 }
 
 /* No longer a row of the title block above it — see profile-buttons.html for

@@ -868,6 +868,14 @@ there and the whole sheet follows. Sizes come from `--step--2` … `--step-5` fo
 > token is contrast-checked at ≥4.5:1 against its surface in both schemes, and an `opacity: 0.6`
 > silently undoes that.
 
+Any fill a reader can land text on is an **opaque** token, not an alpha wash: `--accent-panel` fills
+both the alerts and every hover, `--danger-panel` the warnings and the draft badge, `--hl-line` a
+highlighted code line, and `--syn-ins` / `--syn-del` the lines of a diff. That is deliberate. An
+alpha fill's real contrast depends on what happens to lie under it, and under most of this theme
+that is the graph substrate — so the ratio changed wherever a glyph crossed a grid line, which no
+check that reads token values can see. If you replace one of these, use an opaque colour and measure
+it against `--meta-soft` and the `--syn-*` inks rather than against `--text` alone.
+
 Colours resolve through CSS `light-dark()`, so each is written once and the page themes correctly
 with JavaScript disabled. Note that `light-dark()` only produces *colours* — a display swap like the
 theme-toggle icon still needs a real `prefers-color-scheme` query. Browsers under the baseline are

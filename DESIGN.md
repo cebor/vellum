@@ -80,38 +80,53 @@ to be kept in step by hand, so a colour changed above is changed in two places o
 | `--grid` | `#e5e8e2` | `#161b21` | Graph substrate |
 | `--accent` | `#8a5200` | `#e9a93a` | The one signal |
 | `--danger` | `#a32218` | `#f2a49c` | Draft flag, warnings, errors |
-| `--accent-panel` | `#e5e0d4` | `#302b1e` | TIP / IMPORTANT alert fill |
-| `--danger-panel` | `#e8ddd9` | `#2d272a` | WARNING / CAUTION alert fill |
+| `--accent-panel` | `#e5e0d4` | `#302b1e` | TIP / IMPORTANT alert fill, and every hover fill |
+| `--danger-panel` | `#e8ddd9` | `#2d272a` | WARNING / CAUTION alert fill, and the draft badge |
 | `--hl-line` | `#e3e2d8` | `#232422` | A highlighted line in a code block |
+| `--syn-ins` | `#dae1da` | `#222d2e` | An added line in a diff |
+| `--syn-del` | `#e5dfda` | `#2e2a2e` | A removed line in a diff |
 
 Every text token clears **4.5:1** against every surface it sits on, in both schemes; the measured
 minimum is 4.60:1. Dim text by dropping to `--meta-soft` and a smaller step, never by lowering
 opacity — `opacity` silently undoes the contrast guarantee.
 
-**The last three are opaque, and that is the whole point of them.** They were `--accent-soft` and
-`--danger-soft` — alpha washes, which is right for a hover or a selection because nothing reads text
-off those. It was wrong here, and the audit could not see it: the check reads *tokens against
+**The last five are opaque, and that is the whole point of them.** They began as alpha washes —
+`--accent-soft`, `--danger-soft`, and the two diff fills — on the argument that nothing reads text off
+a hover or a selection. It was wrong, and the audit could not see it: the check reads *tokens against
 surfaces*, and an alpha fill is not a surface. It is the composite of a token and whatever happens to
-lie underneath, and underneath an alert is the graph substrate. So the ground moved with the grid — a
-TIP label measured 4.86:1 over paper and **4.47:1** where a glyph crossed a grid line, under the
-binding 4.5:1, on every sheet the theme has ever rendered. The highlighted code line failed the same
-way at 4.46:1 light and 4.38:1 dark, against `--syn-comment`, the dimmest ink the palette has.
+lie underneath, and underneath an alert, a card or a chip is the graph substrate. So the ground moved
+with the grid. A TIP label measured 4.86:1 over paper and **4.47:1** where a glyph crossed a grid
+line; a hovered tag chip's count measured 4.61:1 over paper and **4.28:1** over the same line. Both
+under the binding 4.5:1, on every sheet the theme has ever rendered. The highlighted code line failed
+a third way at 4.46:1 light and 4.38:1 dark, and the two diff fills a fourth, at 4.26:1 and 4.28:1
+against `--syn-comment`, the dimmest ink the palette has.
 
-Baking them opaque makes the value a label is measured against the value that renders. The two alert
-panels are the same tints at the same alphas over `--bg`, so no alert changed appearance — only the
-grid stopped showing through. `--hl-line` steps the amber back from 10% to 6%, because any more than
-that puts a commented highlighted line under the line; at 6% it still sits about 3 L\* off its ground,
-the same visible step the substrate uses.
+Baking them opaque makes the value a label is measured against the value that renders. The alert
+panels are the same tints at the same alphas over `--bg`, matching to the byte, so nothing changed
+appearance — only the grid stopped showing through. `--hl-line` steps the amber back from 10% to 6%,
+and the diff fills from 13%/11% to 8%/6% light and 10%/11% dark, because any more than that puts a
+commented line under the line. Each still sits 3 to 4.6 L\* off its ground, at or above the step the
+substrate itself uses.
+
+**A hover fill and an alert fill turned out to be the same value**, which is why there are now five
+tokens here and not seven: `--accent-soft` over `--bg` *is* `--accent-panel`. Keeping two names for
+one colour only meant one of them could drift. `--selection` is the one wash that stays alpha, and it
+is the case the original argument was actually right about — it is drawn over arbitrary text at
+`--text`'s contrast, and has no fixed ground to bake against.
 
 The rule this produced: **a surface that carries text is an opaque token, checked against every ink
-that can land on it** — for these three that means all nine `--syn-*` inks, not `--text` alone. An
-alpha fill is for washes nobody reads off. The measured minimum now lives in this group rather than
-in the text tokens, which is why it moved out of the text tokens' 4.87:1. It sits at **4.60:1** —
-`--meta-soft`, `--syn-comment` and `--syn-punct` tied on `--danger-panel`, with `--accent-panel` next
-at 4.64:1 dark and 4.65:1 light. It was recorded as 4.70:1 (`--syn-comment` on `--hl-line`) until an
-audit re-measured every ink against every opaque surface in both schemes; nothing was ever under the
-binding 4.5:1, but the figure had been read off the one panel the change was made for. The lesson is
-the rule above, applied to itself: re-measure the whole matrix, not the token you touched.
+that can land on it** — which for the code surfaces means all nine `--syn-*` inks, not `--text` alone.
+An alpha fill is for washes nobody reads off, and the test of "nobody reads off it" is what a hovered
+card actually contains, not what the fill is called. The measured minimum lives in this group rather
+than in the text tokens, which is why it moved out of the text tokens' 4.87:1. It sits at **4.60:1** —
+`--meta-soft` on `--danger-panel`, tied with `--syn-comment` and `--syn-punct` on `--syn-ins` — with
+`--accent-panel` next at 4.64:1 dark and 4.65:1 light. Across the 132 ink-and-surface pairs that can
+actually occur, nothing is under 4.5:1.
+
+The figure was once recorded as 4.70:1, read off the single panel the change was made for. The lesson
+is the rule above, applied to itself: re-measure the whole matrix, not the token you touched — and
+measure it against the inks that can *land* there, since a matrix of every ink against every surface
+reports failures no reader can reach and hides the ones they can.
 
 Syntax colours are drawn from the same ink family as the chrome, so code and page share one palette
 rather than fighting.
@@ -200,6 +215,15 @@ State is a **mark, not a hue**, so it survives greyscale and colour blindness:
 - Alerts: a lettered label plus a border, so the type of alert is readable without colour.
 - AI use: a drawn stamp and a dashed change bar in graphite, never the one signal colour — amber
   means "this is live", and a note on how the sheet was drawn is not live.
+
+**A diff is the one state whose mark this stylesheet does not draw**, and it is worth being precise
+about rather than counting as an exception. `--syn-ins` and `--syn-del` are 1.00:1 against each other
+in greyscale, and cannot be separated there: both have to stay within about 4 L\* of the code ground
+to keep `--syn-comment` above 4.5:1 on them, which leaves no room for a lightness difference. What
+tells added from removed is the `+` and `-` the diff already begins each line with — which is why a
+diff is legible in a terminal with no colour at all, and why the band's job here is to group a run of
+lines rather than to carry the meaning. Adding a second mark would be inventing vocabulary for a
+distinction the content already makes.
 
 ## Components
 
