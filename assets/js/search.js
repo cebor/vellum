@@ -13,6 +13,14 @@ import * as params from "@params";
     var text = input.dataset;
     var fuse = null;
 
+    // The cap is on what is *rendered*, not on what is found: the live region
+    // still reports the true total, so a reader is told there are 900 matches
+    // and handed the best 50. Fuse scores every key including `content` — the
+    // whole plain text of every page — so on a large site a two-character query
+    // matches most of the corpus, and building one <li> per match on every
+    // keystroke is the part that stalls, not the search.
+    var RENDER_LIMIT = 50;
+
     function options() {
         var o = Object.assign(
             {
@@ -107,7 +115,7 @@ import * as params from "@params";
     // reach this function, and neither should ever be parsed as markup.
     function render(matches) {
         results.replaceChildren();
-        matches.forEach(function (match) {
+        matches.slice(0, RENDER_LIMIT).forEach(function (match) {
             var page = match.item;
             var li = document.createElement("li");
             var meta = metaLine(page);
