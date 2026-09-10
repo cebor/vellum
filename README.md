@@ -472,6 +472,20 @@ TOML lowercases the keys, so the camelCase options Fuse expects have to be mappe
 Any other multi-word Fuse option arrives lowercased and is ignored — add it to the map in
 `assets/js/search.js` if you need it.
 
+Two defaults differ from Fuse's own and are worth knowing about. `includeMatches` is **off**: it
+makes Fuse collect index ranges for every matched key on every keystroke, and nothing in the theme
+reads them. Turn it on only if you are rendering highlights yourself. And the results list renders
+at most **50** entries — the count above it still reports the true total, so a query that matches
+900 pages says so and shows you the best 50.
+
+> [!NOTE]
+> The index carries each page's **full plain text** under `content`, which is what makes a search
+> match a word buried in a post rather than only its title. It is also what makes the index grow
+> with the site: reckon on roughly the size of your rendered prose, so a few hundred long posts is
+> a megabyte or two, fetched once when `/search/` opens. If that is too much for your site, drop
+> `"content"` from `keys` — the index still ships it, but the field stops being searched — or
+> narrow what is indexed with `searchHidden` in front matter.
+
 ### SEO and analytics
 
 ```toml
