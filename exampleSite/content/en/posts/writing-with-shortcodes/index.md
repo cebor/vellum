@@ -7,13 +7,13 @@ summary = "Seven shortcodes, and why a theme whose Markdown is otherwise plain n
 +++
 
 Goldmark's `unsafe` setting is off in this theme, so raw HTML written in a post is stripped rather
-than rendered. That is the right default — a content file should not be able to smuggle a script
-into the page — but it removes a few things that technical writing genuinely needs. The shortcodes
+than rendered. That is the right default: a content file should not be able to smuggle a script
+into the page. But it removes a few things that technical writing genuinely needs. The shortcodes
 below are exactly those things, and nothing more.
 
 ## collapse
 
-The load-bearing one. Long command output should be *present* — searchable, printable, copyable —
+The load-bearing one. Long command output should be *present* (searchable, printable, copyable)
 without occupying half the screen on the way past.
 
 {{< collapse summary="Full build output" >}}
@@ -45,7 +45,7 @@ Written as:
 {{</* /collapse */>}}
 ````
 
-`details` is an alias of the same shortcode, under the name most people reach for first — both render
+`details` is an alias of the same shortcode, under the name most people reach for first. Both render
 through the same partial, so they cannot drift apart. Both take `openByDefault="true"` if the fold
 should start open:
 
@@ -68,7 +68,7 @@ produce a caption. That is the only reason this shortcode exists.
 
 ## audio
 
-Takes a bundle resource or a plain URL. Nothing autoplays, here or in `video` — a reader who is
+Takes a bundle resource or a plain URL. Nothing autoplays, here or in `video`: a reader who is
 mid-task with a terminal open does not want sound.
 
 {{< audio src="tone.wav" >}}
@@ -92,9 +92,10 @@ the baseline of this sentence at `1.1em`, and moves with the type when the reade
 ## ai
 
 Marks a passage as written with AI assistance, using the notation a drawing already has for an
-altered region: a change bar down the edge, the sheet's AI mark flagged on the bar — the same nib the
-title block stamps in its corner — and a number beside it resolving to a row in the revision note at
-the foot of the sheet. The flag is a link — a reference that does not resolve is not a reference.
+altered region: a change bar down the edge, the sheet's AI mark flagged on the bar (the same nib the
+title block stamps in its corner), and a number beside it resolving to a row in the revision note at
+the foot of the sheet. The flag is a link, because a reference that does not resolve is not a
+reference.
 
 {{< ai note="Drafted from an outline, then edited by hand" >}}
 A whole paragraph can be marked. The bar is dashed rather than solid, which is what separates it
@@ -116,7 +117,7 @@ A whole paragraph.
 ```
 
 The post-level counterpart is front matter, not a shortcode: `ai = true` puts a stamp in the corner
-of the title block and the same mark in the index. This post carries no such stamp on purpose —
+of the title block and the same mark in the index. This post carries no such stamp on purpose:
 individual passages are marked, the sheet as a whole is not.
 
 ## rawhtml

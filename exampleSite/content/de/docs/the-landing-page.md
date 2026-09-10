@@ -14,11 +14,11 @@ das, was eine Tabelle nicht transportiert: wie sich die beiden Präsentationen n
 ## Ein Profil, bis zu fünf Ansichten
 
 Unter dem Profilblock kann eine Startseite **about**, **skills**, **record**, **projects** und
-**contact** tragen. Jede rendert nur, wenn ihr eigener Schlüssel gesetzt ist — es gibt also nichts
+**contact** tragen. Jede rendert nur, wenn ihr eigener Schlüssel gesetzt ist, es gibt also nichts
 abzuschalten. Setzt man keine, hat man das schlichte Profil, mit dem das Theme angefangen hat.
 
 Diese Demo setzt auf Englisch alle fünf und lässt `projects` auf Deutsch bewusst weg. Das ist kein
-Versehen, das behoben gehört. Ein Zweig, den nichts baut, ist ein Zweig, den nichts prüft — der Pfad
+Versehen, das behoben gehört. Ein Zweig, den nichts baut, ist ein Zweig, den nichts prüft: der Pfad
 „Ansicht fehlt" brauchte also eine Seite, die wirklich eine weglässt, und die deutsche Startseite ist
 sie.
 
@@ -34,7 +34,7 @@ Zwei Dinge am Index, die man leicht übersieht:
 ## Dieselben Params, zweimal gezeichnet
 
 `view = "terminal"` tauscht den gezeichneten Index gegen eine funktionierende Shell im macOS-Stil.
-Dieselben Schlüssel, derselbe Inhalt, nichts zu migrieren — Zeile löschen und man ist zurück. Diese
+Dieselben Schlüssel, derselbe Inhalt, nichts zu migrieren. Zeile löschen und man ist zurück. Diese
 Demo betreibt von jedem eines, sodass man sie nebeneinanderlegen kann:
 
 - [**Die Startseite dieser Sprache**]({{< relref path="/" lang="de" >}}) — als Shell.
@@ -44,22 +44,22 @@ Demo betreibt von jedem eines, sodass man sie nebeneinanderlegen kann:
 Und zwar wirklich benutzen. Die Shell ist kein Bild einer Shell: Befehle werden getippt, die
 Pfeiltasten laufen durch die Historie, Tab vervollständigt, `Strg+C` und `Strg+L` tun, was sie tun,
 und `<befehl> --json` gibt die Rohdaten statt der Tabelle aus. Jeder Befehl in `help` ist auch ein
-Knopf, damit ein Telefon ohne Tastatur an alles herankommt, und die drei Fensterknöpfe funktionieren —
+Knopf, damit ein Telefon ohne Tastatur an alles herankommt, und die drei Fensterknöpfe funktionieren:
 Schließen klappt das Fenster auf eine Zeile zusammen, Minimieren auf seine Titelleiste, Zoomen wächst
 es von 24 auf 40 Zeilen.
 
 Die Ausgabe kommt zeichenweise statt zu erscheinen, und ein angeklickter Befehl wird in den Prompt
-getippt. Jeder Tastendruck beendet sofort, was noch aussteht — nichts wird also hinter dem Effekt
-zurückgehalten —, und `prefers-reduced-motion: reduce` schaltet das Ganze ab.
+getippt. Jeder Tastendruck beendet sofort, was noch aussteht, sodass niemand hinter dem Effekt
+zurückgehalten wird, und `prefers-reduced-motion: reduce` schaltet das Ganze ab.
 
 Schaltet man JavaScript aus, zeigt das Fenster die bereits gelaufene Sitzung: jeden Befehl und seine
 Ausgabe, der Reihe nach. Nichts geht verloren und nichts gibt vor, interaktiv zu sein. Genau dieses
-Transkript ist auch das, was gedruckt wird — ohne das Fenster darum herum.
+Transkript ist auch das, was gedruckt wird, ohne das Fenster darum herum.
 
 > [!NOTE]
 > Das Fenster fährt nicht Terminals weißes „Basic"-Profil. Es fährt eines, das zum Theme passt, auf
 > derselben abgesenkten Fläche und mit denselben Syntaxfarben, die jeder Codeblock dieser Seite schon
-> benutzt — es sitzt also auf der Seite statt obenauf.
+> benutzt, es sitzt also auf der Seite statt obenauf.
 
 ## Was die Wahl kostet
 
