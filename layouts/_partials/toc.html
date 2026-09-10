@@ -5,6 +5,19 @@
 {{- if and (ne (.Param "toc") false) (ne (.Param "ShowToc") false) (ge (len .Fragments.Identifiers) 2) }}
 <details class="toc"{{ if ne (.Param "TocOpen") false }} open{{ end }}>
     <summary class="toc__summary">{{ i18n "toc" }}</summary>
-    <div class="toc__body">{{ .TableOfContents }}</div>
+    {{- /* Hugo emits a bare <nav id="TableOfContents">, and a post already carries
+           four named nav landmarks — primary, breadcrumb, post nav and the zone
+           rail. A fifth, unnamed one lands in a screen reader's landmark list as
+           a bare "navigation" among four that say what they are. The <summary>
+           above names the disclosure, not the landmark inside it, so the label
+           has to be injected into the generated markup.
+
+           Called with explicit arguments rather than piped into: strings.Replace
+           takes INPUT *first*, so `.TableOfContents | replace OLD NEW` appends
+           the table as the third argument and silently returns OLD — which
+           renders an empty <nav> and loses the whole contents. replaceRE takes
+           its input last and would pipe correctly, but then a `$` in a site's
+           own translation would be read as a capture group. */ -}}
+    <div class="toc__body">{{ replace .TableOfContents "<nav id=\"TableOfContents\">" (printf "<nav id=\"TableOfContents\" aria-label=\"%s\">" (i18n "toc" | htmlEscape)) | safeHTML }}</div>
 </details>
 {{- end }}
