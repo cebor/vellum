@@ -58,14 +58,22 @@
 
         // Each mark sits at its own section's offset down the sheet, so the rail
         // is a scale of the page rather than a list beside it.
+        //
+        // Every offset is read before any is written. Interleaved, each write
+        // invalidated layout and the next getBoundingClientRect had to flush it
+        // again — one forced reflow per section, on a handler that also runs on
+        // every resize event.
         function place() {
             var box = sheet.getBoundingClientRect();
             var top = box.top + window.scrollY;
             var height = sheet.offsetHeight;
             if (!height) return;
+            var offsets = targets.map(function (target) {
+                return (target.getBoundingClientRect().top + window.scrollY - top) / height;
+            });
             marks.forEach(function (mark, i) {
-                var y = (targets[i].getBoundingClientRect().top + window.scrollY - top) / height;
-                mark.style.setProperty("--zone-top", (Math.min(Math.max(y, 0), 1) * 100).toFixed(3) + "%");
+                var y = Math.min(Math.max(offsets[i], 0), 1);
+                mark.style.setProperty("--zone-top", (y * 100).toFixed(3) + "%");
             });
             rail.dataset.placed = "true";
         }
@@ -86,16 +94,26 @@
             });
         }
 
+        // One frame, one measurement. Both handlers go through this: scroll only
+        // needs the spy, resize needs the placement too, and a resize is dragged
+        // rather than fired once — so the handler that measures every section was
+        // the one running unthrottled while the cheaper one was already batched.
         var frame = null;
-        function schedule() {
+        var replace = false;
+        function schedule(withPlace) {
+            if (withPlace === true) replace = true;
             if (frame) return;
-            frame = requestAnimationFrame(function () { frame = null; spy(); });
+            frame = requestAnimationFrame(function () {
+                frame = null;
+                if (replace) { replace = false; place(); }
+                spy();
+            });
         }
 
         place();
         spy();
         window.addEventListener("scroll", schedule, { passive: true });
-        window.addEventListener("resize", function () { place(); spy(); }, { passive: true });
+        window.addEventListener("resize", function () { schedule(true); }, { passive: true });
         // Web fonts and lazy images both change the sheet's height after load.
         window.addEventListener("load", function () { place(); spy(); });
         if (document.fonts && document.fonts.ready) document.fonts.ready.then(place);
