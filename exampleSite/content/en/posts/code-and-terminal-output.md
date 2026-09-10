@@ -33,7 +33,7 @@ highlighted line is a surface the syntax inks are read off, so `--hl-line` is an
 was checked against every one of them rather than an alpha wash over whatever sits underneath.
 
 ```go {hl_lines=["1-2"]}
-// tokens.html parses four values out of 00-tokens.css at build time, because a
+// tokens.html parses six values out of 00-tokens.css at build time, because a
 // sizes attribute is evaluated with no element context and cannot use var().
 func measure(css string) (int, error) {
     m := regexp.MustCompile(`--content-width:\s*(\d+)px`).FindStringSubmatch(css)

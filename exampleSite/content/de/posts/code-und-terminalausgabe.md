@@ -38,7 +38,7 @@ womit.
 {{< /ai >}}
 
 ```go
-// tokens.html liest vier Werte zur Build-Zeit aus 00-tokens.css, weil ein
+// tokens.html liest sechs Werte zur Build-Zeit aus 00-tokens.css, weil ein
 // sizes-Attribut ohne Element-Kontext ausgewertet wird und kein var() kennt.
 func measure(css string) (int, error) {
     m := regexp.MustCompile(`--content-width:\s*(\d+)px`).FindStringSubmatch(css)

@@ -19,9 +19,9 @@
        because it belongs to that component and to nothing else.
      - A media-query breakpoint is a literal, because a media query cannot
        resolve var(). Only two exist, and both are named here as well:
-       40rem is --sheet-narrow, which tokens.html reads to build the image
-       `sizes` attribute, and 60rem is --frame-collapse. Change either and
-       change every media query that spells the number out.
+       40rem is --sheet-narrow and 60rem is --frame-collapse. Change either and
+       change every media query that spells the number out — the name does not
+       propagate, it only records what the number is for.
 
    Anything that is a *scale* value comes from a token here.
 
@@ -29,7 +29,10 @@
    layouts/_partials/tokens.html, which parses --content-width, --sheet-gutter,
    --sheet-gutter-narrow, --sheet-narrow, --bg and --accent out of this file so
    the image `sizes` attribute, the theme-color metas and the mask-icon tint
-   cannot go stale. Renaming any of those six fails the build loudly. */
+   cannot go stale. It also asserts --frame-collapse without using it, for the
+   reason given there: nothing else reads that token, so without the assertion
+   it could be renamed away from the breakpoints it names and nothing would say
+   so. Renaming any of those seven fails the build loudly. */
 
 /* Colours resolve through light-dark(), so each token is written once and the
    browser picks the side from the used color-scheme. data-theme="auto" matches

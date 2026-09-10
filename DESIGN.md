@@ -190,9 +190,17 @@ characters.
 
 Get that arithmetic wrong and the column silently stops matching `--content-width`, which also
 desynchronises the image `sizes` attribute — `_partials/tokens.html` parses `--content-width`,
-`--sheet-gutter`, `--frame-collapse` and `--bg` straight out of the stylesheet at build time, because
-a `sizes` attribute and a `theme-color` meta are evaluated without element context and cannot use
-`var()`. Renaming any of the four fails the build loudly instead of shipping a stale value.
+`--sheet-gutter`, `--sheet-gutter-narrow`, `--sheet-narrow`, `--bg` and `--accent` straight out of
+the stylesheet at build time, because a `sizes` attribute, a `theme-color` meta and the `mask-icon`
+tint are evaluated without element context and cannot use `var()`. Renaming any of the six fails the
+build loudly instead of shipping a stale value.
+
+`--frame-collapse` is **not** one of them, and this file said for a while that it was. Nothing reads
+it: a media query cannot resolve `var()`, so the `60rem` literals in `20-layout.css` are its only
+consumers and the token is a name for the number rather than its source. It is now asserted in
+`tokens.html` without being used, purely so that renaming it fails the build the way this paragraph
+had been promising — a token nothing reads is a token that can be renamed away from what it names in
+silence, which is the failure this theme is built against.
 
 The header and footer rules align to the same two frame edges, so the whole page reads as one sheet.
 Below `--frame-collapse` (60rem) the frame and rail are dropped and the column runs full-bleed inside

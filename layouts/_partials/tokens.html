@@ -22,6 +22,12 @@
        value is returned — the attribute takes one colour and has no scheme-aware
        form, so parsing the dark half would be a build failure with no consumer.
 
+       Six tokens are read: --content-width, --sheet-gutter,
+       --sheet-gutter-narrow, --sheet-narrow, --bg and --accent. A seventh,
+       --frame-collapse, is asserted but not returned — see below for why.
+       Renaming any of the seven fails the build here rather than shipping a
+       stale value.
+
        Returns: measure (px, int), gutter (rem, float), sizes (string),
        bgLight / bgDark and accentLight (hex strings).
 
@@ -46,6 +52,21 @@
 {{- $sn := findRESubmatch `--sheet-narrow:\s*([0-9.]+)rem` $c 1 }}
 {{- if not $sn }}{{ errorf "tokens.html: --sheet-narrow missing from 00-tokens.css, or not expressed in rem" }}{{ end }}
 {{- $narrow := float (index (index $sn 0) 1) }}
+
+{{- /* Asserted, not used, and the assertion is the point. --frame-collapse is
+       the theme's other breakpoint and no template needs its value: a media
+       query cannot resolve var(), so the 60rem literals in 20-layout.css are its
+       only real consumers and the token beside them is a name for the number.
+
+       A name nothing reads is a name that can be renamed with no effect, which
+       is the quiet failure this theme is built against — and DESIGN.md was
+       recording the opposite, promising that renaming it fails the build. This
+       is the one line that makes that true. It buys nothing else: the literals
+       still have to be changed by hand, which is what the comment at the token
+       says. */ -}}
+{{- if not (findRESubmatch `--frame-collapse:\s*([0-9.]+)rem` $c 1) }}
+{{- errorf "tokens.html: --frame-collapse missing from 00-tokens.css, or not expressed in rem" }}
+{{- end }}
 
 {{- $bg := findRESubmatch `--bg:\s*light-dark\(\s*(#[0-9a-fA-F]{3,8})\s*,\s*(#[0-9a-fA-F]{3,8})\s*\)` $c 1 }}
 {{- if not $bg }}{{ errorf "tokens.html: --bg missing from 00-tokens.css, or not a light-dark() pair" }}{{ end }}
