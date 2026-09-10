@@ -33,13 +33,38 @@
 
         var toggle = document.getElementById("theme-toggle");
         if (toggle) {
+            var media = window.matchMedia("(prefers-color-scheme: dark)");
+
+            // "auto" and an absent attribute are the same case: follow the OS.
+            var isDark = function () {
+                return root.dataset.theme === "dark" ||
+                    (root.dataset.theme !== "light" && media.matches);
+            };
+
+            // The accessible name is the action the button will perform, so
+            // activating it renames the element that still holds focus — which
+            // is what tells a screen reader the scheme actually changed. Hugo
+            // cannot render this: the resolved scheme is not known at build
+            // time, so the generic label it ships is corrected here before the
+            // button can be reached.
+            var relabel = function () {
+                var next = isDark() ? toggle.dataset.toLight : toggle.dataset.toDark;
+                if (!next) return;
+                toggle.setAttribute("aria-label", next);
+                toggle.title = next;
+            };
+
+            relabel();
+
             toggle.addEventListener("click", function () {
-                var dark = root.dataset.theme === "dark" ||
-                    (root.dataset.theme === "auto" &&
-                        window.matchMedia("(prefers-color-scheme: dark)").matches);
-                root.dataset.theme = dark ? "light" : "dark";
+                root.dataset.theme = isDark() ? "light" : "dark";
                 try { localStorage.setItem("pref-theme", root.dataset.theme); } catch (e) { }
+                relabel();
             });
+
+            // On "auto" the scheme follows the OS, so the label has to follow it
+            // too — otherwise the button offers to switch to the mode it is in.
+            media.addEventListener("change", relabel);
         }
 
         var top = document.getElementById("top-link");

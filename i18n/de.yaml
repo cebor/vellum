@@ -331,6 +331,12 @@
 
 # --- Rahmen -----------------------------------------------------------------
 
+- id: theme_to_dark
+  translation: "Zu dunklem Modus wechseln"
+
+- id: theme_to_light
+  translation: "Zu hellem Modus wechseln"
+
 - id: theme_toggle
   translation: "Zwischen hellem und dunklem Modus wechseln"
 

@@ -328,6 +328,12 @@
 
 # --- chrome -----------------------------------------------------------------
 
+- id: theme_to_dark
+  translation: "Switch to dark mode"
+
+- id: theme_to_light
+  translation: "Switch to light mode"
+
 - id: theme_toggle
   translation: "Toggle light and dark mode"
 

@@ -56,8 +56,17 @@
             {{- end }}
 
             {{- if not site.Params.disableThemeToggle }}
+            {{- /* The label Hugo renders is the generic one, because the resolved
+                   scheme is not known at build time. The script in footer.html
+                   replaces it with the action the button will perform, so pressing
+                   it changes the accessible name of the element that still holds
+                   focus — which is the only confirmation a screen reader gets that
+                   the scheme swapped at all. Both strings are handed over as data
+                   attributes rather than written into the script, the same rule
+                   search.html states for every string a script can display. */}}
             <button class="theme-toggle" id="theme-toggle" type="button" aria-label="{{ i18n "theme_toggle" }}"
-                title="{{ i18n "theme_toggle" }}">
+                title="{{ i18n "theme_toggle" }}" data-to-dark="{{ i18n "theme_to_dark" }}"
+                data-to-light="{{ i18n "theme_to_light" }}">
                 {{ partial "icon.html" "moon" }}
                 {{ partial "icon.html" "sun" }}
             </button>
