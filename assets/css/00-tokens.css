@@ -3,9 +3,15 @@
 
    Four exceptions, each of which has to say so at the declaration:
 
-     - 95-print.css sets paper ink — white, black and two greys — rather than the
-       screen palette. Paper is not one of the surfaces the palette was contrast-
-       checked against, and #eff0ec is a sheet, not a page.
+     - A print stylesheet sets paper ink — white, black and two greys — rather
+       than the screen palette. Paper is not one of the surfaces the palette was
+       contrast-checked against, and #eff0ec is a sheet, not a page. That is
+       95-print.css and also the @media print block at the foot of
+       35-terminal.css, which has to travel with the sheet it belongs to rather
+       than ship to every site that has no terminal. Two files, one set of four
+       inks: the terminal's half briefly carried a #666 of its own for the same
+       dim text 95-print.css sets in #555, which put two greys on one printed
+       page for no reason either could state.
      - 10-base.css's prefers-reduced-motion block uses the standard 0.01ms, which
        is an idiom rather than a duration anyone would tune.
      - A one-off component geometry — the title-block label column, the card's

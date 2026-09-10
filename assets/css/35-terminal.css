@@ -620,7 +620,7 @@
 
     .term__prompt,
     .term__project-name::before {
-        color: #666;
+        color: #555;
     }
 
     .term__key,
@@ -628,6 +628,6 @@
     .term__project-desc,
     .term__record-note,
     .term__tag {
-        color: #666;
+        color: #555;
     }
 }
