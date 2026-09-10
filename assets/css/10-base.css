@@ -119,6 +119,17 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    /* Every container that can overflow was handled and running text was not:
+       tables and fences scroll, inline code breaks, the terminal wraps — but a
+       bare URL or a long compound in a paragraph or a heading had nothing to
+       break on. Below --sheet-narrow the column is the viewport, so at 320px an
+       unbroken run past roughly 36 characters pushed the whole sheet sideways.
+       Inherited, so it reaches every prose context at once, and break-word
+       rather than anywhere: anywhere also shrinks min-content, which would let
+       the measured column collapse under a flex or grid parent. It fires only
+       where a word would otherwise overflow its line box, so nothing that fits
+       today is re-broken. */
+    overflow-wrap: break-word;
 }
 
 /* --- browser surfaces ---------------------------------------------------- */
