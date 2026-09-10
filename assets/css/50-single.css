@@ -583,11 +583,21 @@
     margin-block: var(--space-xl);
 }
 
+/* A caption is running prose about a figure, not data — so it is set in the
+   reading face. It was mono, which is this theme's own named failure: JetBrains
+   Mono carries code, dates, counts and tabular figures, and reaching for it here
+   was mono as a costume for "technical" rather than for measurement.
+
+   And it takes a measure. At --step--2 across the full column it ran about a
+   quarter longer than body copy does at --step-0 — the smaller the step, the
+   longer the line, on a sheet whose whole argument is a measure that was counted
+   rather than guessed. 60ch is the standfirst's measure, which is what every
+   other run of secondary prose here is already set to. */
 .figure__caption {
     margin-top: var(--space-2xs);
     font-size: var(--step--2);
     color: var(--meta);
-    font-family: var(--font-mono);
+    max-width: 60ch;
 }
 
 .figure__attr {

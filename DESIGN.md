@@ -161,13 +161,22 @@ italic text.
 **JetBrains Mono** carries code, dates, counts, tabular figures and the 404 numerals — data and
 measurement only. It deliberately ships **no italic**: syntax comments are separated by colour, so a
 code block never pulls a second mono file. Mono is never used as a costume for "technical"; the
-tagline and the search field are set in Archivo.
+tagline and the search field are set in Archivo, and so is a figure caption, which was mono until an
+audit named it as exactly that costume — a caption is prose about a figure, not a measurement of one.
 
 **The measure is 92 characters** — `--step-0` at 20px across an 800px column. That is past the classic
 65–75 advice on purpose: the reading scene here is command blocks and terminal output that should not
 wrap, where a conventional column of the same body size measures 83. Both figures were counted from a
 rendered line, not estimated.
-`--line-height: 1.75` is what keeps a line that long trackable. Below 40rem `--step-0` steps back to
+`--line-height: 1.75` is what keeps a line that long trackable.
+
+**A smaller step on the same column is a longer line, not a shorter one**, so secondary prose takes a
+measure of its own: `60ch`, on the standfirst, the sheet note and the figure caption alike. The
+caption had none, and at `--step--2` across the full column it ran about a quarter longer than body
+copy does at `--step-0` — the one run of text on the sheet past a measure that was counted rather
+than guessed.
+
+Below 40rem `--step-0` steps back to
 18px, because on a phone the column is the viewport and 20px would cut the line to about 40
 characters.
 
