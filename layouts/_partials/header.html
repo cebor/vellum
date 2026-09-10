@@ -45,7 +45,12 @@
             {{- range $page.Translations }}
             {{- if eq .Lang $lang }}{{ $href = .Permalink }}{{ end }}
             {{- end }}
-            <a class="lang-switch" href="{{ $href }}" hreflang="{{ $lang }}"
+            {{- /* hreflang states what language the destination is in; lang states
+                   what language this link's own text is in, and they are not the
+                   same claim. Without it a German sheet announces "English" — or
+                   the bare "en" — with German phonemes, which is WCAG 3.1.2 and
+                   the one place a multilingual theme should not be caught. */}}
+            <a class="lang-switch" href="{{ $href }}" hreflang="{{ $lang }}" lang="{{ $lang }}"
                 title="{{ .Language.Label | default $lang }}">{{ if site.Params.displayFullLangName }}{{ .Language.Label | default $lang }}{{ else }}{{ $lang }}{{ end }}</a>
             {{- end }}
             {{- end }}
