@@ -19,7 +19,12 @@ import * as params from "@params";
                 distance: 100,
                 threshold: 0.4,
                 ignoreLocation: true,
-                includeMatches: true,
+                // includeMatches is deliberately off. It makes Fuse collect
+                // index ranges for every matched key, `content` included, on
+                // every keystroke — and nothing reads them: render() below uses
+                // match.item alone. It was the most expensive option in this
+                // config and it bought nothing. A site that wants to highlight
+                // matches turns it back on through fuseOpts.
                 keys: ["title", "permalink", "summary", "content"],
             },
             params.fuseOpts || {}
