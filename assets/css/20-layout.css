@@ -574,6 +574,28 @@
 }
 
 @media (pointer: coarse) {
+    /* The rail is dropped below --frame-collapse, so a phone never meets it —
+       but a tablet in landscape is 64rem with a coarse pointer, and there the
+       marks were a 13px line box with no block padding while every other
+       control in the theme was already raised to --tap-target.
+
+       Grown symmetrically around the letter: the placed rail positions each
+       mark by its *top* edge at the offset the script measured, so growing the
+       box downward would slide every zone off the section it names. The
+       negative start margin gives back exactly half the height gained, which
+       leaves both the letter and its tick where they were. Scoped to the placed
+       state because the unplaced fallback is an evenly spaced flex column, and
+       there a negative margin would compress the spacing it falls back to. */
+    .zone-rail__mark {
+        display: flex;
+        align-items: center;
+        min-height: var(--tap-target);
+    }
+
+    .zone-rail[data-placed] .zone-rail__mark {
+        margin-block-start: calc((1em - var(--tap-target)) / 2);
+    }
+
     .nav__item,
     .lang-switch,
     .theme-toggle,
