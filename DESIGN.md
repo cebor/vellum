@@ -378,8 +378,10 @@ hand-picked terminal green never was. The measured minimum across the shell is
 the window read as a footnote panel beside 20px body copy, and that size gap was
 doing as much to make it foreign as the colour was.
 
-**`.term__cmd` is the theme's one interactive target under `--tap-target`, and it
-stays there.** On a coarse pointer it gains `--space-3xs` of block padding and
+**`.term__cmd` and `.term__input` are the theme's only interactive targets under
+`--tap-target`, and they stay there.** The input needs no size of its own: a click
+anywhere in the window body that is not a link or a selection puts the caret in it,
+so its real target is the whole screen. The commands are the argued case. On a coarse pointer `.term__cmd` gains `--space-3xs` of block padding and
 lands near 32px rather than 44px. That is a deliberate exception to the rule the
 rest of the theme applies without one, so it has to say why: the commands are set
 in the transcript's own line box, and growing them to 44px would space `help`'s
@@ -395,7 +397,11 @@ type, and the window's own `Tab` completion reaches it without a pointer at all.
 It earns the skin by being real rather than a picture of one: typed commands, a
 history on the arrow keys, Tab completion, `Ctrl+C` and `Ctrl+L`, zsh's own
 "command not found", a `--json` flag that prints the data instead of the table,
-and three window buttons that actually close, minimise and zoom. Three painted
+and three window buttons that actually close, minimise and zoom — which is also why
+they carry a 24px hit box on a coarse pointer, drawn as a pseudo-element so the 12px
+dot is unchanged. Not `--tap-target`: their centres are 28px apart, so a 44px box
+would overlap its neighbour and hand it the tap, and opening the gap enough to clear
+44px would pull a 28px title bar apart until it stopped being one. Three painted
 dots that do nothing would make the whole component the costume the rest of this
 theme refuses. The window spans the sheet's full width, so the size in its title
 bar is **measured rather than stated** — the script reads the real column and row

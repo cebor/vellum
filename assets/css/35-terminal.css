@@ -408,6 +408,14 @@
     gap: 1ch;
 }
 
+/* The line box is the target. This measures about 24px on a coarse pointer and
+   is deliberately not grown: the input is set in the transcript's own line box,
+   and a 44px prompt row would open a gap between the prompt and the output above
+   it that no shell has. It needs no size of its own because the window already
+   gives it one — clicking anywhere in the body that is not a link or a selection
+   puts the caret here, so the reachable target is the whole screen, several
+   hundred pixels tall. That is the same exemption .term__cmd takes below, and
+   the stronger end of it rather than the weaker. */
 .term__input {
     flex: 1;
     min-width: 0;
@@ -516,9 +524,31 @@
 
 @media (pointer: coarse) {
     /* The window buttons keep their 12px look and gain a real target around it,
-       which is what macOS does with its own hit rectangles. */
+       which is what macOS does with its own hit rectangles. The target is drawn
+       rather than described: this block used to set only outline-offset and a
+       gap, neither of which grows a target, so the comment claimed a hit
+       rectangle that had never existed and the buttons stayed 12x12 on touch.
+
+       24px and not --tap-target, and the ceiling is arithmetic rather than
+       taste. The lights sit 12px wide with a 16px gap, so their centres are
+       28px apart; a 44px box would overlap its neighbour by 16px on each side
+       and the later sibling would take every hit in the overlap, which is worse
+       than a small target because it is the wrong one. Opening the gap to clear
+       44px would pull a 28px title bar apart until it stopped being one. At 24px
+       the boxes leave 4px between them, and 24x24 is what WCAG 2.5.8 asks for.
+       The dot is unchanged: the box is a pseudo-element with no paint. */
     .term__light {
         outline-offset: 8px;
+    }
+
+    .term__light::after {
+        content: "";
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: 50%;
+        width: 24px;
+        height: 24px;
+        transform: translate(-50%, -50%);
     }
 
     .term__lights {
