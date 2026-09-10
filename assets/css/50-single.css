@@ -344,7 +344,6 @@
     letter-spacing: var(--tracking-label);
     text-transform: uppercase;
     color: var(--meta);
-    list-style-position: inside;
 }
 
 .toc__summary:hover {
