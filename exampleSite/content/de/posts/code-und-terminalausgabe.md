@@ -54,6 +54,28 @@ Bemerkenswert ist weniger der Code als der Fehlertext. Ein fehlendes Token bring
 Absturz — es sorgt nur dafür, dass jedes Bild eine falsche `sizes`-Angabe ausliefert. Solche Fehler
 überleben Monate.
 
+## Diffs
+
+Ein `diff`-Block kommt aus derselben Palette: hinzugefügte und entfernte Zeilen werden hinterlegt,
+nicht eingefärbt.
+
+```diff
+--- a/assets/css/90-syntax.css
++++ b/assets/css/90-syntax.css
+@@ -6,7 +6,9 @@
+ .chroma .line {
+     display: flex;
+-}
++    width: max-content;
++    min-width: 100%;
++}
+```
+
+Die Flächen sind bewusst zurückhaltend, jeweils rund vier Helligkeitspunkte vom Block entfernt. Das
+reicht, um zusammenhängende Zeilen zu gruppieren, ohne den Block in ein Farbfeld zu verwandeln.
+Woran man erkennt, was hinzugefügt und was entfernt wurde, ist das `+` beziehungsweise das `-` am
+Zeilenanfang — genau deshalb bleibt ein Diff auch in einem Terminal ganz ohne Farbe lesbar.
+
 ## Lange Ausgaben
 
 {{< collapse summary="Vollständige Build-Ausgabe" >}}

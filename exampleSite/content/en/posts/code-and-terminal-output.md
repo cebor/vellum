@@ -49,6 +49,29 @@ Note the failure mode named in the error string. A missing token here would not 
 would quietly make every image advertise the wrong `sizes`, which is the kind of bug that survives
 for months.
 
+## Diffs
+
+A `diff` fence is set from the same palette, with the added and removed lines banded rather than
+coloured over:
+
+```diff
+--- a/assets/css/90-syntax.css
++++ b/assets/css/90-syntax.css
+@@ -6,7 +6,9 @@
+ .chroma .line {
+     display: flex;
+-}
++    width: max-content;
++    min-width: 100%;
++}
+```
+
+The bands are deliberately quiet — each sits about four points of lightness off the block it is in,
+which is enough to group a run of lines without turning the block into a colour field. What tells
+you which is which is the `+` and the `-` the diff already starts each line with, and that is the
+point: a diff is legible in a terminal with no colour at all, so the band is grouping the lines
+rather than carrying the meaning.
+
 ## Long output
 
 An 80-column terminal paste, unwrapped:
