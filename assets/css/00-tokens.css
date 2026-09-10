@@ -105,9 +105,15 @@
        and any more amber than that pushes a commented highlighted line under
        the line.
 
-       The measured minimum across the palette now sits here, at 4.70:1, and any
-       new value in this group is checked against every --syn-* ink rather than
-       against --text alone. */
+       The measured minimum across the palette sits here, at 4.60:1 — --meta-soft,
+       --syn-comment and --syn-punct are tied on --danger-panel — with
+       --accent-panel just above it at 4.64:1 dark and 4.65:1 light. Every value
+       in this group is checked against every --syn-* ink rather than against
+       --text alone, which is what puts the minimum here rather than in the text
+       tokens. It was recorded as 4.70:1 (--syn-comment on --hl-line) until an
+       audit re-measured the full matrix: the binding 4.5:1 was never in danger,
+       but the recorded figure was reading only the panel this comment was
+       written for. Re-measure the whole matrix, not the token you touched. */
     --accent-panel: light-dark(#e5e0d4, #302b1e);
     --danger-panel: light-dark(#e8ddd9, #2d272a);
     --hl-line: light-dark(#e3e2d8, #232422);

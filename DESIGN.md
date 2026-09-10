@@ -85,7 +85,7 @@ to be kept in step by hand, so a colour changed above is changed in two places o
 | `--hl-line` | `#e3e2d8` | `#232422` | A highlighted line in a code block |
 
 Every text token clears **4.5:1** against every surface it sits on, in both schemes; the measured
-minimum is 4.70:1. Dim text by dropping to `--meta-soft` and a smaller step, never by lowering
+minimum is 4.60:1. Dim text by dropping to `--meta-soft` and a smaller step, never by lowering
 opacity — `opacity` silently undoes the contrast guarantee.
 
 **The last three are opaque, and that is the whole point of them.** They were `--accent-soft` and
@@ -106,7 +106,12 @@ the same visible step the substrate uses.
 The rule this produced: **a surface that carries text is an opaque token, checked against every ink
 that can land on it** — for these three that means all nine `--syn-*` inks, not `--text` alone. An
 alpha fill is for washes nobody reads off. The measured minimum now lives in this group rather than
-in the text tokens, which is why it moved from 4.87:1 to 4.70:1.
+in the text tokens, which is why it moved out of the text tokens' 4.87:1. It sits at **4.60:1** —
+`--meta-soft`, `--syn-comment` and `--syn-punct` tied on `--danger-panel`, with `--accent-panel` next
+at 4.64:1 dark and 4.65:1 light. It was recorded as 4.70:1 (`--syn-comment` on `--hl-line`) until an
+audit re-measured every ink against every opaque surface in both schemes; nothing was ever under the
+binding 4.5:1, but the figure had been read off the one panel the change was made for. The lesson is
+the rule above, applied to itself: re-measure the whole matrix, not the token you touched.
 
 Syntax colours are drawn from the same ink family as the chrome, so code and page share one palette
 rather than fighting.
@@ -348,7 +353,6 @@ hand-picked terminal green never was. The measured minimum across the shell is
 5.1:1. The screen is set at `--step--1` and not the label step below it: at 13px
 the window read as a footnote panel beside 20px body copy, and that size gap was
 doing as much to make it foreign as the colour was.
-
 It earns the skin by being real rather than a picture of one: typed commands, a
 history on the arrow keys, Tab completion, `Ctrl+C` and `Ctrl+L`, zsh's own
 "command not found", a `--json` flag that prints the data instead of the table,

@@ -211,10 +211,13 @@ third-party requests, with fonts self-hosted and Fuse.js bundled.
   has found a real defect, not a machine that was never given the harness.
 - **Measured figures that must not be re-estimated:** the 92-character measure was counted from a
   rendered line, against a conventional 83-character column counted the same way. The minimum
-  measured contrast across the palette is 4.70:1 — `--syn-comment` on `--hl-line`, the
-  highlighted code line — down from a recorded 4.87:1 when the alert panels and that
-  highlight were alpha washes rather than opaque surfaces. Re-measure before changing either; a
-  characters-per-pixel estimate is reliably wrong.
+  measured contrast across the palette is 4.60:1 — `--meta-soft`, `--syn-comment` and
+  `--syn-punct`, tied on `--danger-panel` — with `--accent-panel` next at 4.64:1 dark and
+  4.65:1 light. That figure stood at 4.70:1 (`--syn-comment` on `--hl-line`) until an audit
+  re-measured every text ink against every opaque surface in both schemes: the binding 4.5:1
+  was never breached, but the recorded number had been read off the single panel the change was
+  made for rather than off the whole matrix. Re-measure the whole matrix before changing either
+  number; a characters-per-pixel estimate is reliably wrong, and so is a spot check.
 - **No** adoption numbers, download counts, user testimonials, performance benchmarks or press exist.
   Do not fabricate them.
 
