@@ -59,6 +59,15 @@
         ],
         "createdAt": "2026-09-10T08:00:12.371Z",
         "reason": "The macOS window title bar, and it is not flush. .term__bar is height: 28px with align-items: center, so its 12px lights and its title sit centred with 8px clear above and below; the detector reads padding-block: 0 as children against the boundary. 28px is the real height of the thing being drawn and padding would make it a different object. Scoped to the one route that renders profile.view = terminal, so the rule stays armed on every other page of the build. Page-level finding, so an inline marker does not reach it. Agent 2026-09-10."
+      },
+      {
+        "rule": "em-dash-overuse",
+        "value": "*",
+        "files": [
+          "exampleSite/public/**"
+        ],
+        "createdAt": "2026-09-10T08:46:10.717Z",
+        "reason": "Detector arithmetic on this theme's own subject, not prose cadence. The rule counts em-dash OR double-hyphen across body text including <code> and <pre>, and this demo's substance is command blocks and CSS custom properties: every remaining hit is --source, --themesDir, --gc, --minify, --printPathWarnings, --content-width, --hl-line or a diff's own --- marker. Measured on the three pages that still fire, prose em-dashes alone are 6 in 3359 chars (en/posts/code-and-terminal-output), 7 in 3389 (de/posts/ein-blatt-lesen) and 6 in 3434 (de/posts/code-und-terminalausgabe) -- one per 484 to 572 characters, under the rule's own saturation bar of one per 500 and under its eight-instance floor on prose. The two pages that were genuinely saturated were rewritten rather than waived: writing-with-shortcodes went from 12 prose em-dashes to 2 and de/docs/the-landing-page from 11 to 4, and both now pass unwaived. Scoped to the built demo, so the rule stays armed on every future page and on any source scan. Agent 2026-09-10."
       }
     ]
   }
