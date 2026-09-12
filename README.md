@@ -827,6 +827,11 @@ None of these need a shortcode.
   dimensions, so they neither shift the layout nor ship at source resolution. An image referenced
   from *outside* a bundle is passed through untouched and gets none of that — **always put post
   images in a page bundle.**
+- **An SVG is not resized** — a vector has no pixel dimensions — but it is still measured: the
+  `viewBox` is read at build time and becomes `width`/`height`, so the box is reserved before the
+  file arrives. An SVG that declares its own `width` and `height` keeps them; one that declares only
+  a `viewBox` is set to the reading column, which is what the browser does with it anyway. A file
+  with no `viewBox` gets no dimensions and will shift the page as it loads.
 
 ## Icons
 

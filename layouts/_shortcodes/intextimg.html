@@ -20,10 +20,20 @@
            measured; an SVG is read, since its viewBox states the ratio in the
            file and parsing it is the only way to have the box before the fetch.
            Either way a mark that states no ratio simply gets none, and the line
-           behaves as it did before. */ -}}
+           behaves as it did before.
+
+           The viewBox parse itself lives in image-set.html, which is where the
+           render hook, figure and cover reach it too. It was written here first
+           and stayed here, so for a while this shortcode measured a vector while
+           the partial next to it declared vectors unmeasurable — and a full-column
+           figure shoved 797px down the sheet on load while a 1em mark in a
+           sentence held its place perfectly. One parse, one answer.
+
+           image-set.html reads .measure only on its raster branch, so an SVG
+           needs no measure passed and gets no resize ladder. */ -}}
     {{- if eq .MediaType.SubType "svg" }}
-        {{- with findRESubmatch `viewBox="[\d.]+ [\d.]+ ([\d.]+) ([\d.]+)"` .Content 1 }}
-            {{- $ratio = printf "aspect-ratio:%v/%v;" (index (index . 0) 1) (index (index . 0) 2) }}
+        {{- with (partial "image-set.html" (dict "resource" .)).aspectRatio }}
+            {{- $ratio = printf "aspect-ratio:%v;" . }}
         {{- end }}
     {{- else }}
         {{- $ratio = printf "aspect-ratio:%d/%d;" .Width .Height }}

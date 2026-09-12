@@ -11,7 +11,9 @@
 
        width/height come from the 1x variant and are always emitted for a raster
        source, because an image without intrinsic dimensions shifts the layout as
-       it loads. A vector source has neither, and says so by returning them empty.
+       it loads. **A vector now returns them too**, derived rather than measured;
+       aspectRatio is returned alongside for the one caller that sets a height of
+       its own and wants the ratio without the box.
 
        One return, at the end: Hugo rewrites a single return statement per
        partial and reports the second one as a wrong-arity call. */ -}}
@@ -19,10 +21,66 @@
 {{- $out := dict }}
 
 {{- if eq $img.MediaType.SubType "svg" }}
-{{- /* A vector has no pixel dimensions and cannot be resized — reaching .Width
-       on an SVG stops the build. Hand it back untouched and let each caller omit
-       the attributes it has no value for, which is the correct markup anyway. */ -}}
-{{- $out = dict "src" $img.RelPermalink "srcset" "" "width" "" "height" "" }}
+{{- /* A vector cannot be resized — reaching .Width on an SVG stops the build —
+       so the file is handed back untouched. It used to be handed back without
+       dimensions as well, on the argument that a vector has none and that
+       omitting the attributes is the correct markup. The first half is true and
+       the second does not follow.
+
+       An SVG that states a viewBox and no width/height has an intrinsic *ratio*
+       and no intrinsic *size*, so the browser stretches it to the column and
+       takes the height from the ratio — neither of which it knows until the file
+       lands. Until then the img is a 2px box. Measured on the demo's own figure:
+       2x2 before load, 799x799 after, and 797px of sheet shoved down the page as
+       it arrives. aspect-ratio alone does not fix it, because with no width there
+       is still nothing for the ratio to resolve against; the box needs both
+       numbers, which is exactly what the raster branch already emits.
+
+       So both numbers are derived here and the three block callers need no change
+       at all — an SVG stops being the special case they each have to remember.
+
+       Two ways to derive, and which one applies is the file's own declaration:
+
+       - The file states width and height in px or bare numbers. Then it has an
+         intrinsic size, the browser is already drawing it at that size, and the
+         attributes restate what is happening rather than changing it.
+       - It states only a viewBox. Then the browser stretches it to the available
+         width, so the measure *is* the rendered width and the height follows the
+         ratio. max-width/height:auto in 10-base.css keeps that correct at every
+         narrower viewport, because the attributes are read as a ratio once a
+         width is constrained.
+
+       A file that states neither gets neither and behaves exactly as before.
+
+       Separators are [\s,]+ and min-x/min-y may be negative: a hand-written
+       viewBox is space-separated and positive, and a drawing tool's is one or
+       the other. intextimg.html parsed a stricter form of this for the same
+       reason and now calls in here, so there is one answer to "what is this
+       image's ratio" instead of two that could drift. */ -}}
+{{- $ratio := "" }}
+{{- $w := "" }}
+{{- $h := "" }}
+{{- with findRESubmatch `viewBox="\s*-?[\d.]+[\s,]+-?[\d.]+[\s,]+([\d.]+)[\s,]+([\d.]+)` $img.Content 1 }}
+{{- $vw := index (index . 0) 1 }}
+{{- $vh := index (index . 0) 2 }}
+{{- $ratio = printf "%v / %v" $vw $vh }}
+{{- /* Matched inside the opening tag only — [^>]* cannot cross the > — and in
+       either attribute order, because nothing says width comes first. A
+       percentage or an em width states no pixel size and is deliberately not
+       matched, so such a file falls through to the measure below. */ -}}
+{{- $tag := "" }}
+{{- with findRESubmatch `<svg[^>]*>` $img.Content 1 }}{{ $tag = index (index . 0) 0 }}{{ end }}
+{{- $dw := findRESubmatch `\swidth="\s*([\d.]+)(?:px)?\s*"` $tag 1 }}
+{{- $dh := findRESubmatch `\sheight="\s*([\d.]+)(?:px)?\s*"` $tag 1 }}
+{{- if and $dw $dh }}
+{{- $w = int (float (index (index $dw 0) 1)) }}
+{{- $h = int (float (index (index $dh 0) 1)) }}
+{{- else if $.measure }}
+{{- $w = int $.measure }}
+{{- $h = int (math.Round (div (mul (float $w) (float $vh)) (float $vw))) }}
+{{- end }}
+{{- end }}
+{{- $out = dict "src" $img.RelPermalink "srcset" "" "width" $w "height" $h "aspectRatio" $ratio }}
 
 {{- else }}
 {{- $measure := int .measure }}
@@ -57,11 +115,15 @@
 {{- $srcset = $srcset | append (printf "%s %dw" .RelPermalink .Width) }}
 {{- end }}
 
+{{- /* A raster states its box in width/height, so it needs no aspectRatio — but
+       the key is present and empty so every caller can emit it unconditionally
+       and neither branch is a special case at the call site. */ -}}
 {{- $out = dict
     "src" $base.RelPermalink
     "srcset" (delimit $srcset ", ")
     "width" $base.Width
-    "height" $base.Height }}
+    "height" $base.Height
+    "aspectRatio" "" }}
 {{- end }}
 
 {{- return $out -}}
