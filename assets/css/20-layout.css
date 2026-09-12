@@ -253,6 +253,24 @@
     min-width: 0;
 }
 
+/* The one place the ring is suppressed, and it is not a control. baseof.html
+   gives <main> tabindex="-1" so the skip link can land focus here rather than
+   only moving the sequential starting point; the global :focus-visible in
+   10-base.css then drew a 2px amber outline around the entire sheet, both on
+   Enter and on a cold load of any URL carrying #main. That is the same failure
+   the profile views record — a fragment naming a focusable element makes the
+   browser focus it on arrival — and they answer it by making the panel
+   focusable only at the moment focus moves, which needs JavaScript. The skip
+   link must work without it, so the answer here is the outline instead.
+
+   10-base.css's rule that a component may never suppress the ring is about
+   *controls*: the ring says which one of many things is focused, and a ring
+   around all of them says nothing. <main> is a destination, not a control, and
+   the next Tab lands on a real control that rings normally. */
+.main:focus {
+    outline: none;
+}
+
 /* --- zone rail ----------------------------------------------------------- */
 
 /* Before measurement the marks flow evenly down the rail; once placed they are

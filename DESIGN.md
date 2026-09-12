@@ -661,6 +661,17 @@ travel with it or ship to every site that has no terminal. Nothing between the t
    link did for a while. `--meta-soft` is the dimmest text the palette has.
 5. Never add a `box-shadow`. Depth is line weight.
 6. Never encode state in colour alone.
+6a. **The focus ring is never suppressed by a component, and `.main` is the one destination that is
+   not a component.** `baseof.html` gives `<main>` `tabindex="-1"` so the skip link can land *focus*
+   there rather than only moving the sequential starting point — without it, activating the link left
+   focus on `<body>`, the next Tab happened to land inside main, and a screen reader was taken
+   nowhere and announced nothing, so the one control whose job is to confirm you skipped the
+   navigation confirmed nothing. Focusable, the global ring then outlined the entire sheet, on Enter
+   and on any cold load of a URL carrying `#main` — the same arrival-focus problem the profile views
+   record, which they answer with JavaScript that the skip link cannot rely on. So `.main:focus`
+   drops the outline. The rule it bends is about controls: a ring says *which* of many things is
+   focused, and a ring around all of them says nothing. The next Tab reaches a real control and rings
+   normally.
 7. Touch-target minimums live behind `@media (pointer: coarse)` so pointer layouts keep their density.
    Every standalone control clears `--tap-target` there; the exceptions are `.term__cmd`,
    `.term__input`, the window buttons, the "Hugo" link in the footer line and `.title-block__value a`,

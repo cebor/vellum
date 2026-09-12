@@ -31,7 +31,16 @@
            2200px backwards, mid-page. Read as a source document it is also the
            right order: the index of a sheet answers the sheet. */}}
     <div class="sheet__frame">
-        <main class="main" id="main">
+        {{- /* tabindex="-1" so the skip link above can actually put focus here.
+               Without it <main> is not focusable, and activating the link moved
+               only the sequential focus *starting point*: the next Tab landed
+               inside main, which is what a sighted keyboard reader wants, while
+               focus itself stayed on <body>. A screen reader was therefore never
+               taken anywhere and announced nothing, so the one control whose
+               whole job is to confirm you skipped the navigation confirmed
+               nothing. Negative, so it is reachable programmatically and stays
+               out of the tab sequence itself. */}}
+        <main class="main" id="main" tabindex="-1">
             {{- block "main" . }}{{ end }}
         </main>
         {{- partial "zone-rail.html" . }}
