@@ -240,7 +240,26 @@
         page-break-after: avoid;
     }
 
+    /* The list protected the content's instruments and not the sheet's own
+       furniture, which is the wrong way round for a theme whose claim is the
+       sheet. Three additions:
+
+       .title-block, because the paragraph fifty lines above this one says it is
+       "the reason a printed sheet is identifiable" — and it could be cut in half
+       by a page break, which is exactly the identification it exists to give.
+
+       .content .highlight, because the border printed around a fenced block is
+       drawn on *that* element while the protection sat on the `pre` inside it.
+       The code could not be split and its box could, so a block near the foot of
+       a page could leave an orphaned top border behind and move on. The element
+       that draws the border is the element that avoids the break.
+
+       .post-card, because an index row cut between its meta line and its title
+       leaves a date on one sheet and what it dates on the next. */
+    .title-block,
+    .content .highlight,
     .content pre,
+    .post-card,
     .table-wrap,
     figure,
     .alert,
