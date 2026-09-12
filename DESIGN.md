@@ -489,7 +489,14 @@ clicks is typed into the real input line — a terminal has one place where typi
 happens, and a second caret over a second prompt while the first sits empty below
 is the tell that the thing is a picture. Any keystroke finishes everything still
 pending at once, because no reader is ever held behind an animation, and
-`prefers-reduced-motion: reduce` removes it entirely. While output is arriving it
+`prefers-reduced-motion: reduce` removes it entirely. **That listener is on the
+window, not on the input**, and the difference is the whole promise: the commands
+are buttons, the window's own first line invites the reader to click them, and a
+click leaves focus on the button it hit. Bound to the input, the escape worked
+only for a command that had been *typed* — measured mid-reveal, a keystroke after
+a click moved the transcript 326 → 355 characters while it settled at 519, and
+after typing the same command it went straight to 519. The path the window
+advertises was the one with no way out of the animation. While output is arriving it
 carries `aria-hidden` and is announced once, finished: a live region mutating one
 character at a time would make a screen reader stutter through the whole thing.
 

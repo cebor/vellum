@@ -472,10 +472,23 @@
                 run(value, false);
             });
 
-            input.addEventListener("keydown", function (event) {
-                /* Any key means the reader is here and not waiting on a show. */
-                flush();
+            /* Any key means the reader is here and not waiting on a show — and
+               the listener has to be on the window rather than on the input,
+               because the input is not where focus is when this matters most.
+               The commands are buttons, the window's own first line invites the
+               reader to click them, and a click leaves focus on the button it
+               hit. Bound to the input alone, the escape from the animation
+               worked only for a command that had been typed: measured mid-reveal,
+               a keystroke after a click moved the transcript 326 → 355 while it
+               settled at 519, and after typing the same command it went straight
+               to 519. The path the window advertises was the one with no way out.
 
+               Capture, so it still fires for keys the handlers below consume, and
+               on root rather than document because a key pressed elsewhere on the
+               sheet is not a statement about this window. */
+            root.addEventListener("keydown", flush, true);
+
+            input.addEventListener("keydown", function (event) {
                 if (event.key === "ArrowUp") {
                     event.preventDefault();
                     if (cursor > 0) { cursor--; input.value = past[cursor]; }
