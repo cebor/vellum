@@ -633,3 +633,17 @@ travel with it or ship to every site that has no terminal. Nothing between the t
     block` inside them. Without that chain a flex line sizes to the `pre`'s *visible* width, so at
     390px a highlighted line's band covered 332px of a 697px line and scrolling right left the marked
     line unmarked — on the one surface this theme exists for.
+11. **Every flex and grid container that holds author text states a floor of zero.** A flex item's
+    `min-width` and a grid track's automatic minimum both default to *min-content*, and
+    `overflow-wrap: break-word` — correctly chosen in `10-base.css`, for the reason stated there —
+    deliberately leaves min-content alone. So an unbreakable run in anything an author writes set the
+    container's floor and the container widened the sheet under it, while the same text in a
+    paragraph on its own page was fine, because a word overflowing a block in normal flow does not
+    widen its parent. Measured at 320px with a bare URL and a long compound in every author-supplied
+    field: an index sheet went to 600px, a post's to 572px, the tag index to 681px. `minmax(0, 1fr)`
+    on `.post-card`, `min-width: 0` on `.breadcrumbs__item` and `.post-footer > *`.
+    **The tag chip is the one exception and takes `overflow-wrap: anywhere`** — the keyword
+    `10-base.css` rules out globally, because `anywhere` shrinks min-content and the measured reading
+    column must not collapse. A chip has no measured column to protect; it is sized by its own word
+    and nothing else, and as an `inline-flex` its min-content *is* that word, so no amount of room
+    given to the item would have let `break-word` break it.

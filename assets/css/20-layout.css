@@ -435,6 +435,17 @@
     text-decoration: underline;
 }
 
+/* A flex item's floor is min-width: auto, which resolves to its min-content
+   width — so an unbreakable run in the trail set the item's floor and the item
+   overflowed the sheet. The last crumb is the page's own title, which is the one
+   crumb an author can make arbitrarily long: measured at 320px, a compound title
+   pushed the sheet to 572px. Dropping the floor to zero lets
+   overflow-wrap: break-word, inherited from 10-base.css, actually break it.
+   Same mechanism as the post card's grid track in 40-list.css. */
+.breadcrumbs__item {
+    min-width: 0;
+}
+
 .breadcrumbs__item--current {
     color: var(--text);
 }

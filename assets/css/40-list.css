@@ -20,8 +20,23 @@
     border-bottom: var(--line-thin) solid var(--rule);
 }
 
+/* The track list is stated for the one-column case too, and minmax(0, 1fr) is
+   the load-bearing half of it rather than tidiness. A grid track sized
+   automatically takes its floor from the item's *min-content* width, and
+   10-base.css breaks long words with overflow-wrap: break-word — which is the
+   right keyword for the reasons stated there, and which deliberately leaves
+   min-content alone. So an unbreakable run in a summary set the card's floor and
+   the card widened the sheet under it: measured at 320px with a bare URL in an
+   auto-generated summary, the index came out 600px wide and scrolled sideways by
+   280px. The same text on its own post page was already fine, because a word
+   overflowing a block in normal flow does not widen its parent.
+   minmax(0, …) drops that floor to zero and the wrap then does its job.
+
+   The cover variant below has always stated it. This is the same guard on the
+   plain one, which is the variant almost every card on almost every site is. */
 .post-card {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-sm) var(--space-lg);
     padding-block: var(--space-lg);
     transition: background-color var(--transition);
@@ -195,6 +210,32 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2xs);
+}
+
+/* A tag is a term an author writes, so it can be a compound with nothing to
+   break on. Measured at 320px, one such tag pushed a post's sheet to 572px and
+   the tag index to 681px — and on the post page it took .post-actions out of the
+   viewport with it, since .post-footer lays the two out as flex siblings.
+
+   **This is the one place the theme needs `anywhere` rather than `break-word`,
+   and it is the exact case 10-base.css's comment excludes.** That comment chose
+   break-word globally because `anywhere` also shrinks min-content, which would
+   let the measured reading column collapse under a flex or grid parent. A chip
+   has no measured column to protect: it is sized by its own word and nothing
+   else, so shrinking its min-content is the whole point. break-word alone could
+   not help here however much room the flex item was given — the chip is an
+   inline-flex whose min-content *is* the word, so it overflowed its own li at any
+   width. min-width: 0 on the li is kept so the item can actually take the
+   smaller size once the word will break.
+
+   A chip that breaks mid-word looks worse than one that does not, and better
+   than a sheet that scrolls sideways on the surface this theme exists for. */
+.tag-list > li {
+    min-width: 0;
+}
+
+.tag-list a {
+    overflow-wrap: anywhere;
 }
 
 .tag-list a {

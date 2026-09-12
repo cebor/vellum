@@ -793,6 +793,14 @@ img.in-text {
     align-items: center;
 }
 
+/* The tag list and the actions row sit here as flex siblings, so a wide one
+   pushes the other out of the sheet rather than merely overflowing itself. The
+   tag chips carry their own floor now; this is the same guard one level up, so
+   the row cannot be widened by whatever is put in it next. */
+.post-footer > * {
+    min-width: 0;
+}
+
 .post-actions {
     display: flex;
     flex-wrap: wrap;
