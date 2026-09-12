@@ -87,10 +87,44 @@
     user-select: none;
 }
 
+/* Hidden until the pre-paint script proves JavaScript ran — the rule 10-base.css
+   states for .theme-toggle, .top-link and .copy-code, applied to the three
+   controls that were left out of it. Every handler for these lives in the
+   `lights` map, so without JavaScript they painted and did nothing: three dots
+   that are exactly the costume the head of this file argues the component must
+   not be, on the one page where nobody could press them anyway.
+
+   Written here rather than added to 10-base.css's list, because every selector
+   in this file begins with .term and that is what lets head-assets.html drop the
+   whole sheet for a site that never turns the terminal on. A .term rule in a file
+   that always ships would leave the feature's remains in every bundle.
+
+   The group, not each button: with no controls to operate there is no partial
+   state worth drawing. .term__title is absolutely positioned and padded
+   symmetrically, so it stays centred on the window with the lights gone. */
 .term__lights {
-    display: flex;
+    display: none;
     gap: 8px;
     z-index: 1;
+}
+
+.js .term__lights {
+    display: flex;
+}
+
+/* The same rule, for the same reason, one element over. Only the script knows
+   the real column and row count, so without it the bar was stating the markup's
+   placeholder — "80×24" over a window as wide as the reading column holding the
+   whole session rather than 24 rows of it. "A window that names a size it does
+   not have" is the failure this component is built to avoid, and it was
+   committing it on precisely the page where nothing could correct it. With no
+   measurement the bar says what it knows: the user and the shell. */
+.term__title-size {
+    display: none;
+}
+
+.js .term__title-size {
+    display: inline;
 }
 
 .term__light {
