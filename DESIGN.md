@@ -545,8 +545,15 @@ travel with it or ship to every site that has no terminal. Nothing between the t
 6. Never encode state in colour alone.
 7. Touch-target minimums live behind `@media (pointer: coarse)` so pointer layouts keep their density.
    Every standalone control clears `--tap-target` there; the exceptions are `.term__cmd`,
-   `.term__input` and the window buttons, each argued at its own declaration. A link inside a sentence
-   is exempt and a link that is its own row is not — the test is the element, not the file it is in.
+   `.term__input`, the window buttons, the "Hugo" link in the footer line and `.title-block__value a`,
+   each argued at its own declaration. A link inside a sentence is exempt and a link that is its own
+   row is not — the test is the element, not the file it is in. **Applying the rule to the control
+   that opens a thing is not applying it to the thing.** `.toc__summary` cleared 44px while every
+   entry under it sat at its 16px line box, and the card title — the one link a reader is aiming at on
+   the home page, every section list, every tag page and the 404 — sat at 24px while
+   `.archive-item__link` and `.search-results a`, the identical case, had both been raised. Both are
+   now raised in the same centred shape those two use: the link carries no padding, so growing it from
+   the top leaves the title at the head of a 44px box with the space beneath it.
 8. `--content-width` is the reading column; keep the frame arithmetic resolving to it.
 9. Any asset referenced only from CSS must have its `RelPermalink` evaluated somewhere in a template,
    or Hugo never publishes it and it 404s in production while working locally.

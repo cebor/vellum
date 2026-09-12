@@ -72,6 +72,22 @@
     min-width: 0;
 }
 
+/* Deliberately not raised to --tap-target on a coarse pointer, and recorded here
+   because every other standalone control in the theme is. A value link is not a
+   control row: it is a word inside a field's value, set in that value's line box
+   beside the commas that separate it from the next one, with the field's label
+   above and the row's rules around it. That is the inline case the size minimum
+   exempts, and growing it would space the block's rows apart to satisfy a rule
+   it was never under — on the one instrument whose whole point is that it is
+   ruled evenly and tightly.
+
+   The tag chips on a list or term page are the same words and *are* raised, in
+   40-list.css. Not an inconsistency: there they are a row of chips laid out as
+   controls, here they are text in a field. The test is the element, not the word
+   in it.
+
+   Measured at 390px: 16px tall, adjacent tags 7.3px apart and the next target
+   48px below, which clears WCAG 2.5.8's spacing exception in both directions. */
 .title-block__value a {
     text-decoration-color: var(--rule-strong);
 }
@@ -961,6 +977,27 @@ img.in-text {
        row's optical centre as it grows. */
     .toc__summary,
     .collapse__summary {
+        min-height: var(--tap-target);
+    }
+
+    /* The summary above got the minimum and the entries under it did not, which
+       left the control that *opens* the contents at 44px and every control that
+       uses them at 16px — the line box and nothing else.
+
+       These are the case the rule was written for, and the one with the most
+       riding on it. The zone rail is dropped below --frame-collapse, so on a
+       phone the contents are the only section navigation the sheet has; the
+       rail's own no-JavaScript fallback hands them the same job. A stack of
+       16px rows is not a navigation instrument.
+
+       Centred, like .archive-item__link and .search-results a, and for the same
+       reason those two spell out: the link carries no padding of its own, so
+       growing it from the top would leave each title sitting at the head of a
+       44px box with the space beneath it. The li margins stay — 2px between
+       44px rows is what keeps them reading as separate entries. */
+    .toc a {
+        display: flex;
+        align-items: center;
         min-height: var(--tap-target);
     }
 }

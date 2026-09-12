@@ -387,6 +387,24 @@
         min-height: var(--tap-target);
     }
 
+    /* The card's title is the card's control — the one link on the home page,
+       every section list, every tag page and the 404 that a reader is actually
+       aiming at — and it was the one standalone control in the theme still at
+       its own line box, 24px at --step-1. .search-results a and
+       .archive-item__link are the same case and were both raised; this is the
+       third member of that set and was simply missed.
+
+       Same centred shape as those two, for the reason they give: the link
+       carries no padding, so growing it from the top would drop the title to the
+       head of a 44px box. Centred, it stays where it was and the card breathes
+       equally into the meta line above and the summary below. A title that
+       already wraps is past 44px and is not touched. */
+    .post-card__title a {
+        display: flex;
+        align-items: center;
+        min-height: var(--tap-target);
+    }
+
     /* An archive row is a list of links and nothing else, so each title is a
        standalone control rather than a link inside a sentence — the same case
        .search-results a makes in 60-search.css, and it takes the same shape:
