@@ -1,7 +1,23 @@
 /* The search sheet. */
 
+/* The field is enabled by the script and by nothing else, so without JavaScript
+   it is a permanently disabled control whose placeholder reads "Loading search…"
+   and always will. The <noscript> block below it already says what is going on
+   and offers the section and tag indexes as the way out; the field's only
+   contribution was a claim that something was still coming.
+
+   So it is hidden until the pre-paint script sets .js — the same rule the theme
+   toggle, the top link, the copy control and the terminal's window buttons take,
+   for the same reason: nobody should meet a dead control. Removing it is better
+   than relabelling it, because a search box that cannot search is not improved
+   by a more accurate caption. */
 .searchbox {
+    display: none;
     margin-bottom: var(--space-xl);
+}
+
+.js .searchbox {
+    display: block;
 }
 
 .search-input {
