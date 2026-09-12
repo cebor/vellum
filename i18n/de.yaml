@@ -239,6 +239,9 @@
 - id: code_copy
   translation: "Kopieren"
 
+- id: code_copy_label
+  translation: "Codeblock {n} kopieren"
+
 - id: code_copied
   translation: "Kopiert"
 

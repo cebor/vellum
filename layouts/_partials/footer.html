@@ -83,19 +83,44 @@
     (function () {
         var copy = {{ i18n "code_copy" }},
             copied = {{ i18n "code_copied" }},
-            failed = {{ i18n "code_copy_failed" }};
-        document.querySelectorAll(".content .highlight").forEach(function (block) {
+            failed = {{ i18n "code_copy_failed" }},
+            label = {{ i18n "code_copy_label" }};
+
+        // Swapping the button's own label announces nothing: a screen reader has
+        // already read the control it is sitting on and does not re-read it, so
+        // "Copied" and — the one that matters — "Copy failed" reached sighted
+        // readers only. Over plain HTTP the clipboard API rejects outright, so
+        // that is not a rare path. One region for every block on the sheet,
+        // created now and written on click: a live region has to be in the
+        // document before the text lands or the first message is missed.
+        var announce = document.createElement("p");
+        announce.className = "visually-hidden";
+        announce.setAttribute("role", "status");
+        announce.setAttribute("aria-live", "polite");
+        document.body.appendChild(announce);
+
+        document.querySelectorAll(".content .highlight").forEach(function (block, i) {
             var code = block.querySelector("code");
             if (!code) return;
             var button = document.createElement("button");
             button.className = "copy-code";
             button.type = "button";
             button.textContent = copy;
+            // Every button on the page is the word "Copy", which is the right
+            // word to read and the wrong one to navigate by: a reader listing
+            // the sheet's controls hears it once per block with nothing telling
+            // them apart. The number is the block's position, which is the only
+            // thing that does.
+            button.setAttribute("aria-label", label.replace("{n}", i + 1));
 
             var restore = function () {
                 setTimeout(function () {
                     button.textContent = copy;
                     delete button.dataset.state;
+                    // Emptied as well, or copying the same block twice writes
+                    // the identical string, mutates nothing, and is announced
+                    // once however many times the reader presses it.
+                    announce.textContent = "";
                 }, 1500);
             };
 
@@ -113,11 +138,13 @@
                     })
                     .then(function () {
                         button.textContent = copied;
+                        announce.textContent = copied;
                         restore();
                     })
                     .catch(function () {
                         button.textContent = failed;
                         button.dataset.state = "failed";
+                        announce.textContent = failed;
                         restore();
                     });
             });
