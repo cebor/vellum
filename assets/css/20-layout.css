@@ -34,13 +34,20 @@
 }
 
 /* Below --sheet-narrow it stops being sticky, and that is two fixes in one rule.
-   The nav wraps there, so the header goes from 57px to 122px and, on a phone
-   with the touch minimums applied, to 181px — 21% of an 844px viewport, held
-   permanently, on the device where reading room is scarcest and in a theme whose
-   whole claim is that a post survives intact. It was also the mechanical cause
-   of anchors landing behind it: no scroll-margin can absorb 181px without
-   pushing the heading a fifth of the way down the screen, so the margin in
+   The header takes a second line there — the index drops below the wordmark —
+   so it goes from 57px to 91px, and to 122px on a phone, where the touch
+   minimums raise both lines to --tap-target. That is 14% of an 844px viewport,
+   held permanently, on the device where reading room is scarcest and in a theme
+   whose whole claim is that a post survives intact. It was also the mechanical
+   cause of anchors landing behind it: no scroll-margin can absorb a header that
+   size without pushing the heading well down the screen, so the margin in
    10-base.css only has to clear what stays sticky.
+
+   Those two figures were 126–129px and 181px until the header split by kind
+   rather than by wrap order — a third line carrying one control was what the
+   phone was paying 21% of its viewport for. The concession is smaller now than
+   the comment it replaces, and it is still the right one: 122px of sticky
+   furniture over a post is the thing this theme exists not to do.
 
    The same breakpoint the sheet already uses to give up its frame and rail and
    run full-bleed — the header giving up its position there is the same
@@ -58,13 +65,26 @@
     padding: var(--space-sm) var(--sheet-gutter);
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--space-md);
     flex-wrap: wrap;
+    gap: var(--space-md);
     min-width: 0;
+
+    /* The index and the instruments sit at the sheet's right edge, and the
+       wordmark's auto margin is the whole of what holds them there. It is
+       written this way round — flex-end plus one auto margin, rather than the
+       `justify-content: space-between` this rule carried when the header had
+       two children — because space-between distributes, and with three children
+       it stranded the index in the middle of the rule. It also answers the line
+       that has wrapped: a menu long enough to push the instruments onto a
+       second line drops them at the right edge, where they are still the field
+       at the end of the header, rather than at the left under the wordmark. */
+    justify-content: flex-end;
 }
 
 .header__brand {
+    /* See the inner above: this is what holds the index and the instruments at
+       the sheet's right edge. */
+    margin-inline-end: auto;
     display: flex;
     align-items: center;
     gap: var(--space-xs);
@@ -146,7 +166,17 @@
     height: 0.85em;
 }
 
-.nav__rule {
+/* The instruments — which language the sheet is drawn in, which paper it is
+   drawn on — are a field of the header, ruled off the index the way any field
+   on a drawing is. The rule is the field's edge, so it is drawn whenever the
+   field exists rather than only when there are two things in it. */
+.header__controls {
+    display: flex;
+    align-items: center;
+    column-gap: var(--space-md);
+}
+
+.header__rule {
     width: var(--line-thin);
     align-self: stretch;
     background: var(--rule-strong);
@@ -608,12 +638,33 @@
         gap: var(--space-xs);
     }
 
-    /* Only the column gap tightens. The row gap is the mark's clearance and is
+    /* The header splits by kind rather than by whatever overflowed last. The
+       wordmark and the instruments share the top line; the index takes the line
+       below, whole.
+
+       Left to the wrap, the instruments were the tail of the index and the tail
+       is what came off: at 390px with the touch minimums applied, the scheme
+       toggle sat alone on a third line and the header stood at 181px — 21% of an
+       844px viewport. Worse, the index was then no longer the header's last
+       line, so the active mark dropped its --nav-mark-drop into the gap between
+       two rows and marked nothing, when landing on the header rule is the whole
+       of what that mark is.
+
+       Only the column gap tightens. The row gap is the mark's clearance and is
        derived from it — see .nav — so it is not the viewport's to give up. */
     .nav {
+        order: 1;
         column-gap: var(--space-sm);
         width: 100%;
-        justify-content: flex-start;
+    }
+
+    /* The order above is a visual reorder of two adjacent groups and nothing
+       else: the reading order stays wordmark, index, instruments, which is the
+       order a drawing's header states them in and the order the markup keeps. A
+       keyboard leaves the last menu entry for the line above it — one row, in a
+       header of two. */
+    .header__controls {
+        column-gap: var(--space-sm);
     }
 
     .page-title {

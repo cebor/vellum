@@ -35,9 +35,19 @@
                 {{- if $active }} aria-current="page"{{ end }}
                 {{- if $external }} rel="noopener noreferrer" target="_blank"{{ end }}>{{ .Name }}{{ if $external }}{{ partial "icon.html" "external" }}{{ end }}</a>
             {{- end }}
+        </nav>
 
-            {{- if and hugo.IsMultilingual (not site.Params.disableLangToggle) }}
-            <span class="nav__rule" aria-hidden="true"></span>
+        {{- $langSwitch := and hugo.IsMultilingual (not site.Params.disableLangToggle) }}
+        {{- $themeSwitch := not site.Params.disableThemeToggle }}
+        {{- if or $langSwitch $themeSwitch }}
+        {{- /* The instruments are a field of their own, ruled off the index, and
+               not the last two entries of it. On a narrow sheet they ride on the
+               wordmark's line and the menu takes the line below — see the header
+               block in 20-layout.css, where that split is the whole reason this
+               is a sibling of .nav rather than its tail. */}}
+        <div class="header__controls">
+            <span class="header__rule" aria-hidden="true"></span>
+            {{- if $langSwitch }}
             {{- range site.Home.Translations }}
             {{- $lang := .Lang }}
             {{- $href := .Permalink }}
@@ -55,7 +65,7 @@
             {{- end }}
             {{- end }}
 
-            {{- if not site.Params.disableThemeToggle }}
+            {{- if $themeSwitch }}
             {{- /* The label Hugo renders is the generic one, because the resolved
                    scheme is not known at build time. The script in footer.html
                    replaces it with the action the button will perform, so pressing
@@ -71,6 +81,7 @@
                 {{ partial "icon.html" "sun" }}
             </button>
             {{- end }}
-        </nav>
+        </div>
+        {{- end }}
     </div>
 </header>

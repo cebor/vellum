@@ -220,21 +220,38 @@ Below `--frame-collapse` (60rem) the frame and rail are dropped and the column r
 its gutters; the title block stacks to a single column and the identity survives on mono date lines,
 hairline rules, bordered icon squares and the stacked block.
 
+**The header carries three things of two kinds, and below `--sheet-narrow` it breaks along that
+line rather than along the wrap.** The wordmark is the sheet's identity and the menu is the index of
+sheets; the language switch and the scheme toggle are instruments — which language the sheet is drawn
+in, which paper it is drawn on. They are a field of the header, ruled off the index the way any field
+on a drawing is, and in the markup they are a sibling of the `<nav>` rather than its last two
+entries. Narrow, the instruments ride on the wordmark's line and the index takes the line below,
+whole.
+
+Left to the wrap it broke by whatever overflowed last, which cost twice. At 390px with the touch
+minimums applied the scheme toggle sat alone on a third line, 181px of header on an 844px viewport;
+and because the index was then no longer the header's last line, **the active mark landed on
+nothing** — it is drawn `--nav-mark-drop` below its own item so that it falls on the header rule and
+cuts a notch out of it, and a line of menu with another line beneath it drops that mark into the gap
+between two rows. The index being last is what makes the mark mean anything, so it is last by
+construction now and not by luck.
+
 **The header is sticky only where it is short**, and the boundary is `--sheet-narrow` (40rem) rather
 than the frame's own. Measured, it is not one height but four: 57px with a fine pointer, 70px with a
-coarse one — the touch minimum raises every nav item to `--tap-target` — 122px once the nav wraps
-below 40rem, and 181px on a phone where both apply. That last figure is **21% of an 844px viewport,
-held permanently**, on the device with the least reading room and in a theme whose claim is that a
-post survives intact. Below 40rem it therefore scrolls away like any other block, which is the same
-concession the sheet already makes at 60rem when it gives up its frame and rail; `.top-link` is the
-way back up and is fixed at every width.
+coarse one — the touch minimum raises every nav item to `--tap-target` — 91px once it takes its
+second line below 40rem, and 122px on a phone where both apply. That last figure is **14% of an 844px
+viewport, held permanently**, on the device with the least reading room and in a theme whose claim is
+that a post survives intact. Below 40rem it therefore scrolls away like any other block, which is the
+same concession the sheet already makes at 60rem when it gives up its frame and rail; `.top-link` is
+the way back up and is fixed at every width.
 
 That is also half of how **an anchor lands clear of it**. `:target` carries a
 `scroll-margin-top`, and a single value could never be right for four header heights: at 64px it
 suited the desktop case alone and put a heading 117px *above* the header's own bottom edge on a
 phone — fully hidden, on the surface where the contents are the only section navigation the sheet has
-because the rail is gone. The narrow case is not a margin problem, since absorbing 181px would push
-the heading a fifth of the way down the screen; it is answered by the header not being sticky at all.
+because the rail is gone. The narrow case is not a margin problem, since absorbing a header of that
+size would push the heading well down the screen; it is answered by the header not being sticky at
+all.
 What remains is the coarse-pointer header at 70px, and that *is* a margin: stepped to `--space-4xl`
 behind the same `pointer: coarse` query every other touch adjustment sits behind, so the pointer
 layouts keep their tighter landing. Every combination of pointer and width from 320px to 1280px now
