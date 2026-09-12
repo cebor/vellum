@@ -57,8 +57,8 @@ buildDrafts = true
       [languages.en.params.profile]
         title = "Your Name"
         subtitle = "what you do, in one line"
-        image = "images/profile.png"
-        imageAlt = "Placeholder portrait, drawn as a construction"
+        image = "images/profile.svg"
+        imageAlt = "Placeholder portrait, drawn as a front elevation"
         imageWidth = 120
 
         # The five profile views. Each renders only when its own key is set, so
@@ -254,7 +254,7 @@ caption. Markdown works here, so a [link](https://gohugo.io/) does too.
         # das nichts rendert, ist ein Markup, das nichts testet.
         title = "Dein Name"
         subtitle = "was du machst, in einer Zeile"
-        image = "images/profile.png"
+        image = "images/profile.svg"
         imageAlt = "Platzhalter-Porträt, als Konstruktion gezeichnet"
         imageWidth = 120
 

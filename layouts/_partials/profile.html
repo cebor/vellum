@@ -9,6 +9,32 @@
     {{- errorf "profile.image %q was not found under assets/" . }}
     {{- else }}
     {{- $w := int ($profile.imageWidth | default 120) }}
+    {{- $alt := $profile.imageAlt | default $profile.title | default site.Title }}
+    {{- if eq $img.MediaType.SubType "svg" }}
+    {{- /* A vector is not resized — .Resize stops the build on one — but it is
+           measured, by the same viewBox parse image-set.html does for every other
+           image on the site. Worth accepting here rather than rejecting: a
+           portrait on this sheet is a drawn construction as often as it is a
+           photograph, and a drawing is the one kind of image that can carry its
+           own prefers-color-scheme rules and follow the sheet it sits on. A
+           raster cannot, which is why the demo's placeholder is one.
+
+           Both attributes, like every other caller of that partial, and scaled to
+           the requested width rather than taken as returned — it reports the
+           file's own size and imageWidth is what this block draws it at.
+
+           An aspect-ratio alone will not do here. The avatar spans two grid rows,
+           and a replaced element with no intrinsic size stretches to fill them:
+           a viewBox-only SVG came out 120×177 with the drawing squashed into it.
+           A stated pair gives it an intrinsic size and the stretch never starts. */}}
+    {{- $set := partial "image-set.html" (dict "resource" $img "measure" $w) }}
+    {{- $h := $w }}
+    {{- if and $set.width $set.height }}
+    {{- $h = int (math.Round (div (mul (float $w) (float $set.height)) (float $set.width))) }}
+    {{- end }}
+    <img class="profile__avatar" src="{{ $set.src }}" width="{{ $w }}" height="{{ $h }}"
+        alt="{{ $alt }}" draggable="false">
+    {{- else }}
     {{- $x1 := $img.Resize (printf "%dx webp q90" $w) }}
     {{- $x2 := $img.Resize (printf "%dx webp q90" (mul $w 2)) }}
     {{- /* Both dimensions come off the resized variant, never $w twice. The
@@ -20,7 +46,8 @@
     <img class="profile__avatar" src="{{ $x1.RelPermalink }}"
         srcset="{{ $x1.RelPermalink }} 1x, {{ $x2.RelPermalink }} 2x"
         width="{{ $x1.Width }}" height="{{ $x1.Height }}"
-        alt="{{ $profile.imageAlt | default $profile.title | default site.Title }}" draggable="false">
+        alt="{{ $alt }}" draggable="false">
+    {{- end }}
     {{- end }}
     {{- end }}
 

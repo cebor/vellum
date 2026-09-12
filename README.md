@@ -287,6 +287,17 @@ site sets the param to `false`.
     url = "posts"
 ```
 
+`image` takes a raster or an SVG. A raster is resized to `imageWidth` and to
+twice it, and the pair of dimensions is read off the resized file rather than
+assumed square, so a portrait reserves a portrait-shaped box. **An SVG is not
+resized but is measured**, from its own `width`/`height` or its `viewBox` — and
+it is the only form that can follow the reader's colour scheme, because a
+standalone SVG can carry its own `prefers-color-scheme` rules. Give it an
+intrinsic `width` and `height` as well as a `viewBox`: the avatar spans two rows
+of the profile grid, and a vector with no intrinsic size stretches to fill them.
+The demo's placeholder is an SVG for exactly this reason — see
+`exampleSite/assets/images/profile.svg`.
+
 `buttons` renders as a row under the views below — the last thing the profile
 says before the index of posts starts. A `url` beginning with `http` is treated
 as external and opens in a new tab; anything else is resolved against the

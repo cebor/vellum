@@ -306,6 +306,27 @@ the fields drew the title block's own 2px frame caps instead, so the block close
 `--rule-frame` lines 26px apart with bare sheet between them. **The numeric prefix is the cascade
 order, and that cuts both ways**: a home rule that has to beat a later file says so in its selector.
 
+**The avatar is pasted on the sheet, and whether it can follow the sheet depends on what it is.** A
+raster cannot: one set of pixels, one lightness, and the demo's placeholder — a drawn front
+elevation on `#eff0ec`, the light sheet's own paper — read as a lit rectangle above the name on the
+dark sheet. It is now an SVG carrying its own `prefers-color-scheme` block, the technique
+`static/favicon.svg` already uses, so the ink inverts with the scheme and the page's graph substrate
+shows through where the PNG carried a picture of one. `profile.html` accepts either: a raster goes
+through the resize, a vector is measured by `image-set.html` like every other image on the site.
+
+Two things that branch taught, both of them recorded because neither failed loudly. A vector needs
+an **intrinsic** `width` and `height`, not only a `viewBox`: the avatar spans two rows of the profile
+grid, and a replaced element with no intrinsic size stretches to fill them — the drawing came out
+120×177. And an XML comment may not contain a double hyphen, so a comment naming CSS custom
+properties made the file malformed; a malformed SVG does not error, it loads as a broken-image icon
+with the alt text beside it. Both were caught by measuring the rendered box rather than reading the
+markup.
+
+The raster branch's dimensions are now read off the **resized** variant rather than written as
+`imageWidth` twice. Declaring both from the width made every portrait square, which reserves the
+wrong box and shifts the block as it loads — `header.html` carries the same note over the same
+mistake, and this was the second place it had been made.
+
 Under it sit up to five views — about, skills, record, projects, contact — each rendered only when
 its params exist, indexed by a row of lettered entries, and marked live the way everything else in
 the theme is marked live: the 2px amber rule under the active item, the main nav's own mark.

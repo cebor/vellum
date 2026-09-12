@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="480" viewBox="0 0 480 480" role="img">
+  <!-- The placeholder portrait, and it is a front elevation rather than a photo:
+       outline, centre lines, dimensions, a view label. Drawn rather than
+       photographed, so it follows the sheet it is on — the same trick
+       static/favicon.svg uses, and the reason this is an SVG at all. It replaces
+       a PNG of the identical construction whose ground was #eff0ec, the light
+       sheet's own paper, which on the dark sheet read as a lit rectangle above
+       the name. There is no ground here; the page's graph substrate shows
+       through, so the drawing sits on the real paper instead of carrying a
+       picture of some.
+
+       The four values below are the theme's own tokens written out, because a
+       standalone SVG cannot read the page's custom properties: the text ink for
+       the outline, the hairline rule for the construction lines, the accent for
+       the dimensions and the meta ink for the view label. Changed in the
+       stylesheet, they are changed here too or in neither.
+
+       No double hyphen anywhere in this comment: XML forbids it inside one, and
+       an SVG that is not well formed does not fail loudly. It loads as a broken
+       image with the alt text beside it, which is how this file spent its first
+       revision. -->
+  <style>
+    :root {
+      --ink: #14181c;
+      --construction: #c7ccc6;
+      --dim: #8a5200;
+      --label: #4a5560;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --ink: #e4e7e9;
+        --construction: #333b43;
+        --dim: #e9a93a;
+        --label: #a0a8af;
+      }
+    }
+  </style>
+
+  <!-- Construction: centre lines through the head, and the extension lines the
+       dimensions are measured between. Chain-dashed, as a centre line is. -->
+  <g stroke="var(--construction)" stroke-width="2" fill="none">
+    <path d="M64 170h352" stroke-dasharray="24 6 4 6"/>
+    <path d="M240 40v260" stroke-dasharray="24 6 4 6"/>
+    <path d="M152 78v192M328 78v192" stroke-dasharray="6 6"/>
+  </g>
+
+  <!-- The centre mark where the two lines cross. -->
+  <g stroke="var(--ink)" stroke-width="2">
+    <path d="M228 170h24M240 158v24"/>
+  </g>
+
+  <!-- Ø172, across the head. -->
+  <g stroke="var(--dim)" stroke-width="2" fill="none" stroke-linecap="round">
+    <path d="M152 54h176"/>
+    <path d="M164 48l-12 6 12 6M316 48l12 6-12 6"/>
+  </g>
+  <text x="240" y="48" fill="var(--dim)" font-family="'JetBrains Mono',ui-monospace,monospace"
+        font-size="21" font-weight="700" text-anchor="middle">Ø172</text>
+
+  <!-- 356, the overall height. -->
+  <g stroke="var(--dim)" stroke-width="2" fill="none" stroke-linecap="round">
+    <path d="M44 88v352"/>
+    <path d="M38 100l6-12 6 12M38 428l6 12 6-12"/>
+    <path d="M44 88h20M44 440h32"/>
+  </g>
+  <text x="30" y="264" fill="var(--dim)" font-family="'JetBrains Mono',ui-monospace,monospace"
+        font-size="21" font-weight="700" text-anchor="middle" transform="rotate(-90 30 264)">356</text>
+
+  <!-- The figure: head, neck, shoulders. One weight, round joins, as an
+       outline on a drawing is. -->
+  <g stroke="var(--ink)" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="240" cy="170" r="88"/>
+    <path d="M212 250v48M268 250v48"/>
+    <path d="M76 440c0-52 14-96 48-118 30-19 66-26 116-26s86 7 116 26c34 22 48 66 48 118"/>
+  </g>
+
+  <text x="84" y="462" fill="var(--label)" font-family="Archivo,system-ui,sans-serif"
+        font-size="22" font-weight="700" letter-spacing="1.6" font-stretch="84%">FRONT ELEV.</text>
+</svg>
