@@ -1,7 +1,16 @@
 +++
 title = "The Zone Rail"
 date = 2026-05-08T16:45:00+02:00
-draft = false
+# The one draft in the demo, and it is here for the reason `comments` below is:
+# the draft flag has a badge in two templates, 17 lines of CSS in 40-list.css and
+# a translation in both languages, and no content in this repository set it — so
+# a state the theme documents, styles and names in DESIGN.md rendered in no build
+# here. This post is already the one that walks the branches nothing else walks,
+# and it is English-only, so nothing has to be kept in step in German.
+#
+# It shows up rather than disappearing because exampleSite sets buildDrafts —
+# see the note there. That is what puts the badge in front of CI.
+draft = true
 tags = ["layout", "typography"]
 summary = "On a real drawing the border zones let two people talk about the same spot. Here they index the post."
 # Renders _partials/comments.html, the empty stub a site overrides. Set here so

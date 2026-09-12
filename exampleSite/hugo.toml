@@ -10,6 +10,18 @@ defaultContentLanguageInSubdir = true
 enableRobotsTXT = true
 capitalizeListTitles = false
 
+# A real site would leave this off. The demo is also the theme's only test
+# harness, and the draft flag is a *state* rather than a param: it has a badge in
+# post-card.html and title-block.html, its own rules in 40-list.css and a
+# translation in both languages, but it renders only where some page is actually
+# in it. Nothing here was, so the badge — and --danger-panel under it, one of the
+# five fills baked opaque for contrast — was built by no CI run.
+#
+# The documented dev command already passes -D, so this only makes the published
+# build agree with what a maintainer sees locally. One post sets draft = true;
+# see content/en/posts/the-zone-rail.md.
+buildDrafts = true
+
 [pagination]
   # Deliberately small. The demo has nine posts and this is what makes the
   # pagination visible on a list; a real site would set this far higher.
