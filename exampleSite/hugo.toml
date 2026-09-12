@@ -210,6 +210,23 @@ caption. Markdown works here, so a [link](https://gohugo.io/) does too.
       description = "Ein Hugo-Theme, das jede Seite als technische Zeichnung setzt."
       DateFormat = ":date_long"
 
+      # Nur im Deutschen gesetzt, nach demselben Muster wie `profile.view`
+      # darüber: Englisch zeigt die reine Wortmarke, Deutsch die Marke mit
+      # Signet — so baut jeder Build beide Zweige von `header.html`.
+      #
+      # Vorher war der ganze `[params.label]`-Block von keiner Sprache gesetzt,
+      # also wurde er nirgends gebaut. Das ist teurer als es klingt: der
+      # Rasterpfad holt die Datei, skaliert sie höhenbegrenzt und schreibt
+      # width/height aus der *skalierten* Ressource. Stünde dort zweimal die
+      # Höhe, wäre jedes Signet quadratisch deklariert — eine Wortmarke würde
+      # gestaucht und der Kopf verspränge beim Laden. Genau deshalb ist die
+      # Marke hier 2:1 und nicht quadratisch: ein Rückfall wäre sofort sichtbar
+      # statt unsichtbar.
+      [languages.de.params.label]
+        text = "Vellum"
+        icon = "images/label.png"
+        iconHeight = 24
+
       [languages.de.params.profile]
         # Dieselben Profil-Params wie im Englischen, nur anders dargestellt:
         # Englisch zeigt den gezeichneten Ansichtsindex, Deutsch die Terminal-
