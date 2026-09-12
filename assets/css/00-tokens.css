@@ -299,8 +299,13 @@
 /* Browsers without light-dark() get no value at all for every colour token
    above — the declarations are invalid at computed-value time, which would leave
    borders falling back to currentColor and the page reading as broken rather
-   than plain. This restates the light palette for them and nothing else; the
-   theme's baseline is otherwise Chrome 123+, Safari 17.5+, Firefox 120+. */
+   than plain. This restates the light palette for them and nothing else.
+
+   The theme's baseline is Chrome 123+, Safari 17.5+, Firefox 121+. This block
+   sets the first two and Firefox 120; the extra Firefox version is :has(), used
+   in five rules elsewhere. Only the terminal's focus ring is guarded there,
+   because it is the only one whose absence costs a commitment rather than an
+   appearance — see 35-terminal.css. */
 @supports not (color: light-dark(#000, #fff)) {
     :root {
         --bg: #eff0ec;

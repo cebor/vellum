@@ -213,8 +213,9 @@ change bumps the *minor*, so `v0.3.x` → `v0.4.0` is the step to read carefully
 ## Requirements
 
 - **Hugo extended ≥ 0.158.** Lower versions fail at render time, not with a friendly message.
-- **Browsers:** Chrome 123+, Safari 17.5+, Firefox 120+ (CSS `light-dark()`). Older browsers get a
-  plain light palette through an `@supports` fallback rather than a broken page.
+- **Browsers:** Chrome 123+, Safari 17.5+, Firefox 121+ — CSS `light-dark()` sets the first two,
+  `:has()` the third. Older browsers get a plain light palette through an `@supports` fallback
+  rather than a broken page.
 
 The theme uses Hugo's flat layout structure — templates directly in `layouts/`, partials in
 `layouts/_partials/`, render hooks in `layouts/_markup/`, shortcodes in `layouts/_shortcodes/`. There

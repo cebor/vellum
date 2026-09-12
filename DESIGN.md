@@ -142,6 +142,19 @@ A `@supports not (color: light-dark(…))` block restates the light palette for 
 Chrome 123 / Safari 17.5 / Firefox 120, which would otherwise get *no value at all* for every colour
 token and render as a broken page rather than a plain one.
 
+**The baseline itself is Firefox 121, not 120**, and the extra version is `:has()` rather than
+`light-dark()`. Five rules use it. Four — the frame closing the rail's column, the card's cover
+layout — degrade to a cosmetic difference and are left unguarded, which is what a baseline is for.
+The fifth is the terminal input's focus ring, and it does not degrade. `outline: none` on the input
+and the window's replacement ring are one move; split apart, the first was doing what `10-base.css`
+forbids in as many words — *the ring is the only focus signal, so it must never be suppressed by a
+component's own styling* — because `.term__input:focus` outranks the bare `:focus-visible` there on
+specificity. A browser without `:has()` therefore had the global ring removed and nothing put in its
+place. Both statements now sit inside one `@supports selector(:has(*))` block, so below it the global
+amber ring simply lands on the input: not this component's preferred furniture, but the theme's own,
+and present. The rule this states: **a `:has()` rule that carries a binding commitment is guarded;
+one that carries an appearance is not.**
+
 ## Type
 
 Two self-hosted variable faces, subset to latin and latin-ext, `font-display: swap`.

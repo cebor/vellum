@@ -116,8 +116,12 @@ revision note at the foot of the sheet, each usable without the other; the `coll
 - **Hugo extended ≥ 0.158.** `site.Language.Locale` and `.Language.Label` are used unguarded in seven
   templates and exist only from that version; a lower one fails at render time, not with the version
   guard's message.
-- **Browser baseline Chrome 123+ / Safari 17.5+ / Firefox 120+**, set by CSS `light-dark()`. Older
-  browsers get a plain light palette through an `@supports` fallback rather than a broken page.
+- **Browser baseline Chrome 123+ / Safari 17.5+ / Firefox 121+.** `light-dark()` sets the first two
+  and would set Firefox 120; `:has()` is the later of the two and sets 121. That was recorded as 120
+  for a while, read off `light-dark()` alone — the same mistake as reading a contrast figure off the
+  one panel a change was made for. Older browsers get a plain light palette through an `@supports`
+  fallback rather than a broken page, and the one `:has()` rule whose absence would cost an
+  accessibility affordance rather than a cosmetic one is guarded in the same shape.
 - **Hugo's flat layout structure only.** Templates in `layouts/`, partials in `layouts/_partials/`,
   render hooks in `layouts/_markup/`, shortcodes in `layouts/_shortcodes/`. There is no
   `layouts/_default/` and no `layouts/partials/`; files placed there silently do nothing.

@@ -427,16 +427,36 @@
     caret-color: var(--text);
 }
 
-.term__input:focus {
-    outline: none;
-}
-
 /* The focus ring belongs to the window, because the window is what the caret is
    inside — a ring around a bare input line in a shell would be furniture no
-   terminal has. */
-.term__window:has(.term__input:focus-visible) {
-    outline: var(--line-frame) solid var(--accent);
-    outline-offset: 2px;
+   terminal has.
+
+   Both halves sit inside the @supports, and that is the load-bearing part rather
+   than the selector. `outline: none` on the input is only safe where the window's
+   ring replaces it — the two statements are one move. Split apart, the first one
+   was doing exactly what 10-base.css forbids two hundred lines above it ("the
+   ring is the only focus signal, so it must never be suppressed by a component's
+   own styling"): .term__input:focus outranks the bare :focus-visible there on
+   specificity, so in a browser without :has() it suppressed the global ring and
+   put nothing in its place, on the theme's only text input outside search.
+
+   :has() is Firefox 121 while light-dark() — which sets the baseline everything
+   else is written against — is 120, so there was a real one-version window where
+   that rendered. The theme's other four :has() rules degrade to a cosmetic
+   difference and need no guard; this one degraded to a WCAG failure, which is the
+   distinction the guard is drawn on.
+
+   Below it the global amber ring lands on the input instead: not this component's
+   preferred furniture, but the theme's own, and present. */
+@supports selector(:has(*)) {
+    .term__input:focus {
+        outline: none;
+    }
+
+    .term__window:has(.term__input:focus-visible) {
+        outline: var(--line-frame) solid var(--accent);
+        outline-offset: 2px;
+    }
 }
 
 /* --- closed -------------------------------------------------------------- */
