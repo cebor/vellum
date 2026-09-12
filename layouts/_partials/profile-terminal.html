@@ -49,8 +49,14 @@
         <div class="term__bar">
             <span class="term__lights">
                 <button type="button" class="term__light term__light--close" aria-label="{{ i18n "term_close" }}" title="{{ i18n "term_close" }}"></button>
-                <button type="button" class="term__light term__light--min" aria-label="{{ i18n "term_min" }}" title="{{ i18n "term_min" }}"></button>
-                <button type="button" class="term__light term__light--zoom" aria-label="{{ i18n "term_zoom" }}" title="{{ i18n "term_zoom" }}"></button>
+                {{- /* Close acts once and says so by revealing the reopen line,
+                       which carries its own label. These two are toggles — a
+                       second press restores — and a toggle whose label cannot
+                       change has to state its state instead, or a reader hears
+                       "Minimise", watches nothing happen that they can perceive,
+                       and is offered "Minimise" again. */}}
+                <button type="button" class="term__light term__light--min" aria-pressed="false" aria-label="{{ i18n "term_min" }}" title="{{ i18n "term_min" }}"></button>
+                <button type="button" class="term__light term__light--zoom" aria-pressed="false" aria-label="{{ i18n "term_zoom" }}" title="{{ i18n "term_zoom" }}"></button>
             </span>
             <span class="term__title">{{ $user }} — -zsh<span class="term__title-size"> — 80×24</span></span>
         </div>
@@ -508,14 +514,39 @@
                 input.focus();
             });
 
+            /* A toggle that only changes a class tells a screen reader nothing.
+               Each of these states it on the button it belongs to, in the same
+               statement that flips the class so the two cannot drift. */
+            function press(button, on) {
+                if (button) button.setAttribute("aria-pressed", on ? "true" : "false");
+            }
+
             var lights = {
-                "term__light--close": function () { root.classList.add("is-closed"); reopen.hidden = false; },
-                "term__light--min": function () { root.classList.toggle("is-minimised"); },
-                "term__light--zoom": function () { root.classList.toggle("is-zoomed"); remeasure(); }
+                "term__light--close": function (button) {
+                    root.classList.add("is-closed");
+                    if (!reopen) return;
+                    reopen.hidden = false;
+                    /* The button that was just pressed is inside the window this
+                       hides, so leaving focus on it drops the reader onto <body>
+                       and back to the top of the sheet — they then tab through
+                       the whole header and profile block to get back to a control
+                       that is already on screen. Reopen is that control, and it
+                       already does the mirror of this: its own handler ends by
+                       focusing the input. Close was the one handler that moved
+                       nothing. */
+                    reopen.focus();
+                },
+                "term__light--min": function (button) {
+                    press(button, root.classList.toggle("is-minimised"));
+                },
+                "term__light--zoom": function (button) {
+                    press(button, root.classList.toggle("is-zoomed"));
+                    remeasure();
+                }
             };
             Object.keys(lights).forEach(function (cls) {
                 var button = root.querySelector("." + cls);
-                if (button) button.addEventListener("click", lights[cls]);
+                if (button) button.addEventListener("click", function () { lights[cls](button); });
             });
             if (reopen) reopen.addEventListener("click", function () {
                 root.classList.remove("is-closed");

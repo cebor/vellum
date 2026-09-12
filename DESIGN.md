@@ -457,6 +457,31 @@ count out of the box and re-reads it on resize and once the fonts settle. A
 window that names a size it does not have is the same failure as a rail lettering
 an empty field.
 
+**All three of those claims are conditional on JavaScript, and the sheet now says
+so rather than assuming it.** The buttons' handlers all live in one map, so
+without a script they painted and did nothing — the costume the paragraph above
+refuses, drawn on the one page where nobody could press them. The size was worse:
+the bar stated the markup's placeholder `80×24` over a window as wide as the
+column holding the whole session. Both are hidden until the pre-paint script sets
+`.js`, which is the rule `10-base.css` already states for the theme toggle, the
+top link and the copy control; these three and the size were simply left out of
+it. The rules are written in `35-terminal.css` rather than added to that list,
+because every selector in this file begins with `.term` and that is what lets
+`head-assets.html` drop the whole sheet for a site that never turns the terminal
+on. Without a script the bar says what it knows — the user and the shell — and
+nothing it cannot operate.
+
+Close, minimise and zoom differ in kind, and the markup now says which is which.
+Close acts once and announces its result by revealing the reopen line, which
+carries its own label; the other two are toggles and carry `aria-pressed`, set in
+the same statement that flips the class so the two cannot drift. A toggle whose
+label cannot change has to state its state instead, or a reader presses
+"Minimise", perceives nothing, and is offered "Minimise" again. **Close also moves
+focus**, to the reopen control: the button it was pressed on is inside the window
+it hides, so leaving focus there dropped the reader onto `<body>` and back to the
+top of the sheet. Reopen has always done the mirror of this, ending on
+`input.focus()`; close was the one handler that moved nothing.
+
 Output **arrives** rather than appearing: revealed a character at a time by
 walking the text nodes of the very markup Hugo rendered, so the effect works on a
 table and there is still exactly one copy of the content. A command the reader
