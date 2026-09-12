@@ -659,7 +659,10 @@ travel with it or ship to every site that has no terminal. Nothing between the t
    from the 4.5:1 check because none of them is text — which holds exactly until one is used as text,
    and then the invariant passes while a rendered text node sits at 2.06:1. The disabled pagination
    link did for a while. `--meta-soft` is the dimmest text the palette has.
-5. Never add a `box-shadow`. Depth is line weight.
+5. Never add a `box-shadow`. Depth is line weight. Two exist, both in
+   `35-terminal.css` and both argued at their declarations: the window's, and the inset hairline on
+   its lights. `inset` is the one form the rule does not reach, because an inset hairline *is* line
+   weight — but it is still declared, because an exception nobody wrote down is one nobody can check.
 6. Never encode state in colour alone.
 6a. **The focus ring is never suppressed by a component, and `.main` is the one destination that is
    not a component.** `baseof.html` gives `<main>` `tabindex="-1"` so the skip link can land *focus*
@@ -705,3 +708,8 @@ travel with it or ship to every site that has no terminal. Nothing between the t
     column must not collapse. A chip has no measured column to protect; it is sized by its own word
     and nothing else, and as an `inline-flex` its min-content *is* that word, so no amount of room
     given to the item would have let `break-word` break it.
+
+    The test is a hostile value in every field an author controls, not a plausible one. The
+    sheet-level grids — the office, the schedule, the record, the projects, the terminal's tables —
+    all held, because they already state `minmax(0, …)`; only the flex rows and the plain card did
+    not.
