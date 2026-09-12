@@ -33,6 +33,25 @@
     z-index: 5;
 }
 
+/* Below --sheet-narrow it stops being sticky, and that is two fixes in one rule.
+   The nav wraps there, so the header goes from 57px to 122px and, on a phone
+   with the touch minimums applied, to 181px — 21% of an 844px viewport, held
+   permanently, on the device where reading room is scarcest and in a theme whose
+   whole claim is that a post survives intact. It was also the mechanical cause
+   of anchors landing behind it: no scroll-margin can absorb 181px without
+   pushing the heading a fifth of the way down the screen, so the margin in
+   10-base.css only has to clear what stays sticky.
+
+   The same breakpoint the sheet already uses to give up its frame and rail and
+   run full-bleed — the header giving up its position there is the same
+   concession, not a new one. The way back up is `.top-link`, which is fixed,
+   appears after 800px of scroll and is present at every width. */
+@media (max-width: 40rem) {
+    .header {
+        position: static;
+    }
+}
+
 .header__inner {
     max-width: var(--frame-width);
     margin-inline: auto;

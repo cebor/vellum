@@ -220,6 +220,26 @@ Below `--frame-collapse` (60rem) the frame and rail are dropped and the column r
 its gutters; the title block stacks to a single column and the identity survives on mono date lines,
 hairline rules, bordered icon squares and the stacked block.
 
+**The header is sticky only where it is short**, and the boundary is `--sheet-narrow` (40rem) rather
+than the frame's own. Measured, it is not one height but four: 57px with a fine pointer, 70px with a
+coarse one — the touch minimum raises every nav item to `--tap-target` — 122px once the nav wraps
+below 40rem, and 181px on a phone where both apply. That last figure is **21% of an 844px viewport,
+held permanently**, on the device with the least reading room and in a theme whose claim is that a
+post survives intact. Below 40rem it therefore scrolls away like any other block, which is the same
+concession the sheet already makes at 60rem when it gives up its frame and rail; `.top-link` is the
+way back up and is fixed at every width.
+
+That is also half of how **an anchor lands clear of it**. `:target` carries a
+`scroll-margin-top`, and a single value could never be right for four header heights: at 64px it
+suited the desktop case alone and put a heading 117px *above* the header's own bottom edge on a
+phone — fully hidden, on the surface where the contents are the only section navigation the sheet has
+because the rail is gone. The narrow case is not a margin problem, since absorbing 181px would push
+the heading a fifth of the way down the screen; it is answered by the header not being sticky at all.
+What remains is the coarse-pointer header at 70px, and that *is* a margin: stepped to `--space-4xl`
+behind the same `pointer: coarse` query every other touch adjustment sits behind, so the pointer
+layouts keep their tighter landing. Every combination of pointer and width from 320px to 1280px now
+lands the heading below the header.
+
 ## The zone rail
 
 One lettered zone per top-level section, **positioned at that section's own offset down the sheet**,

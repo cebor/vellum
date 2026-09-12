@@ -102,9 +102,32 @@ html {
    outside the reduced-motion query above: how far an anchor scrolls is a
    motion preference, where it lands is not. Inside it, a reader who asked for
    reduced motion got scroll-margin-top: 0 and every zone-rail mark, contents
-   link and search-engine deep link put its heading behind the header. */
+   link and search-engine deep link put its heading behind the header.
+
+   The value has to clear the header, and the header is not one height. Measured:
+   57px with a fine pointer, 70px with a coarse one — the touch minimum raises
+   every nav item to --tap-target — and 122px to 181px below --sheet-narrow,
+   where the nav wraps. So 64px was right for exactly one of those three, and on
+   a phone it put the heading 117px *above* the header's own bottom edge, fully
+   hidden. That is worst where it matters most: below --frame-collapse the zone
+   rail is dropped, so the contents are the only section navigation the sheet
+   has, and every entry in them landed nowhere.
+
+   Two mechanisms, because the cause splits in two. The narrow case is not a
+   margin problem — absorbing 181px would push the heading a fifth of the way
+   down the screen — so 20-layout.css stops the header being sticky there at
+   all. What is left is the coarse-pointer header at 70px, and that one is a
+   margin: bumped here, behind the same pointer query every other touch
+   adjustment in this theme sits behind, so the pointer layouts keep their
+   tighter landing. */
 :target {
     scroll-margin-top: var(--space-3xl);
+}
+
+@media (pointer: coarse) {
+    :target {
+        scroll-margin-top: var(--space-4xl);
+    }
 }
 
 body {
