@@ -26,17 +26,23 @@
  */
 import { chromium } from 'playwright-core';
 import { mkdirSync, writeFileSync } from 'node:fs';
-/* A devDependency, not a dependency: taking a shot still needs only
- * playwright-core, and `npm install --omit=dev` leaves a harness that reviews
- * fine and cannot regenerate the fixtures. It is here because Chrome cannot
- * encode what these images need. canvas.toDataURL('image/webp', 1) is WebP
- * quality 100 and still lossy, and hairline rules, frame edges and tracked
- * lettering are exactly the subject that smears under it -- on the one image
- * that has to prove the theme draws cleanly. sharp does lossless WebP.
+/* sharp is imported where it is used, at the head of the --fixtures branch, and
+ * that is the whole point of it being a devDependency: taking a review shot
+ * needs only playwright-core, and `npm install --omit=dev` has to leave a
+ * harness that reviews fine and cannot regenerate the fixtures. A static import
+ * here made that claim false in the strongest way -- the module is resolved
+ * before any of this file runs, so an --omit=dev checkout died with
+ * ERR_MODULE_NOT_FOUND before opening a browser, and every ordinary review round
+ * was unavailable on exactly the install the comment described.
+ *
+ * It is needed at all because Chrome cannot encode what these images need.
+ * canvas.toDataURL('image/webp', 1) is WebP quality 100 and still lossy, and
+ * hairline rules, frame edges and tracked lettering are exactly the subject that
+ * smears under it -- on the one image that has to prove the theme draws cleanly.
+ * sharp does lossless WebP.
  *
  * Nothing about this rides into a consuming site: node_modules/ is ignored, so
  * a module download takes package.json and package-lock.json and no more. */
-import sharp from 'sharp';
 
 const BASE = `http://localhost:${process.env.VELLUM_SHOTS_PORT || 1313}`;
 const OUT = '.impeccable/review';
@@ -190,8 +196,9 @@ const fixtures = [
     { file: 'images/gallery-print-dark.webp', path: '/en/posts/reading-a-sheet/', scheme: 'dark', dsf: 1, compare: true },
 ];
 
-/* PNG in, the tracked format out, dimensions untouched. */
-const encode = (file, buf) => file.endsWith('.webp')
+/* PNG in, the tracked format out, dimensions untouched. Handed sharp rather
+ * than reaching for it, so this file has no module-scope dependency on it. */
+const encode = (sharp, file, buf) => file.endsWith('.webp')
     ? sharp(buf).webp({ lossless: true, effort: 6 }).toBuffer()
     : sharp(buf).png({ compressionLevel: 9, effort: 10 }).toBuffer();
 
@@ -253,6 +260,20 @@ async function settle(page) {
         await Promise.all([...document.images].map(i => i.decode().catch(() => { })));
     }).catch(() => { });
     await page.waitForTimeout(300);
+}
+
+/* Resolved before the browser is launched, so a checkout without the
+ * devDependency is told in a second what it is missing and how to get it,
+ * rather than after ten frames have been shot and cannot be written. */
+let sharp = null;
+if (FIXTURES) {
+    try {
+        sharp = (await import('sharp')).default;
+    } catch {
+        console.error('--fixtures needs sharp, a devDependency of this harness.');
+        console.error('Install it with:  npm install --prefix .parity');
+        process.exit(2);
+    }
 }
 
 const browser = await launch();
@@ -449,7 +470,7 @@ if (FIXTURES) {
 
     if (captured.length === fixtures.length) {
         for (const [file, buf] of captured) {
-            const out = await encode(file, buf);
+            const out = await encode(sharp, file, buf);
             writeFileSync(file, out);
             console.log(`    ${file}  ${(out.length / 1024).toFixed(0)} KB`);
             shots++;
