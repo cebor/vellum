@@ -13,12 +13,17 @@ import * as params from "@params";
     var text = input.dataset;
     var fuse = null;
 
-    // The cap is on what is *rendered*, not on what is found: the live region
-    // still reports the true total, so a reader is told there are 900 matches
-    // and handed the best 50. Fuse scores every key including `content` — the
-    // whole plain text of every page — so on a large site a two-character query
-    // matches most of the corpus, and building one <li> per match on every
-    // keystroke is the part that stalls, not the search.
+    // The cap is on what is *rendered*, not on what is found, and once it bites
+    // the status line says both numbers — see countLabel. It used to say only
+    // the total, on the reasoning that a reader is "told there are 900 matches
+    // and handed the best 50"; the telling never mentioned the 50, so the list
+    // stopped at an unexplained place and the count above it was the only
+    // evidence that anything was missing.
+    //
+    // Fuse scores every key including `content` — the whole plain text of every
+    // page — so on a large site a two-character query matches most of the corpus,
+    // and building one <li> per match on every keystroke is the part that stalls,
+    // not the search.
     var RENDER_LIMIT = 50;
 
     function options() {
@@ -78,7 +83,18 @@ import * as params from "@params";
         }
     }
 
+    // A count the list does not back up is the same failure as a window naming a
+    // size it does not have. The cap is on what is rendered, so once it bites,
+    // the line has to say both numbers — otherwise a reader is told 900 and
+    // handed 50, with the list simply stopping and nothing accounting for the
+    // difference. Announced as well as shown, since the status line is a live
+    // region and a screen reader has even less to go on.
     function countLabel(n) {
+        if (n > RENDER_LIMIT) {
+            return (text.countCapped || "")
+                .replace("{shown}", RENDER_LIMIT)
+                .replace("{n}", n);
+        }
         return n === 1
             ? text.countOne
             : (text.countOther || "").replace("{n}", n);

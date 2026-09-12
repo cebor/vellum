@@ -276,6 +276,9 @@
 - id: search_results_other
   translation: "{n} results"
 
+- id: search_results_capped
+  translation: "{shown} of {n} results"
+
 - id: search_error
   translation: "Search is unavailable right now."
 

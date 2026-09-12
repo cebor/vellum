@@ -22,7 +22,8 @@
         spellcheck="false" placeholder="{{ i18n "search_loading" }}"
         data-index="{{ with site.Home.OutputFormats.Get "json" }}{{ .RelPermalink }}{{ else }}{{ "index.json" | relLangURL }}{{ end }}" data-placeholder="{{ .Params.placeholder | default (i18n "search_placeholder") }}"
         data-empty="{{ i18n "search_no_results" }}" data-error="{{ i18n "search_error" }}"
-        data-count-one="{{ i18n "search_results_one" }}" data-count-other="{{ i18n "search_results_other" }}" disabled>
+        data-count-one="{{ i18n "search_results_one" }}" data-count-other="{{ i18n "search_results_other" }}"
+        data-count-capped="{{ i18n "search_results_capped" }}" disabled>
 </form>
 
 <ul class="search-results" id="search-results" aria-label="{{ i18n "search_label" }}"></ul>

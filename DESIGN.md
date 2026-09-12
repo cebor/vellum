@@ -268,6 +268,14 @@ invariant there is the class, not the full field list. The AI mark and the draft
 because both would mean rebuilding a partial's logic in the script; `hidemeta` is honoured, so a page
 that hides its title block everywhere else does not have its date reappear here.
 
+**The list is capped at 50 and the count says so.** Fuse scores the whole plain text of every page,
+so on a large site a two-character query matches most of the corpus and building one row per match on
+every keystroke is what stalls. Capping the render is right; announcing the untrimmed total over it
+was not. "900 results" above a list that stops at 50, with nothing accounting for the other 850, is
+the same failure as a window naming a size it does not have and a rail lettering an empty field — and
+it was worse in the live region than on screen, since a screen reader has only the count to go on.
+The line reads `{shown} of {n} results` once the cap bites and `{n} results` when it does not.
+
 A search that finds nothing gets the 404's treatment rather than a grey line, because both are the same
 situation: the reader is at a dead end on a sheet that has other sheets.
 

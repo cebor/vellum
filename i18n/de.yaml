@@ -278,6 +278,9 @@
 - id: search_results_other
   translation: "{n} Treffer"
 
+- id: search_results_capped
+  translation: "{shown} von {n} Treffern"
+
 - id: search_error
   translation: "Die Suche ist momentan nicht verfügbar."
 
