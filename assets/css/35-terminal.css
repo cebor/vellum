@@ -10,6 +10,12 @@
    sheet's own frame ink at low alpha rather than in black, because a black
    shadow on cool paper is a bruise.
 
+   There are **two** box-shadows here, not one, and this paragraph used to cover
+   only the first. The other is the 1px inset edge on each of the three window
+   lights, which is a drawn edge rather than depth and is argued at its own
+   declaration below. An exception this file states more narrowly than it takes
+   is the same defect as a comment that describes code the file no longer has.
+
    It carries bare colour values in exactly one place: the three window buttons.
    Those are macOS's own system colours and are recognisable precisely because
    they are #ff5f57, #febc2e and #28c840 and nothing near them. There is no
@@ -183,6 +189,29 @@
     background-image: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
                       linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55));
     background-size: 7px 1.5px, 1.5px 7px;
+}
+
+/* In forced colors every background-color is replaced by a system colour, so all
+   three lights became the exact colour of the bar they sit on and disappeared:
+   measured, white on white in light high contrast and black on black in dark,
+   with the three controls still focusable and clickable. The inverse of the
+   problem this component states — not three painted dots that do nothing, but
+   three invisible dots that do something, which is the worse half, because a
+   control nobody can find is not a control.
+
+   An outline in the user's own ButtonBorder rather than forced-color-adjust:
+   none. Keeping macOS's three colours would be defensible — they are the
+   control's identity — but a reader in high contrast chose that palette
+   deliberately, and three outlined circles in the size and spacing macOS uses
+   are recognisable enough without overriding it. box-sizing is border-box
+   throughout, so the dot stays 12px and the title bar keeps its geometry.
+
+   The hover glyphs are gradients and stay black; they are a macOS nicety rather
+   than the affordance, and each button carries its own label. */
+@media (forced-colors: active) {
+    .term__light {
+        border: 1px solid ButtonBorder;
+    }
 }
 
 /* Centred on the window, not on what is left of the bar beside the buttons —

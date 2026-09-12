@@ -600,6 +600,27 @@ light scheme (repeating the `[data-theme]` selectors, which set `color-scheme` a
 than a bare `:root`), drops the substrate and all chrome, prints the title block *heavier* rather than
 lighter, wraps code so it cannot be cut off at the page edge, and prints external link destinations.
 
+**What must not be split across a page break is the sheet's furniture as much as the content's.** The
+`break-inside: avoid` list protected code blocks, tables, figures, alerts and blockquotes and left
+the title block, the fenced block's own bordered wrapper and the index card `auto` — the wrong way
+round for a theme whose claim is the sheet. The block that is "the reason a printed sheet is
+identifiable" could be cut in half; the border printed around a fence was drawn on `.highlight` while
+the protection sat on the `pre` inside it, so a block near the foot of a page could leave an orphaned
+top border behind; and a card could be cut between its meta line and the title it dates. All three
+are in the list now.
+
+**There is no `forced-colors` block except one, and that is the finding.** In Windows high contrast
+the sheet holds together with no code written for it: text legible in both schemes, frame and
+title-block rules intact, the graph substrate correctly absent rather than a grid of system-coloured
+lines, the draft badge carried by its border, and the active nav mark surviving as a *notch cut into
+the header rule* because the mark is a painted bar rather than a tint. That is rule 6 — state is a
+mark, not a hue — paying off in a mode nobody designed for. The single exception is the terminal's
+window lights, whose meaning *is* their colour: all three became the exact colour of the bar they sit
+on and disappeared while staying focusable and clickable. They take a `ButtonBorder` outline in the
+reader's own palette rather than `forced-color-adjust: none`, because someone in high contrast chose
+that palette deliberately and three outlined circles at macOS's size and spacing are recognisable
+enough without overriding it.
+
 It must keep a numeric prefix after `90-syntax.css`: the CSS files are globbed and concatenated
 alphabetically, so **the numeric prefix is the cascade order**, and these rules only beat the syntax
 colours because they come later.
