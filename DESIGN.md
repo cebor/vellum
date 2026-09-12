@@ -279,6 +279,12 @@ The line reads `{shown} of {n} results` once the cap bites and `{n} results` whe
 A search that finds nothing gets the 404's treatment rather than a grey line, because both are the same
 situation: the reader is at a dead end on a sheet that has other sheets.
 
+Each card is a named `<article>`, labelled with its post's title. The element was already right — a
+card is a self-contained syndicated item — but `<article>` is a landmark, and three to five unnamed
+ones per index sheet meant a reader listing landmarks on the home page heard "article" five times
+with nothing to tell them apart, on the surface whose whole job is indexing posts. The profile views
+were already named this way; the cards were the set that had been missed.
+
 Cards are separated by ruled lines, never boxed: a drawing divides a schedule with rules, and boxing
 each row would make the index heavier than the drawing it indexes.
 

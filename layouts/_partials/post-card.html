@@ -8,7 +8,18 @@
        the "Latest" section on the home page and the 404. */ -}}
 {{- $p := .page }}
 {{- $level := .level | default 2 }}
-<article class="post-card">
+{{- /* Named, because <article> is a landmark and there are three to five of
+       these on every index sheet. Unnamed, a reader pulling up the landmark list
+       on the home page heard "article" five times with nothing to tell them
+       apart — on the one surface whose whole job is indexing posts. ARIA's rule
+       is that a role appearing more than once needs a unique label on each; the
+       profile views already follow it, three named by their band heading and two
+       by an aria-label, and the cards were the set that did not.
+
+       aria-label rather than aria-labelledby: the title is right there but
+       carries no id, and minting one per card to point at it would add markup to
+       say what the label says directly. */ -}}
+<article class="post-card" aria-label="{{ $p.LinkTitle | default $p.Title | plainify }}">
     {{- partial "cover.html" (dict "page" $p "isSingle" false) }}
     <div class="post-card__body">
         {{- if not ($p.Param "hidemeta") }}
