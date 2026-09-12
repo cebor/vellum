@@ -11,8 +11,15 @@
     {{- $w := int ($profile.imageWidth | default 120) }}
     {{- $x1 := $img.Resize (printf "%dx webp q90" $w) }}
     {{- $x2 := $img.Resize (printf "%dx webp q90" (mul $w 2)) }}
+    {{- /* Both dimensions come off the resized variant, never $w twice. The
+           resize is width-constrained, so only $x1 knows the height that came
+           out of it — and writing $w into both declares every portrait square,
+           which crops nothing but reserves the wrong box and shifts the block as
+           it loads. header.html carries the same note over the same mistake; this
+           is the second place it was made. */}}
     <img class="profile__avatar" src="{{ $x1.RelPermalink }}"
-        srcset="{{ $x1.RelPermalink }} 1x, {{ $x2.RelPermalink }} 2x" width="{{ $w }}" height="{{ $w }}"
+        srcset="{{ $x1.RelPermalink }} 1x, {{ $x2.RelPermalink }} 2x"
+        width="{{ $x1.Width }}" height="{{ $x1.Height }}"
         alt="{{ $profile.imageAlt | default $profile.title | default site.Title }}" draggable="false">
     {{- end }}
     {{- end }}
