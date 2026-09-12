@@ -396,6 +396,16 @@ registration corner — it says this object *lies on* the sheet rather than bein
 drawn on it — and it is mixed from the frame's own ink at low alpha, because a
 black shadow on cool paper is a bruise.
 
+It is the one component that carries a `box-shadow`, and within it there are two.
+The second is the 1px **inset** edge on each window light, which is not depth at
+all: it is a drawn hairline, and `inset` is how you draw one that does not eat
+into a 12px dot the way a border would. An inset hairline is line weight, which
+is what the rule asks for. It is black where the window's shadow is not, and the
+ground is why — that shadow falls on cool paper, this one on `#ff5f57`, where the
+frame's grey would read as a smudge instead of an edge. Both exceptions are now
+argued at their own declarations; the file's header used to state only the first,
+which is the same defect as a comment describing code that has moved on.
+
 Bare colour values survive in exactly one place: the three window buttons.
 #ff5f57 has no correct second value, and those colours are recognisable precisely
 because they are macOS's and nothing near them.

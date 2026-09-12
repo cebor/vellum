@@ -108,6 +108,24 @@
     background-size: 6px 6px;
 }
 
+/* The second and only other use of box-shadow in this theme, declared here
+   because the header above declares the window's and this one was riding on that
+   declaration without being covered by it.
+
+   It is not depth. It is the 1px inner edge macOS draws on each light, and
+   box-shadow: inset is how you draw an edge that must not change the element's
+   box — a real border would eat into a 12px dot and shrink the colour that makes
+   the button recognisable. The ban it is measured against is on shadow as a
+   substitute for line weight, and an inset hairline *is* line weight.
+
+   Black, and deliberately, though the header argues the window's shadow out of
+   black and into the frame's ink. Different ground, different answer: that shadow
+   falls on cool paper, where black is a bruise, while this one falls on #ff5f57.
+   These three colours are macOS's own and so is the edge on them — the frame ink
+   over a saturated dot would read as a grey smudge rather than an edge, and would
+   be the one place this component stopped quoting the thing it is quoting. Both
+   the glyph strokes below and this ring are the same black at the same low alpha
+   for that reason. */
 .term__light--close { background-color: #ff5f57; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14); }
 .term__light--min   { background-color: #febc2e; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14); }
 .term__light--zoom  { background-color: #28c840; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14); }
