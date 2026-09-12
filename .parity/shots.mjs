@@ -303,6 +303,25 @@ if (FIXTURES) {
              * not show less of it. */
             reducedMotion: 'reduce',
         });
+
+        /* The second half of the same argument, and it was missing. The terminal
+         * opens by printing a real last-login line — `new Date()` in
+         * profile-terminal.html — so the two terminal fixtures carried a wall
+         * clock and came out different on every run. Two back-to-back runs of
+         * this mode differed in exactly those two files and nothing else, which
+         * is the shape of the bug: eight fixtures reproducible, two never.
+         *
+         * That is worse than untidy. `release.sh` requires a clean tree, so a
+         * regeneration before a release always left two binaries modified with
+         * a diff nobody could read, and a real change in them was
+         * indistinguishable from the clock ticking.
+         *
+         * setFixedTime rather than install: this only pins what Date reports and
+         * leaves timers running, so the reveal, the resize measurement and every
+         * setTimeout in the page behave exactly as they do for a reader. The date
+         * is arbitrary and its only property is that it does not move. */
+        await ctx.clock.setFixedTime(new Date('2026-01-01T09:41:00Z'));
+
         const page = await ctx.newPage();
         let buf = null;
         if (await visit(page, label, path)) {
