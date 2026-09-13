@@ -360,3 +360,6 @@
 
 - id: no_posts
   translation: "Hier ist noch nichts."
+
+- id: opens_new_window
+  translation: "öffnet ein neues Fenster"

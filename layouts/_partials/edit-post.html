@@ -9,7 +9,7 @@
 {{- end }}
 <a class="edit-post" href="{{ $href | safeURL }}" rel="noopener noreferrer" target="_blank">
     {{- partialCached "icon.html" "pencil" "pencil" -}}
-    <span>{{ .Text | default (i18n "edit_post") }}</span>
+    <span>{{ .Text | default (i18n "edit_post") }}</span>{{ partial "new-window.html" . }}
 </a>
 {{- end }}
 {{- end }}

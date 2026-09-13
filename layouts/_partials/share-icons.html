@@ -26,7 +26,7 @@
         {{- with index $targets . }}
         <li>
             <a class="share__link" href="{{ .href | safeURL }}" rel="noopener noreferrer" target="_blank"
-                aria-label="{{ i18n "share_on" }} {{ .label }}" title="{{ .label }}">
+                aria-label="{{ i18n "share_on" }} {{ .label }} ({{ i18n "opens_new_window" }})" title="{{ .label }}">
                 {{- partialCached "icon.html" .icon .icon -}}
             </a>
         </li>

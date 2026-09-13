@@ -14,7 +14,7 @@
             {{- with $p.url }}
             {{- $external := strings.HasPrefix . "http" }}
             <a href="{{ if $external }}{{ . }}{{ else }}{{ . | relLangURL }}{{ end }}"
-                {{- if $external }} rel="noopener noreferrer" target="_blank"{{ end }}>{{ $p.name }}{{ if $external }}{{ partialCached "icon.html" "external" "external" }}{{ end }}</a>
+                {{- if $external }} rel="noopener noreferrer" target="_blank"{{ end }}>{{ $p.name }}{{ if $external }}{{ partialCached "icon.html" "external" "external" }}{{ partial "new-window.html" . }}{{ end }}</a>
             {{- else }}
             {{ $p.name }}
             {{- end }}

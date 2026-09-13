@@ -662,7 +662,19 @@ faces ship and would fall back to whatever the system had.
 
 Icons are two deliberate families: UI glyphs authored on a 24×24 grid at 1.75 stroke, and brand marks
 as the official filled logotypes, which cannot be redrawn as strokes without misrepresenting someone's
-mark. No unicode glyph ever stands in for an icon. `<details>` gets a drawn chevron rather than the
+mark. No unicode glyph ever stands in for an icon.
+
+**A marker that only one reader can see is half a statement.** The external-link
+glyph is `aria-hidden`, correctly — announcing it as an image on every link would
+be noise — but that left the context change unsaid for anyone who does not get
+the glyph, on all 60 `target="_blank"` links the demo builds, while the render
+hook's own comment had claimed for a long time that "opens in a new tab" belonged
+in the accessible name. `new-window.html` now puts the words there. It is set as
+text *inside* the link rather than as a label *on* it, because a label replaces
+the link's own words and the reader needs "Suggest an edit, opens in a new
+window" rather than only the second half; the two icon-only rows that already
+carry a label — share and social — append the same string to it, which is the
+same rule read from the other end. `<details>` gets a drawn chevron rather than the
 UA disclosure triangle.
 
 Browser surfaces are themed from the palette, not left at their defaults: selection, caret, scrollbar,

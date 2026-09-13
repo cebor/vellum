@@ -1,0 +1,20 @@
+{{- /* The announcement that a link leaves for a new window, for readers who do
+       not get the drawn marker beside it.
+
+       render-link.html has claimed this in a comment for a long time — "External
+       links open in a new tab and say so ... 'opens in a new tab' belongs in the
+       accessible name" — while emitting only the glyph, which is aria-hidden.
+       Measured: 60 links across the demo carried target="_blank" and not one of
+       them announced the context change. A comment that describes behaviour the
+       file does not have is the same defect as a rail lettering an empty field.
+
+       Set as text inside the link rather than as an aria-label on it, because a
+       label would replace the link's own words: the reader needs "Suggest an
+       edit, opens in a new window", not "opens in a new window". The two places
+       that already carry an aria-label — the share row and the social row, both
+       icon-only — append the same string to that label instead, for the same
+       reason in reverse.
+
+       The parenthesis lives here and not in the translation so both languages
+       are punctuated the same way. */ -}}
+<span class="visually-hidden"> ({{ i18n "opens_new_window" }})</span>

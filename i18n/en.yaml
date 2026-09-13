@@ -357,3 +357,6 @@
 
 - id: no_posts
   translation: "Nothing here yet."
+
+- id: opens_new_window
+  translation: "opens in a new window"

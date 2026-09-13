@@ -3,12 +3,16 @@
        are left exactly as authored.
 
        The marker is inside the link so it cannot be orphaned onto its own line
-       by a wrap, and aria-hidden because "opens in a new tab" belongs in the
-       accessible name, not as a repeated glyph announcement. */ -}}
+       by a wrap, and it is aria-hidden: the glyph is the sighted reader's half
+       of the statement, and announcing it as an image on every external link
+       would be noise. The other half is new-window.html, which puts the words
+       into the link's own name — for a long time this comment claimed that half
+       existed while nothing emitted it, and 60 links in the demo opened a new
+       window without saying so. */ -}}
 {{- $u := urls.Parse .Destination }}
 {{- $external := and $u.Host (ne $u.Host (urls.Parse site.BaseURL).Host) }}
 <a href="{{ .Destination | safeURL }}"{{ with .Title }} title="{{ . }}"{{ end }}
     {{- if $external }} class="link-external" rel="noopener noreferrer" target="_blank"{{ end }}>
     {{- .Text | safeHTML -}}
-    {{- if $external }}{{ partialCached "icon.html" "external" "external" }}{{ end -}}
+    {{- if $external }}{{ partialCached "icon.html" "external" "external" }}{{ partial "new-window.html" . }}{{ end -}}
 </a>

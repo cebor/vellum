@@ -124,7 +124,7 @@
                                     {{- with $proj.url }}
                                     {{- $external := strings.HasPrefix . "http" }}
                                     <a class="term__link" href="{{ if $external }}{{ . }}{{ else }}{{ . | relLangURL }}{{ end }}"
-                                        {{- if $external }} rel="noopener noreferrer" target="_blank"{{ end }}>{{ . }}</a>
+                                        {{- if $external }} rel="noopener noreferrer" target="_blank"{{ end }}>{{ . }}{{ if $external }}{{ partial "new-window.html" . }}{{ end }}</a>
                                     {{- end }}
                                     {{- with $proj.tags }}
                                     <span class="term__tags">

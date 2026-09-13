@@ -33,7 +33,7 @@
             {{- $external := strings.HasPrefix .URL "http" }}
             <a class="nav__item{{ if $active }} is-active{{ end }}" href="{{ .URL }}"
                 {{- if $active }} aria-current="page"{{ end }}
-                {{- if $external }} rel="noopener noreferrer" target="_blank"{{ end }}>{{ .Name }}{{ if $external }}{{ partial "icon.html" "external" }}{{ end }}</a>
+                {{- if $external }} rel="noopener noreferrer" target="_blank"{{ end }}>{{ .Name }}{{ if $external }}{{ partial "icon.html" "external" }}{{ partial "new-window.html" . }}{{ end }}</a>
             {{- end }}
         </nav>
 

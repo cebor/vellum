@@ -15,7 +15,7 @@
             <span class="footer__sep" aria-hidden="true"></span>
             {{- end }}
             <span>{{ i18n "built_with" | default "Built with" }} <a href="https://gohugo.io/" rel="noopener noreferrer"
-                    target="_blank">Hugo</a></span>
+                    target="_blank">Hugo{{ partial "new-window.html" . }}</a></span>
         </span>
     </div>
 </footer>

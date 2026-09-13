@@ -826,7 +826,9 @@ None of these need a shortcode.
 - **Alerts.** A blockquote opening with `> [!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` or
   `[!CAUTION]` becomes a labelled callout.
 - **Headings** get an anchor link on hover.
-- **External links** get `rel="noopener noreferrer"`, a new tab, and a marker.
+- **External links** get `rel="noopener noreferrer"`, a new tab, a drawn marker, and — for readers
+  who do not get the marker — the words, from the `opens_new_window` translation. Override it in your
+  own `i18n/` like any other label.
 - **Fenced code blocks** are highlighted with Chroma *class names*, so their colours come from
   `00-tokens.css` and follow the theme in both schemes. This needs no `markup.highlight`
   configuration — the theme asks for classes per block, overriding Hugo's default of a palette baked
