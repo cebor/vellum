@@ -35,7 +35,14 @@
 
    The 24-row geometry, the title bar height and the button sizes are this
    component's own geometry — a terminal is measured in rows and characters — so
-   they are literals at their point of use, the exception 00-tokens.css allows. */
+   they are literals at their point of use, the exception 00-tokens.css allows.
+   The four on .term below are the one group that is not: the title bar's
+   padding, the gap between the lights, where they end and the title's inset are
+   the same measurement read four times. Written out as literals it was three
+   copies — 76px centred, 78px narrow, 66px in a comment — and they drifted the
+   moment the coarse-pointer block moved the gap under them. A literal is allowed where
+   a number belongs to one declaration; where a second declaration has to agree
+   with it, it is named. */
 
 /* The window sits on the reading column, sharing its left edge with the title
    block, the buttons and every card below it. It was briefly pulled out to the
@@ -55,6 +62,35 @@
        person's half of the page, and the 3xl break belongs under that — the
        same rhythm .profile-views keeps. */
     margin-bottom: var(--space-xl);
+
+    /* The title bar's geometry, named because three declarations have to agree
+       about it and, written out, did not. The lights are 3 x 12px with two
+       gaps, inset from the bar's edge by --term-bar-pad; .term__title is
+       positioned across that same box and has to start clear of them — centred
+       above 40rem, left-aligned below it.
+
+       Every one of those numbers was a literal: 76px in the centred rule, 78px
+       in the narrow one, and 66px in a comment explaining the 78. All three were
+       the fine-pointer sum and all three were correct. Then the coarse-pointer
+       block doubled the gap to give the buttons a real hit box — which moved the
+       lights 16px right and left every restatement of where they end behind.
+       Measured, the title text cleared the last light by 12px with a fine
+       pointer and ran 4px *under* it with a coarse one, at every width up to
+       640px: on every phone, on the demo page this feature exists to show, the
+       bar read "(o)(o)(o)our-name — -zsh — 36x13". That is the
+       picture-of-a-window failure the head of this file argues the whole
+       component must avoid, and it had been drawing it.
+
+       Derived, it cannot reopen. Move the gap and both insets move with it,
+       because neither rule below is allowed to say where the lights end. */
+    --term-bar-pad: 14px;
+    --term-light-gap: 8px;
+    /* Where the rightmost light ends, measured from the bar's padding box —
+       which is also the box .term__title is absolutely positioned in, so the
+       two are directly comparable. */
+    --term-lights-end: calc(var(--term-bar-pad) + 12px * 3 + var(--term-light-gap) * 2);
+    /* 12px of air between that and the first glyph of the title. */
+    --term-title-inset: calc(var(--term-lights-end) + 12px);
 }
 
 /* --- the window ---------------------------------------------------------- */
@@ -87,7 +123,7 @@
     display: flex;
     align-items: center;
     height: 28px;
-    padding-inline: 14px;
+    padding-inline: var(--term-bar-pad);
     background: var(--surface);
     border-bottom: var(--line-thin) solid var(--rule);
     user-select: none;
@@ -110,7 +146,7 @@
    symmetrically, so it stays centred on the window with the lights gone. */
 .term__lights {
     display: none;
-    gap: 8px;
+    gap: var(--term-light-gap);
     z-index: 1;
 }
 
@@ -234,7 +270,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding-inline: 76px;
+    padding-inline: var(--term-title-inset);
 }
 
 /* --- the screen ---------------------------------------------------------- */
@@ -575,12 +611,32 @@
 }
 
 @media (max-width: 40rem) {
-    /* The buttons end at 66px; the title starts clear of them rather than
-       against the green one. Left-aligned, because a bar this narrow has no
-       centre left to speak of once the buttons have taken their end of it. */
+    /* Left-aligned, because a bar this narrow has no centre left to speak of
+       once the buttons have taken their end of it. It still has to start clear
+       of them rather than against the green one, and this is the rule that
+       decides whether it does: above 40rem the bar is wide enough that a
+       centred title never reaches its own padding, so the base rule's inset is
+       never the one under test. Here it always is.
+
+       It read `padding-inline: 78px 14px`, over a comment saying "the buttons
+       end at 66px" — true with a fine pointer and false with a coarse one,
+       where the gap doubles for the hit boxes and they end at 82px. So the
+       title ran 4px under the rightmost light at every width up to 640px: on
+       every phone, on the demo page this feature exists to show. Same number,
+       third copy, and the copy that mattered. */
     .term__title {
-        padding-inline: 78px 14px;
+        padding-inline: var(--term-bar-pad);
         text-align: start;
+    }
+
+    /* The inset clears the lights, so it is owed only where there are lights:
+       .term__lights is hidden until the pre-paint script sets .js, and a
+       start-aligned title carrying 94px of left padding against three buttons
+       that are not drawn is the same indent with nothing on the other end of
+       it. The centred rule above needs no such gate — symmetric padding with
+       the lights gone is still centred, which is what its own comment says. */
+    .js .term__title {
+        padding-inline: var(--term-title-inset) var(--term-bar-pad);
     }
 
     .js .term__scroll {
@@ -652,8 +708,13 @@
         transform: translate(-50%, -50%);
     }
 
-    .term__lights {
-        gap: 16px;
+    /* Redeclared on the component root, not on .term__lights, so
+       --term-title-inset recomputes with it and the title keeps clearing the
+       buttons it just moved. Set here and the custom property would resolve
+       against .term__lights alone, which is the drift this token exists to
+       stop. */
+    .term {
+        --term-light-gap: 16px;
     }
 
     .term__cmd {

@@ -515,7 +515,22 @@ dot is unchanged. Not `--tap-target`: their centres are 28px apart, so a 44px bo
 would overlap its neighbour and hand it the tap, and opening the gap enough to clear
 44px would pull a 28px title bar apart until it stopped being one. Three painted
 dots that do nothing would make the whole component the costume the rest of this
-theme refuses. The window spans the sheet's full width, so the size in its title
+theme refuses.
+
+**That hit box is also what broke the title, and the repair is the rule rather
+than the pixel.** Widening the gap moved the lights 16px right, and where they
+end was written out as a literal in three places — `76px` in the centred title
+rule, `78px` in the narrow one, and `66px` in the comment explaining the `78`.
+All three were correct for a fine pointer and none of them followed. Measured,
+the title text cleared the last light by 12px with a fine pointer and ran 4px
+*under* it with a coarse one, at every width up to 640px: on every phone, the bar
+read `(o)(o)(o)our-name — -zsh`. A window whose title is under its own buttons is
+the same failure as one naming a size it does not have, drawn on the page that
+exists to show the feature. `--term-lights-end` now states it once and both
+insets derive from it, so no rule below is allowed to say where the lights end.
+This is `--nav-mark-drop`'s lesson a second time, in the component that had not
+had it applied: **a number two declarations must agree about is named, even where
+a one-off component geometry would otherwise be a literal at its point of use.** The window spans the sheet's full width, so the size in its title
 bar is **measured rather than stated** — the script reads the real column and row
 count out of the box and re-reads it on resize and once the fonts settle. A
 window that names a size it does not have is the same failure as a rail lettering
