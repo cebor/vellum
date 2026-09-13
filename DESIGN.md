@@ -521,6 +521,22 @@ count out of the box and re-reads it on resize and once the fonts settle. A
 window that names a size it does not have is the same failure as a rail lettering
 an empty field.
 
+**The emulation stops where the browser's own contract begins, and that boundary
+is a rule rather than a concession.** A shell owns its keys; a page does not own
+the reader's. Three of them were taken unconditionally and two of those cost the
+reader something the window could not give back.
+
+`Tab` is the serious one: a shell completes on it, and completing on it *always*
+meant the input could not be left. Measured, `Tab` twenty-six times, `Shift+Tab`
+and `Escape` all returned focus to the same input — so a reader who arrived here
+by keyboard could no longer reach the footer, the nav or the language switch, on
+the whole sheet and not merely in the window. WCAG 2.1.2 allows a non-standard
+exit if the reader is told what it is; there was none to tell them about. So
+completion now takes `Tab` only where there is a stem to complete, and never
+backwards: `Shift+Tab` is always the way out, and on an empty prompt so is `Tab`,
+which costs only the listing that `help` already prints and the window's first
+line already points at.
+
 **All three of those claims are conditional on JavaScript, and the sheet now says
 so rather than assuming it.** The buttons' handlers all live in one map, so
 without a script they painted and did nothing — the costume the paragraph above

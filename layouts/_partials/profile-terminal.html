@@ -497,6 +497,23 @@
                     if (cursor < past.length - 1) { cursor++; input.value = past[cursor]; }
                     else { cursor = past.length; input.value = ""; }
                 } else if (event.key === "Tab") {
+                    /* Completion may take this key only where there is something
+                       to complete, and never backwards. Taken unconditionally it
+                       was a keyboard trap in the WCAG 2.1.2 sense and in the
+                       plain one: measured, Tab x26, Shift+Tab and Escape all left
+                       focus on this input, so a reader who arrived here by
+                       keyboard could not reach the footer, the nav or the
+                       language switch again without a pointer. That is the window
+                       taking the whole sheet hostage, not a rough edge in an
+                       optional component.
+
+                       Shift+Tab is always the way back — a shell has no backward
+                       completion for it to mean anything else. Forward, an empty
+                       prompt is the other exit: there is no stem, so the only
+                       thing completion could do is list every command, which
+                       `help` already does and the window's own first line already
+                       points at. With a stem typed, Tab completes as before. */
+                    if (event.shiftKey || !input.value.trim()) return;
                     event.preventDefault();
                     var stem = input.value.trim();
                     var all = order.concat(Object.keys(builtins));
