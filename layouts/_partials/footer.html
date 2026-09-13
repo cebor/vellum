@@ -56,15 +56,48 @@
 
             relabel();
 
+            // Both palettes land at once or the sheet repaints in two passes —
+            // see .is-theme-switching in 10-base.css for what that looks like
+            // and what it measures. The class goes on, the current style is
+            // flushed so the suppression is actually live, the scheme flips,
+            // the new palette is flushed under it, and the class comes off:
+            // no transition is ever started, so there is none to remove.
+            var snap = function (change) {
+                root.classList.add("is-theme-switching");
+                void root.offsetWidth;
+                change();
+                void root.offsetWidth;
+                root.classList.remove("is-theme-switching");
+            };
+
             toggle.addEventListener("click", function () {
-                root.dataset.theme = isDark() ? "light" : "dark";
+                snap(function () {
+                    root.dataset.theme = isDark() ? "light" : "dark";
+                });
                 try { localStorage.setItem("pref-theme", root.dataset.theme); } catch (e) { }
                 relabel();
             });
 
             // On "auto" the scheme follows the OS, so the label has to follow it
             // too — otherwise the button offers to switch to the mode it is in.
-            media.addEventListener("change", relabel);
+            //
+            // The palette changes without passing through the button here, so
+            // snap() has nothing to wrap, and the class cannot be got in front
+            // of the change: measured, the ground moves a frame before the
+            // event is dispatched, which is the browser's ordering and not
+            // something script can reach around. What the class still does is
+            // cancel the fade that has already started, so the mismatch is one
+            // frame instead of the whole 140ms. Two frames to take it off
+            // again — a single rAF still runs before the paint it must follow.
+            media.addEventListener("change", function () {
+                root.classList.add("is-theme-switching");
+                requestAnimationFrame(function () {
+                    requestAnimationFrame(function () {
+                        root.classList.remove("is-theme-switching");
+                    });
+                });
+                relabel();
+            });
         }
 
         var top = document.getElementById("top-link");

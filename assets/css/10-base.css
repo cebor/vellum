@@ -368,3 +368,24 @@ abbr[title] {
         scroll-behavior: auto !important;
     }
 }
+
+/* A scheme change is not an animation, and left alone it renders as one badly.
+   No surface transitions its background, so the ground changes in a single
+   frame while every colour that does carries its 140ms fade across it — for
+   the length of that fade the ink is the old scheme's on the new scheme's
+   paper. Measured on the wordmark, which is the largest thing on the sheet
+   still holding the old value: 1.02:1 going dark, 1.09:1 coming back, under
+   4.5:1 for about 40ms. Not a flash of the wrong colour but of no colour.
+
+   So the toggle hangs this on <html>, flushes it, flips the scheme and flushes
+   that too, all before its handler yields — the palette then lands the way the
+   ground already did. !important for the same reason the reset above needs it:
+   this has to beat each component's own transition shorthand whatever its
+   specificity, and a scheme change is the one moment where a component's
+   preference is not the reader's. */
+.is-theme-switching,
+.is-theme-switching *,
+.is-theme-switching *::before,
+.is-theme-switching *::after {
+    transition: none !important;
+}

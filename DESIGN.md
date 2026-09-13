@@ -630,6 +630,15 @@ One transition token (`--transition: 140ms`), used for colour and border changes
 animations, no scroll effects. `prefers-reduced-motion: reduce` collapses every duration; smooth
 scrolling is behind `prefers-reduced-motion: no-preference` in the first place.
 
+**A scheme change is exempt, and that is a contrast rule rather than a taste one.** Nothing transitions
+its background, so the ground changes in one frame while every colour that does fades across it for
+140ms — the old scheme's ink on the new scheme's paper, which measures 1.02:1 on the wordmark going
+dark and 1.09:1 coming back. The toggle therefore suppresses transitions for the length of the flip
+(`.is-theme-switching`), so both palettes land in the same frame the way the ground already does. The
+one path this cannot cover is the OS switching under `data-theme="auto"`: the event arrives a frame
+after the ground has moved, so the suppression cancels the fade rather than preventing it, and the
+mismatch lasts one frame instead of 140ms.
+
 ## Print
 
 A drawing sheet is a printed artefact, so printing is not an afterthought. `95-print.css` forces the
