@@ -764,7 +764,12 @@ travel with it or ship to every site that has no terminal. Nothing between the t
    Every standalone control clears `--tap-target` there; the exceptions are `.term__cmd`,
    `.term__input`, the window buttons, the "Hugo" link in the footer line and `.title-block__value a`,
    each argued at its own declaration. A link inside a sentence is exempt and a link that is its own
-   row is not — the test is the element, not the file it is in. **Applying the rule to the control
+   row is not — the test is the element, not the file it is in. **A field's value is a third case and
+   the wording above used to swallow it**: a title-block value is not a control row even when it holds
+   a single link and nothing else, because the row is the field and the link is what the field states.
+   Read literally, the sentence said the Also-in row's lone translation link should be raised while
+   the Subject row's tags beside it should not, which would have put two different row heights in one
+   ruled instrument to satisfy a minimum WCAG already clears there by spacing. **Applying the rule to the control
    that opens a thing is not applying it to the thing.** `.toc__summary` cleared 44px while every
    entry under it sat at its 16px line box, and the card title — the one link a reader is aiming at on
    the home page, every section list, every tag page and the 404 — sat at 24px while
