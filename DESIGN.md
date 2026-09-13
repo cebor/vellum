@@ -537,6 +537,22 @@ backwards: `Shift+Tab` is always the way out, and on an empty prompt so is `Tab`
 which costs only the listing that `help` already prints and the window's first
 line already points at.
 
+`Ctrl+C` is the same shape one step smaller. Taken always, it suppressed the
+browser's own copy — measured, the document fired a `copy` event with focus on a
+window button and none with focus in the input, which is the state a click
+anywhere in the window body puts the reader in. Selecting a command out of a
+transcript and taking it is the single most likely thing a reader wants from a
+terminal on a page, this theme's subject is terminal output, and there is no
+`Ctrl+Shift+C` here to fall back on. It now sends SIGINT only when nothing is
+selected — the rule a real terminal applies too, and the same test the window
+already used to decide not to steal the caret on a click.
+
+`Ctrl+L` keeps its binding. It is the weakest of the three and worth stating as a
+decision rather than an oversight: it takes a browser shortcut, but it takes one
+whose loss is recoverable in the same keystroke it was pressed with, and `clear`
+is reachable by typing it. The line is not "never take a key" — it is that a key
+may be taken only where the reader is not left without the thing it did.
+
 **All three of those claims are conditional on JavaScript, and the sheet now says
 so rather than assuming it.** The buttons' handlers all live in one map, so
 without a script they painted and did nothing — the costume the paragraph above

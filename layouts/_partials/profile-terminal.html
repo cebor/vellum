@@ -524,6 +524,17 @@
                         print(hits.join("  "));
                     }
                 } else if (event.ctrlKey && (event.key === "c" || event.key === "C")) {
+                    /* SIGINT, unless something is selected — which is the rule a
+                       real terminal applies too, and the same test the click
+                       handler below already uses to decide not to steal the
+                       caret. Taken unconditionally it suppressed the browser's
+                       own copy: measured, the document fired one `copy` event
+                       with focus on a window button and none with focus here, so
+                       a reader could select a command out of the transcript and
+                       then had no keyboard way to take it. There is no
+                       Ctrl+Shift+C here to fall back on, and copying a command
+                       out of a terminal is the one thing this page is for. */
+                    if (String(window.getSelection())) return;
                     event.preventDefault();
                     var typed = input.value;
                     input.value = "";
