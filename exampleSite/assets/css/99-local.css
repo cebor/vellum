@@ -10,8 +10,33 @@
 
 /* A parts schedule, not a swatch grid: shared hairlines rather than gaps, so
  * the cells read as ruled fields on the sheet like the title block does.
- * The container draws the top and left rule, each cell the other two. */
-.icon-sheet {
+ *
+ * The closed box is drawn by the container, on all four sides, and the cells
+ * draw only the rules between them. It used to be split -- container top and
+ * left, each cell its own right and bottom -- which closes the box only if
+ * every track is filled, and none of these grids is: fourteen UI glyphs across
+ * six columns leave four empty, and the one-cell sheet that demonstrates the
+ * unknown-name fallback leaves five. What that drew was a top rule running off
+ * into nothing with no bottom and no right edge under it -- an open frame on a
+ * page whose whole argument is that this theme rules a sheet properly.
+ *
+ * The cells' rules are pulled back onto the box with a negative end margin, so
+ * the last column's right rule and the last row's bottom rule land *on* the
+ * container's border rather than beside it. Same colour, so the overlap is
+ * invisible; adjacent, the two hairlines would read as one 2px rule down the
+ * right-hand edge. This is the only form that survives a ragged last row
+ * without knowing how many columns the viewport gave us.
+ *
+ * Written with `.content` in front of it because the theme indents prose lists
+ * with `.content ul { padding-inline-start: var(--space-lg) }`, and one class
+ * does not outrank that however late this file lands in the cascade. A bare
+ * `.icon-sheet { padding: 0 }` therefore never applied: 24px of unruled space
+ * sat inside the box ahead of the first track, so the first column read wider
+ * than the other five and every horizontal rule -- each one drawn by a cell,
+ * and every cell starting after the padding -- stopped 24px short of the
+ * left-hand edge instead of closing on it. This grid is not a prose list, and
+ * the selector now says so. */
+.content .icon-sheet {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
     /* A one-off component geometry: 7.5rem is what fits the longest name
@@ -21,15 +46,24 @@
     margin: var(--space-lg) 0;
     padding: 0;
     list-style: none;
-    border-top: var(--line-thin) solid var(--rule);
-    border-left: var(--line-thin) solid var(--rule);
+    border: var(--line-thin) solid var(--rule);
 }
 
-.icon-sheet__item {
+/* Two classes deliberately, and for the same reason the name below needs them:
+ * `.content li + li` gives every prose list item a 4px top margin, which
+ * outranks a single class however late this file lands in the cascade. In a
+ * ruled grid that margin is not rhythm, it is a defect -- it applied to every
+ * cell except the first, so the first cell's glyph sat 4px above its row-mates
+ * and stretched its row 4px taller than the rest of the sheet. Spacing between
+ * these fields is the rule between them; there is nothing for a margin to do. */
+.icon-sheet .icon-sheet__item {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: var(--space-xs);
+    margin: 0;
+    margin-inline-end: calc(var(--line-thin) * -1);
+    margin-block-end: calc(var(--line-thin) * -1);
     padding: var(--space-md) var(--space-2xs);
     border-right: var(--line-thin) solid var(--rule);
     border-bottom: var(--line-thin) solid var(--rule);
@@ -46,7 +80,12 @@
 /* Two classes deliberately: the theme styles inline code as a chip with
  * `.content code`, which outranks a single class however late this file lands
  * in the cascade. Here the cell is the field the name sits in, so a second
- * field drawn around the name is one box too many. */
+ * field drawn around the name is one box too many.
+ *
+ * That meant the chip's border and corner radius as much as its background,
+ * and only the background and padding were being switched off -- so every name
+ * kept a hairline box, and with the padding gone it closed right onto the
+ * glyphs, tighter and louder than the prose chip it came from. */
 .icon-sheet .icon-sheet__name {
     font-size: var(--step--2);
     line-height: var(--line-height-snug);
@@ -54,8 +93,10 @@
     text-align: center;
     overflow-wrap: anywhere;
     /* The name is the string you type into socialIcons, so it is set as code
-     * and carries no background of its own -- the cell is the field. */
+     * and carries no field of its own -- the cell is the field. */
     background: none;
+    border: 0;
+    border-radius: 0;
     padding: 0;
 }
 
