@@ -9,6 +9,55 @@ the format they follow is in [`CONTRIBUTING.md`](CONTRIBUTING.md). Only changes 
 can see are listed — refactors, documentation, CI and build chores are not. Releases up to 0.1.2
 predate the generated format and were written by hand.
 
+## [0.3.2](https://github.com/cebor/vellum/compare/v0.3.1...v0.3.2) - 2026-09-15
+
+### Added
+
+- **partials:** accept an SVG as the profile image (9d36bd0)
+
+### Fixed
+
+- **a11y:** declare the language of the switcher's link text (be2c66e)
+- **a11y:** name the table of contents landmark (4425618)
+- **a11y:** announce the theme toggle's resulting state (b57f4bb)
+- **css:** break a long word instead of widening the sheet (516c715)
+- **a11y:** raise the zone rail's marks to the touch minimum (68ea6c8)
+- **css:** span a marked code line's band across the whole block (58bf595)
+- **a11y:** bake every fill that carries text opaque (ff49c9a)
+- **a11y:** raise the remaining standalone touch targets to the minimum (9be2001)
+- **a11y:** give the terminal's window buttons a real hit box (99732aa)
+- **print:** set one dim grey on paper (9689bed)
+- **css:** set figure captions in the reading face on a measure (d36c8b1)
+- **shortcodes:** reserve an in-text image's box before it loads (d7c97e1)
+- **a11y:** guard the terminal's focus ring behind :has() support (c71a140)
+- **partials:** measure a vector so its box is reserved before it loads (c0613dd)
+- **a11y:** raise the contents entries and card titles to 44px (05a70a2)
+- **search:** say both numbers once the rendered list is capped (e7355cd)
+- **a11y:** announce the copy control's outcome and name each button (db330d7)
+- **a11y:** report what the terminal's window controls did (53caa9c)
+- **a11y:** let any key in the window cut the terminal's reveal short (e9e23fd)
+- **a11y:** hide the terminal's window controls until JavaScript has run (cab2dca)
+- **a11y:** hide the search field until JavaScript has run (91b2472)
+- **partials:** take the avatar's height from the resized file (3c27c44)
+- **css:** stop an unbreakable word widening the sheet (948e129)
+- **a11y:** name each post card so repeated landmarks differ (47ba982)
+- **a11y:** outline the terminal's window buttons in forced colours (8117dfb)
+- **print:** keep the title block and a fence's border off a page break (50be63d)
+- **a11y:** land an anchor clear of the header at every width (bb40461)
+- **a11y:** move focus into main when the skip link is used (22cdb01)
+- **css:** break the narrow header by kind, not by wrap order (25e7215)
+- **a11y:** suppress transitions for the length of a scheme change (2d72bed)
+- **a11y:** free the keyboard focus trapped in the terminal input (5feb159)
+- **a11y:** let Ctrl+C copy a selection in the terminal (055856e)
+- **css:** keep the terminal title clear of the window lights on touch (0423cbf)
+- **a11y:** announce the new window on every external link (9737643)
+
+### Performance
+
+- **search:** drop includeMatches from the Fuse defaults (c5e55ff)
+- **search:** cap the rendered result list at 50 (f6b9155)
+- **partials:** batch the zone rail's reads and throttle its resize (53bccde)
+
 ## [0.3.1](https://github.com/cebor/vellum/compare/v0.3.0...v0.3.1) - 2026-09-08
 
 ### Fixed
