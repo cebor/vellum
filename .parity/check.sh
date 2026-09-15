@@ -18,6 +18,29 @@
 #   .parity/check.sh HEAD~3       # working tree vs three commits back
 #   .parity/check.sh v0.1.2       # working tree vs a tag — what users install
 #
+#   .parity/check.sh v0.3.1 --accept-lost images/profile_hu_HASH.webp
+#
+# --accept-lost names one path, in the normalised form printed below, that this
+# run is expected to lose and that is known not to be a moved URL. Repeatable.
+# The case it exists for is a path that only exampleSite's own content produced:
+# the demo swapped its profile.png for an SVG, so it stopped emitting the resized
+# rasters of a file it no longer has, while `profile.html`'s raster branch — and
+# therefore every consuming site with a raster profile — is untouched. This
+# script compares built file lists and cannot tell those two apart; it was never
+# able to. The flag is where a human says which one it is.
+#
+# It is typed on the command line, for one run, and is the whole reason this is
+# not the checked-in baseline the note above forbids. Nothing is written, nothing
+# outlives the invocation, and a path named here that the run did *not* lose
+# fails the run — so a waiver cannot quietly sit in a release invocation after
+# the delta it was written for has gone, covering the next path that goes for
+# real. Not being able to say it had gone stale is exactly what was wrong with
+# the frozen fixtures.
+#
+# A path is matched against the normalised line, so one --accept-lost covers
+# every occurrence of it. The profile case emits two, one per language, which
+# normalise to the same string.
+#
 # exampleSite is the reference site deliberately: it is the only site in this
 # repo, it is what CI builds, and it exercises both languages, the taxonomy, the
 # archive, the search index and a page bundle. A path it does not cover is a
@@ -25,7 +48,28 @@
 # be exercised belongs in exampleSite anyway.
 set -u
 
-REF="${1:-HEAD}"
+REF=""
+ACCEPT=""
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --accept-lost)
+            [ $# -ge 2 ] || { echo "--accept-lost needs a path" >&2; exit 2; }
+            ACCEPT="$ACCEPT$2
+"
+            shift 2 ;;
+        --accept-lost=*)
+            ACCEPT="$ACCEPT${1#--accept-lost=}
+"
+            shift ;;
+        -h|--help) sed -n '2,45p' "$0"; exit 0 ;;
+        -*) echo "unknown argument: $1" >&2; exit 2 ;;
+        *)  [ -z "$REF" ] || { echo "only one ref: already have $REF" >&2; exit 2; }
+            REF="$1"; shift ;;
+    esac
+done
+REF="${REF:-HEAD}"
+
 ROOT="$(cd "$(dirname "$0")/.." && pwd)" || exit 1
 
 command -v hugo >/dev/null || { echo "hugo not on PATH"; exit 2; }
@@ -89,19 +133,57 @@ norm() {
 lost=$(LC_ALL=C comm -23 <(norm "$BASE_OUT") <(norm "$CAND_OUT"))
 added=$(LC_ALL=C comm -13 <(norm "$BASE_OUT") <(norm "$CAND_OUT"))
 
+# Split the losses against what was waived on the command line, and keep track
+# of which waivers were used: an unused one is a failure in its own right, for
+# the reason given at the head of this file.
+unexpected=""; waived=""; stale=""
+
+while IFS= read -r p; do
+    [ -n "$p" ] || continue
+    if printf '%s' "$ACCEPT" | grep -qxF -- "$p"; then
+        waived="$waived$p
+"
+    else
+        unexpected="$unexpected$p
+"
+    fi
+done <<EOF
+$lost
+EOF
+
+while IFS= read -r a; do
+    [ -n "$a" ] || continue
+    printf '%s' "$waived" | grep -qxF -- "$a" || stale="$stale$a
+"
+done <<EOF
+$ACCEPT
+EOF
+
 short=$(git -C "$ROOT" rev-parse --short "$REF")
 echo "### $REF ($short) → working tree, via exampleSite"
 
-if [ -n "$lost" ]; then
+if [ -n "$unexpected" ]; then
     echo "### PATHS LOST — rsync --delete would remove these from a live site:"
-    echo "$lost" | sed 's/^/    /'
+    printf '%s' "$unexpected" | sed 's/^/    /'
 else
     echo "### ok: no paths lost"
 fi
+
+[ -n "$waived" ] && {
+    echo "### accepted by --accept-lost, lost on purpose:"
+    printf '%s' "$waived" | sed 's/^/    /'
+}
+
+[ -n "$stale" ] && {
+    echo "### --accept-lost named a path this run did not lose:"
+    printf '%s' "$stale" | sed 's/^/    /'
+    echo "    The waiver has outlived its delta. Drop it — left in place it would"
+    echo "    cover the next path that goes for real."
+}
 
 [ -n "$added" ] && { echo "### new paths (fine, informational):"; echo "$added" | sed 's/^/    /'; }
 
 # Builds are left in .parity/base and .parity/cand for inspection; both are
 # regenerated on the next run.
-[ -n "$lost" ] && exit 1
+{ [ -n "$unexpected" ] || [ -n "$stale" ]; } && exit 1
 exit 0

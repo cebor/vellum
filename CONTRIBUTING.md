@@ -25,7 +25,11 @@ Before you commit:
   its `RelPermalink`, so tidying up a loop like the font walk in `_partials/head-assets.html` stops
   publishing files that only CSS references — and `hugo server`, reading from the source directory,
   keeps serving them, so nothing looks wrong until production. Run `.parity/check.sh [ref]` and quote
-  the result in the commit body.
+  the result in the commit body. Where a path goes because `exampleSite` changed its own content
+  rather than because a template moved a URL, name it with `--accept-lost <path>` for that one run
+  and say in the commit body why it is not a moved URL — the check compares built file lists and
+  cannot tell the two apart. A path named there that the run did not lose fails the run, so the
+  waiver cannot outlive its delta.
 - `assets/css/` is concatenated in filename order, so the numeric prefix *is* the cascade position.
   Colors, sizes, spacings and durations belong in `00-tokens.css` and nowhere else.
 

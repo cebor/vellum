@@ -20,6 +20,13 @@
 #   --yes                   skip the confirmation prompt
 #   --allow-unconventional  release even though some commits are unparseable
 #   --allow-empty           release even though nothing user-visible changed
+#   --accept-lost <path>    a path the parity check is expected to lose; repeatable
+#
+# --accept-lost is forwarded to .parity/check.sh; see the note at its head for
+# what it is for and why naming a path there for one run is not the checked-in
+# baseline that script forbids. It is not a way past a red check: a path named
+# here that the run did not actually lose fails the run, so the flag cannot be
+# left in a release invocation after the delta it was written for is gone.
 #
 # Exit status: 0 released, 1 a check failed, 2 usage or environment error.
 set -u
@@ -28,19 +35,25 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)" || exit 2
 cd "$ROOT" || exit 2
 
 DRY=0; YES=0; EDIT=0; ALLOW_UNCONV=0; ALLOW_EMPTY=0; WANT=""
+ACCEPT=()
 
-for arg in "$@"; do
-    case "$arg" in
+while [ $# -gt 0 ]; do
+    case "$1" in
         --dry-run)              DRY=1 ;;
         --edit)                 EDIT=1 ;;
         --yes|-y)               YES=1 ;;
         --allow-unconventional) ALLOW_UNCONV=1 ;;
         --allow-empty)          ALLOW_EMPTY=1 ;;
-        major|minor|patch)      WANT="$arg" ;;
-        [0-9]*.[0-9]*.[0-9]*|v[0-9]*.[0-9]*.[0-9]*) WANT="${arg#v}" ;;
-        -h|--help)              sed -n '2,24p' "$0"; exit 0 ;;
-        *) echo "unknown argument: $arg" >&2; exit 2 ;;
+        --accept-lost)
+            [ $# -ge 2 ] || { echo "--accept-lost needs a path" >&2; exit 2; }
+            ACCEPT+=(--accept-lost "$2"); shift ;;
+        --accept-lost=*)        ACCEPT+=(--accept-lost "${1#--accept-lost=}") ;;
+        major|minor|patch)      WANT="$1" ;;
+        [0-9]*.[0-9]*.[0-9]*|v[0-9]*.[0-9]*.[0-9]*) WANT="${1#v}" ;;
+        -h|--help)              sed -n '2,32p' "$0"; exit 0 ;;
+        *) echo "unknown argument: $1" >&2; exit 2 ;;
     esac
+    shift
 done
 
 step() { printf '\n==> %s\n' "$*"; }
@@ -205,7 +218,10 @@ step "URL parity against $LAST_TAG"
 # The binding commitment: consuming sites deploy with `rsync --delete`, so a
 # path this build stopped emitting is a live 404 on every site that upgrades.
 # check.sh builds both sides, so a green run is also proof the theme compiles.
-.parity/check.sh "$LAST_TAG" || fail "URL parity failed — see the lost paths above; a release cannot take those away silently"
+# The empty-array expansion is the portable form: a bare "${ACCEPT[@]}" is an
+# unbound variable under `set -u` on bash before 4.4, which is what macOS ships.
+.parity/check.sh "$LAST_TAG" ${ACCEPT[@]+"${ACCEPT[@]}"} \
+    || fail "URL parity failed — see the lost paths above; a release cannot take those away silently"
 
 # ------------------------------------------------------------------ release
 
