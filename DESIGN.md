@@ -157,7 +157,8 @@ one that carries an appearance is not.**
 
 ## Type
 
-Two self-hosted variable faces, subset to latin and latin-ext, `font-display: swap`.
+Two self-hosted variable faces, subset to latin and latin-ext, `font-display: swap`. JetBrains Mono
+adds a third subset for arrows, box drawing and block elements, so a pasted TUI keeps its columns.
 
 **Archivo** carries a width axis as well as a weight axis, so one file supplies both voices the sheet
 needs. That axis is doing real work, not decoration:

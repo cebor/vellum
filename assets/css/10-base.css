@@ -77,6 +77,19 @@
         U+A720-A7FF;
 }
 
+/* Arrows, box drawing, block elements and geometric shapes — the glyphs a
+   pasted TUI or tree diagram is built from. Neither Google subset carries
+   them, so they fell back to a system face with a different advance and the
+   columns stopped lining up. U+2191 and U+2193 stay with the latin face. */
+@font-face {
+    font-family: "JetBrains Mono";
+    src: url("../fonts/jetbrains-mono-symbols.woff2") format("woff2-variations");
+    font-weight: 400 700;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+2190, U+2192, U+2194-21FF, U+2500-25FF;
+}
+
 *,
 *::before,
 *::after {

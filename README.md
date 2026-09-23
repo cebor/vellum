@@ -915,7 +915,9 @@ Two self-hosted variable faces, subset to latin and latin-ext, preloaded, `font-
   reading face and the narrow tracked lettering the title blocks and labels are set in. A matching
   italic ships too, fetched only when a page actually sets italic text.
 - **JetBrains Mono** (SIL OFL) for code, figures and tabular numerals. No italic: syntax comments are
-  separated by colour instead, so a code block never pulls a second mono file.
+  separated by colour instead, so a code block never pulls a second mono file. A third, 4 KB subset
+  carries arrows, box drawing and block elements, so a pasted TUI or tree diagram keeps its columns;
+  it is fetched only by a page that uses one of them.
 
 Together they are ~121 KB on first load and cached thereafter — a deliberate trade for a theme whose
 subject is code. To fall back to system stacks, drop the `@font-face` blocks in `10-base.css` and the
