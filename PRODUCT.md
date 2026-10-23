@@ -175,7 +175,7 @@ third-party requests, with fonts self-hosted and Fuse.js bundled.
 
 - **Name: Vellum.** Author of record: Felix Itzenplitz. MIT licence, with Fuse.js (Apache-2.0),
   Archivo and JetBrains Mono (SIL OFL-1.1) and Simple Icons paths (CC0) bundled.
-- **Voice: exact, and it states the reason.** The README and CLAUDE.md both explain *why* a rule
+- **Voice: exact, and it states the reason.** The README and AGENTS.md both explain *why* a rule
   exists ("Goldmark's `unsafe` is off, so a raw `<details>` is stripped — this is the only way to get
   one") rather than issuing it. Warnings name the actual failure mode, including the quiet ones. No
   marketing register, no exclamation, no hedging.

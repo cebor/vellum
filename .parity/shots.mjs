@@ -92,7 +92,7 @@ const viewports = [
 ];
 
 /* The four tracked PNGs under images/, which until now were cut by hand from a
- * review round — CLAUDE.md said to regenerate them "the way shots.mjs takes its
+ * review round — AGENTS.md said to regenerate them "the way shots.mjs takes its
  * shots", which this script could not actually do: it only ever wrote 1280x900
  * fullPage frames into a gitignored directory.
  *

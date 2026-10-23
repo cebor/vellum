@@ -1,4 +1,4 @@
-# CLAUDE.md
+# AGENTS.md
 
 ## What this is
 
@@ -64,6 +64,10 @@ hugo server -D --source exampleSite --themesDir ../..   # the theme's own demo s
 Hugo extended is required. There are no tests, linters, or package manifests for the theme itself — `.gitlab-ci.yml` builds `exampleSite/` on every branch and publishes it to GitLab Pages from `main`, so that build is the only thing standing between a broken template and the demo. It symlinks the repo root to `exampleSite/themes/vellum` instead of passing `--themesDir`, and takes its `--baseURL` from `CI_PAGES_URL` because the demo is served from a subpath.
 
 If Hugo is installed as a snap, as on this machine, never point `--destination` or `--source` at `/tmp`. A strictly confined snap gets a private `/tmp` of its own: a build written there reports success and lands where nothing outside the snap can read it, and one sourced from there fails to load its mounts. It fails silently — the build output looks normal and only the missing files give it away. Build a throwaway site somewhere under `$HOME` instead (`~/.cache/…`, as `.parity/check.sh` does) or inside the repo.
+
+## Gate
+
+A change is finished when `exampleSite` builds without new warnings, the changed path has been seen working in the built or served demo, and — if it can affect output paths or asset publication — `.parity/check.sh` exits 0. A finished change is **always committed and pushed**: commit to `main` in the format `CONTRIBUTING.md` fixes, then `git push origin main`, without waiting to be asked. A change left uncommitted in the working tree is not finished. `github` is not part of this: it receives commits and tags only through `.release/release.sh`.
 
 ## Design harness
 

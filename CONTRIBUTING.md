@@ -65,7 +65,7 @@ Only these. The type decides whether and where the commit shows up in the change
 | `fix`      | wrong rendering, broken link, missing output, a11y defect    | Fixed             |
 | `perf`     | smaller payload, fewer requests, faster build                | Performance       |
 | `refactor` | same output, different implementation                        | —                 |
-| `docs`     | `README.md`, `CLAUDE.md`, `PRODUCT.md`, `DESIGN.md`, this file | —               |
+| `docs`     | `README.md`, `AGENTS.md`, `PRODUCT.md`, `DESIGN.md`, this file | —               |
 | `build`    | `hugo.toml`, `go.mod`, `theme.toml`, registry fixtures       | —                 |
 | `ci`       | `.gitlab-ci.yml`, `.release/`, `.parity/`, `.impeccable/`    | —                 |
 | `chore`    | anything else with no user-visible effect                    | —                 |
