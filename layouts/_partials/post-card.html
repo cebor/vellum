@@ -42,7 +42,16 @@
                    a touch as well as a mouse, which a title attribute would not
                    have. The string is the button's own accessible name, so AT
                    hears it with the box shut and the box itself is hidden from
-                   AT rather than read a second time. */}}
+                   AT rather than read a second time.
+
+                   `params.ai.hiddenInList` drops the mark from every index —
+                   lists, tags, home, 404 — and leaves the sheet's own stamp
+                   alone, because the post is where the disclosure is owed. Read
+                   from site params only: `$p.Param` would find the post's own
+                   `ai` key first. */}}
+            {{- $aiInList := true }}
+            {{- with site.Params.ai }}{{ if .hiddenInList }}{{ $aiInList = false }}{{ end }}{{ end }}
+            {{- if $aiInList }}
             {{- with partialCached "ai.html" $p $p.RelPermalink }}
             {{- if .on }}
             <span class="post-card__ai">
@@ -52,6 +61,7 @@
                 </button>
                 <span class="post-card__ai-note" aria-hidden="true">{{ i18n "ai_stamp" }}: {{ .label }}</span>
             </span>
+            {{- end }}
             {{- end }}
             {{- end }}
             {{- if $p.Draft }}<span class="draft-badge">{{ i18n "draft" }}</span>{{ end }}

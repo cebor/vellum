@@ -633,7 +633,8 @@ Nine posts across two languages, written to exercise the theme rather than to fi
 States that a post was written with AI assistance. It puts a small stamp beside the post's title —
 the note qualifies the whole sheet, so it is struck on the sheet's name rather than filed as one more
 row of the title block — and the same drawn mark in the index, so a reader sees
-it before opening the post. It follows `hidemeta`: a post that states no metadata states no
+it before opening the post; a site can drop the index mark with `params.ai.hiddenInList`, and the
+stamp on the post stays. It follows `hidemeta`: a post that states no metadata states no
 disclosure either. Hovering or focusing the stamp opens the detail; the detail is also read
 out by a screen reader with the box closed, so nothing is hidden behind a pointer.
 
@@ -659,11 +660,12 @@ ai = "generated"                 # just the level
 | `note` | — | What was done. Free text. |
 | `model` | `params.ai.model` | What it was done with. |
 
-Name the model once for the whole site rather than in every post:
+Site-wide: name the model once rather than in every post, and choose whether the index carries the mark:
 
 ```toml
 [params.ai]
   model = "Claude Opus 5"
+  hiddenInList = false     # true: no mark on post cards in lists, tags, home, 404; the post keeps its stamp
 ```
 
 To mark individual passages instead of the whole post, use the [`ai` shortcode](#ai). A post may do

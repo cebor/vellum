@@ -367,6 +367,13 @@ Markdown funktioniert hier, also auch ein [Link](https://gohugo.io/).
       [languages.de.params.footer]
         text = "Gesetzt als technische Zeichnung. Inhalte unter [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de)."
 
+      # Set for German and deliberately left unset for English. post-card.html
+      # has two branches for the AI mark in the index, and both languages carry
+      # a post with `ai`, so every build renders both: English shows the mark in
+      # lists, German only on the post itself.
+      [languages.de.params.ai]
+        hiddenInList = true
+
     [languages.de.outputs]
       home = ["HTML", "RSS", "JSON"]
 
