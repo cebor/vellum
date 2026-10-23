@@ -63,6 +63,8 @@ hugo server -D --source exampleSite --themesDir ../..   # the theme's own demo s
 
 Hugo extended is required. There are no tests, linters, or package manifests for the theme itself — `.gitlab-ci.yml` builds `exampleSite/` on every branch and publishes it to GitLab Pages from `main`, so that build is the only thing standing between a broken template and the demo. It symlinks the repo root to `exampleSite/themes/vellum` instead of passing `--themesDir`, and takes its `--baseURL` from `CI_PAGES_URL` because the demo is served from a subpath.
 
+If Hugo is installed as a snap, as on this machine, never point `--destination` or `--source` at `/tmp`. A strictly confined snap gets a private `/tmp` of its own: a build written there reports success and lands where nothing outside the snap can read it, and one sourced from there fails to load its mounts. It fails silently — the build output looks normal and only the missing files give it away. Build a throwaway site somewhere under `$HOME` instead (`~/.cache/…`, as `.parity/check.sh` does) or inside the repo.
+
 ## Design harness
 
 - `PRODUCT.md` records what the theme is for and who it is built for first, and marks which of its properties are binding commitments (URL-surface stability, 4.5:1 text contrast) against which are merely true today and may be traded deliberately (no-JavaScript operation, no third-party requests). A change to the latter is not a defect.
