@@ -4,7 +4,7 @@
 with a zone rail down its left edge, and a ruled title block carrying the metadata a grey caption
 line usually mumbles.
 
-[![Hugo](https://img.shields.io/badge/Hugo-%E2%89%A5%200.158%20extended-ff4088?style=flat-square&logo=hugo&logoColor=white)](https://gohugo.io)
+[![Hugo](https://img.shields.io/badge/Hugo-%E2%89%A5%200.158-ff4088?style=flat-square&logo=hugo&logoColor=white)](https://gohugo.io)
 [![Licence](https://img.shields.io/badge/licence-MIT-blue?style=flat-square)](https://github.com/cebor/vellum/blob/main/LICENSE)
 
 <picture>
@@ -212,7 +212,7 @@ change bumps the *minor*, so `v0.3.x` → `v0.4.0` is the step to read carefully
 
 ## Requirements
 
-- **Hugo extended ≥ 0.158.** Lower versions fail at render time, not with a friendly message.
+- **Hugo ≥ 0.158, extended edition below 0.170.** Lower versions fail at render time, not with a friendly message.
 - **Browsers:** Chrome 123+, Safari 17.5+, Firefox 121+ — CSS `light-dark()` sets the first two,
   `:has()` the third. Older browsers get a plain light palette through an `@supports` fallback
   rather than a broken page.

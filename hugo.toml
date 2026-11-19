@@ -11,9 +11,10 @@
 
 [module]
   [module.hugoVersion]
-    # `extended` is the half that could not be declared before. The WebP ladder
-    # in _markup/render-image.html needs it; without the guard a standard build
-    # silently falls back to source-resolution images instead of failing.
+    # `extended` matters only below 0.170, where the WebP ladder in
+    # _markup/render-image.html needs it. From 0.170 there is no extended
+    # edition and Hugo ignores the key; it stays so that a pre-0.170 standard
+    # binary is still flagged. Remove it once Hugo starts warning about it.
     extended = true
     # 0.158 is where site.Language.Locale and .Language.Label arrived, both of
     # which seven templates use unguarded. See layouts/baseof.html.

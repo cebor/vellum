@@ -158,7 +158,7 @@ wrong before:
 | ---------------------------------- | --------------------------------------------------------------------------- |
 | clean tree, on `main`, not behind   | a tag on a checkout that is not what `origin` has                           |
 | the ten `images/` fixtures present and correctly sized | the theme gallery shows a placeholder, and the README's hero and gallery go blank |
-| Hugo extended on `PATH`             | the standard edition builds green and silently drops the WebP ladder         |
+| Hugo ≥ 0.170, or extended below that | a pre-0.170 standard edition builds green and silently drops the WebP ladder |
 | every commit in range parseable     | a change that never appears in the changelog                                 |
 | at least one `feat`/`fix`/`perf`/`revert`, or anything breaking | a version bump nobody can be told the reason for         |
 | `.parity/check.sh` against the last tag | a path the build stopped emitting, deleted from every site on upgrade    |

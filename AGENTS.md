@@ -18,7 +18,7 @@ The demo carries a `docs/` section (`exampleSite/content/{en,de}/docs/`), and th
 
 ## Structure
 
-Requires Hugo extended ≥ 0.158 — `site.Language.Locale` and `.Language.Label` are used unguarded in seven templates and neither exists before that, so a lower version fails at render time, not with the version guard's message. Uses Hugo's flat layout structure: templates directly in `layouts/` (`baseof.html`, `home.html`, `list.html`, `single.html`, `term.html`, `taxonomy.html`, `archives.html`, `search.html`), partials in `layouts/_partials/`, render hooks in `layouts/_markup/`, shortcodes in `layouts/_shortcodes/`. There is no `layouts/_default/` and no `layouts/partials/` — putting files there silently does nothing.
+Requires Hugo ≥ 0.158, extended edition below 0.170 — `site.Language.Locale` and `.Language.Label` are used unguarded in seven templates and neither exists before that, so a lower version fails at render time, not with the version guard's message. Uses Hugo's flat layout structure: templates directly in `layouts/` (`baseof.html`, `home.html`, `list.html`, `single.html`, `term.html`, `taxonomy.html`, `archives.html`, `search.html`), partials in `layouts/_partials/`, render hooks in `layouts/_markup/`, shortcodes in `layouts/_shortcodes/`. There is no `layouts/_default/` and no `layouts/partials/` — putting files there silently does nothing.
 
 Four render hooks carry behaviour the site depends on, not just styling:
 
@@ -61,7 +61,7 @@ hugo server -D --source exampleSite --themesDir ../..   # the theme's own demo s
 
 `exampleSite/` is the only site in this repo, so it is what every change is tested against; content that a template needs in order to be exercised has to be added there.
 
-Hugo extended is required. There are no tests, linters, or package manifests for the theme itself — `.gitlab-ci.yml` builds `exampleSite/` on every branch and publishes it to GitLab Pages from `main`, so that build is the only thing standing between a broken template and the demo. It symlinks the repo root to `exampleSite/themes/vellum` instead of passing `--themesDir`, and takes its `--baseURL` from `CI_PAGES_URL` because the demo is served from a subpath.
+Hugo ≥ 0.170 is required, or Hugo extended below that. There are no tests, linters, or package manifests for the theme itself — `.gitlab-ci.yml` builds `exampleSite/` on every branch and publishes it to GitLab Pages from `main`, so that build is the only thing standing between a broken template and the demo. It symlinks the repo root to `exampleSite/themes/vellum` instead of passing `--themesDir`, and takes its `--baseURL` from `CI_PAGES_URL` because the demo is served from a subpath.
 
 If Hugo is installed as a snap, as on this machine, never point `--destination` or `--source` at `/tmp`. A strictly confined snap gets a private `/tmp` of its own: a build written there reports success and lands where nothing outside the snap can read it, and one sourced from there fails to load its mounts. It fails silently — the build output looks normal and only the missing files give it away. Build a throwaway site somewhere under `$HOME` instead (`~/.cache/…`, as `.parity/check.sh` does) or inside the repo.
 

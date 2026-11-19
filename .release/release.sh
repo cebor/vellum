@@ -159,7 +159,9 @@ check_img images/gallery-print-dark.webp 1500x1000
 step "Changelog"
 
 command -v hugo >/dev/null || fail "hugo not on PATH"
-hugo version | grep -q extended || fail "this theme requires Hugo extended"
+# 0.170 dropped the extended edition; every binary since encodes WebP.
+hugo version | awk '{ split(substr($2, 2), v, /[.+-]/) } /extended/ || v[1] > 0 || v[2] >= 170 { ok = 1 } END { exit !ok }' \
+    || fail "this theme requires Hugo 0.170 or later, or Hugo extended below that"
 
 WORK="$(mktemp -d "${TMPDIR:-/tmp}/vellum-release.XXXXXX")" || exit 2
 trap 'rm -rf "$WORK"' EXIT

@@ -113,7 +113,7 @@ revision note at the foot of the sheet, each usable without the other; the `coll
 
 **Hard technical constraints:**
 
-- **Hugo extended ≥ 0.158.** `site.Language.Locale` and `.Language.Label` are used unguarded in seven
+- **Hugo ≥ 0.158, extended edition below 0.170.** `site.Language.Locale` and `.Language.Label` are used unguarded in seven
   templates and exist only from that version; a lower one fails at render time, not with the version
   guard's message.
 - **Browser baseline Chrome 123+ / Safari 17.5+ / Firefox 121+.** `light-dark()` sets the first two

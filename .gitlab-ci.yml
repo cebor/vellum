@@ -11,15 +11,17 @@ stages:
 
 default:
   image:
-    # The official image builds with HUGO_BUILD_TAGS=extended. Its entrypoint is
-    # hugo itself, so it has to be cleared for GitLab to run a shell in it.
+    # The official image is the single Hugo binary (the extended edition was
+    # folded into it in 0.170). Its entrypoint is hugo itself, so it has to be
+    # cleared for GitLab to run a shell in it.
     #
     # Deliberately unpinned. For a theme, "still builds on the Hugo people
     # actually have" is the thing under test, and a pinned tag would hide a
     # breaking Hugo release until someone thought to bump it — the failure would
     # then land on a user rather than on this pipeline. The floor is declared in
-    # hugo.toml's [module.hugoVersion] and enforced by Hugo itself; the extended
-    # half is checked below, because nothing else would catch it.
+    # hugo.toml's [module.hugoVersion] and enforced by Hugo itself; the
+    # pre-0.170 extended requirement is checked below, because nothing else
+    # would catch it.
     name: ghcr.io/gohugoio/hugo
     entrypoint: [""]
 
@@ -42,11 +44,14 @@ variables:
     # a fork under another name would otherwise stop resolving `theme = "vellum"`.
     - mkdir -p exampleSite/themes
     - ln -sfn ../.. exampleSite/themes/vellum
-    # render-image.html encodes its WebP ladder, which the standard edition
-    # cannot do. Without this guard a standard image yields a green pipeline and
-    # a site whose every image silently fell back to the source file.
+    # render-image.html encodes its WebP ladder. Before 0.170 only the extended
+    # edition could, and a standard binary built green with every image silently
+    # fallen back to the source file. 0.170 removed the extended edition and
+    # every binary since encodes WebP, so the version string no longer names it;
+    # the guard therefore only rejects a standard binary older than 0.170.
     - hugo version
-    - hugo version | grep -q extended || { echo "this theme requires Hugo extended"; exit 1; }
+    - |
+      hugo version | awk '{ split(substr($2, 2), v, /[.+-]/) } /extended/ || v[1] > 0 || v[2] >= 170 { ok = 1 } END { exit !ok }' || { echo "this theme requires Hugo 0.170 or later, or Hugo extended below that"; exit 1; }
     # The demo is served from a subpath, and the fingerprinted stylesheet, the
     # fonts and every RelPermalink are resolved against this.
     - >
